@@ -1,0 +1,42 @@
+version: '3'
+services:
+  api:
+    image: milvus.io/om-search:v1
+    ports:
+      - "5000:5000"
+    environment:
+      - MINIO_ADDR=192.168.1.10:9000
+      - UPLOAD_FOLDER=/tmp
+      - MILVUS_ADDR=192.168.1.10
+      - SEARCH_IMAGES_DATABASE_EP=mysql://root:passwd@192.168.1.10:3306/search
+      - SEARCH_IMAGES_DATABASE_USERNAME=root
+      - SEARCH_IMAGES_DATABASE_PASSWD=passwd
+      - MILVUS_PORT=19530
+      - MINIO_BUCKET_NUM=20
+    depends_on:
+      - milvus
+      - minio
+      - mysql
+  mysql:
+    image: daocloud.io/library/mysql:5.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=passwd
+    ports:
+      - "3306:3306"
+  milvus:
+    image: milvusdb/milvus:0.7.0-cpu-d031120-de409b
+    ports:
+      - "19530:19530"
+      - "8080:8080"
+    volumes:
+      - /mnt/milvus/db:/var/lib/milvus/db
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - /mnt/minio/data:/data
+    command: ["server","/data"]
+# networks:
+#   app:
+#     driver: bridge
