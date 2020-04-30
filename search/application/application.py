@@ -69,11 +69,11 @@ def all_applications():
 def application_detail(name):
     try:
         x = search_application(name)
-        if x:
-            fields = json.loads(x.fields)
-            app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
-            return app
-        return {}
+        if not x:
+            raise NotExistError("application %s not exist" % name, "")
+        fields = json.loads(x.fields)
+        app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
+        return app
     except Exception as e:
         logger.error(e)
         return e
@@ -95,14 +95,14 @@ def new_application(name, fields, s3_buckets):
 def delete_application(name):
     try:
         x = del_application(name)
-        if x:
-            x = x[0]
-            fields = json.loads(x.fields)
-            app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
-            S3Ins.del_s3_buckets(x.s3_buckets.split(","))
-            logger.info("delete application %s" % name)
-            return app
-        return {}
+        if not x:
+            raise NotExistError("application %s not exist" % name, "")
+        x = x[0]
+        fields = json.loads(x.fields)
+        app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
+        S3Ins.del_s3_buckets(x.s3_buckets.split(","))
+        logger.info("delete application %s" % name)
+        return app
     except Exception as e:
         logger.error(e)
         return e
@@ -112,6 +112,8 @@ def patch_application(name, fields, s3_buckets):
     try:
         app_model = DB(name=name, fields=json.dumps(fields), s3_buckets=s3_buckets)
         x = update_application(name, app_model)
+        if not x:
+            raise NotExistError("application %s not exist" % name, "")
         app = Application(name=x.name, fields=fields, buckets=s3_buckets)
         logger.info("change appication %s config" % name)
         return app

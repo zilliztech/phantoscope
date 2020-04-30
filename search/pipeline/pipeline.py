@@ -10,6 +10,7 @@ from common.error import PipelineCheckError
 from common.error import OperatorImportError
 from common.error import PipelineIlegalError
 from common.error import RPCExecError
+from common.error import NotExistError
 from common.const import OPERATOR_TYPE_ENCODER
 from common.const import OPERATOR_TYPE_PROCESSOR
 from operators.operator import all_operators
@@ -124,20 +125,20 @@ def _all_pipelines():
 def pipeline_detail(name):
     try:
         p = search_pipeline(name)
-        if p:
-            if not p.processors:
-                pr = []
-            else:
-                pr = p.processors.split(",")
-            pipe = Pipeline(name=p.name, input=p.input,
-                            output=p.output, dimension=p.dimension,
-                            index_file_size=p.index_file_size,
-                            metric_type=p.metric_type,
-                            description=p.description,
-                            processors=pr,
-                            encoder=p.encoder)
-            return pipe
-        return {}
+        if not p:
+            raise NotExistError("pipeline %s is not exist" % name, "")
+        if not p.processors:
+            pr = []
+        else:
+            pr = p.processors.split(",")
+        pipe = Pipeline(name=p.name, input=p.input,
+                        output=p.output, dimension=p.dimension,
+                        index_file_size=p.index_file_size,
+                        metric_type=p.metric_type,
+                        description=p.description,
+                        processors=pr,
+                        encoder=p.encoder)
+        return pipe
     except Exception as e:
         return e
 
@@ -161,18 +162,18 @@ def new_pipeline(name, input, output, dimension, index_file_size, metric_type,
 def delete_pipeline(name):
     try:
         p = del_pipeline(name)
-        if p:
-            p = p[0]
-            MilvusIns.del_milvus_collection(p.name)
-            pipe = Pipeline(name=p.name, input=p.input,
-                            output=p.output, dimension=p.dimension,
-                            index_file_size=p.index_file_size,
-                            metric_type=p.metric_type,
-                            description=p.description,
-                            processors=p.processors.split(","),
-                            encoder=p.encoder)
-            return pipe
-        return {}
+        if not p:
+            raise NotExistError("pipeline %s is not exist" % name, "")
+        p = p[0]
+        MilvusIns.del_milvus_collection(p.name)
+        pipe = Pipeline(name=p.name, input=p.input,
+                        output=p.output, dimension=p.dimension,
+                        index_file_size=p.index_file_size,
+                        metric_type=p.metric_type,
+                        description=p.description,
+                        processors=p.processors.split(","),
+                        encoder=p.encoder)
+        return pipe
     except Exception as e:
         logger.error(e)
         return e

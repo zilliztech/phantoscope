@@ -34,7 +34,7 @@ def operator_refresh_api():
 @operator.route("/<name>", methods=['DELETE'])
 @json_response
 def delete_operator_api(name):
-    return delete_operator(name)
+    return delete_operators(name)
 
 
 @operator.route("/<name>")
