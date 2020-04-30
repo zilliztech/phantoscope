@@ -45,7 +45,7 @@ def delete_application_api(name):
     return delete_application(name)
 
 
-@application.route("/<name>", methods=['PATCH'])
+@application.route("/<name>", methods=['PUT'])
 @json_response
 def patch_pipeline_api(name):
     args = reqparse.RequestParser(). \

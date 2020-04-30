@@ -46,7 +46,7 @@ def delete_pipeline_api(name):
     return delete_pipeline(name)
 
 
-@pipeline.route("/<name>", methods=['PATCH'])
+@pipeline.route("/<name>", methods=['PUT'])
 @json_response
 def patch_pipeline_api(name):
     args = reqparse.RequestParser(). \
