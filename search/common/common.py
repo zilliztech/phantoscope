@@ -46,13 +46,17 @@ def json_response(func):
             res_body = res
         elif isinstance(res, tuple):
             res_body, res_code = res
+            if isinstance(res_body, list):
+                res_body = json.dumps([r.__dict__ for r in res_body])
         elif isinstance(res, Exception):
+            res_code = 500
+            if hasattr(res, "error_code"):
+                res_code = res.error_code
             res = {
                 "message": res.message,
                 "error": res.error.__repr__()
             }
             res_body = json.dumps(res)
-            res_code = 500
         elif isinstance(res, dict):
             res_body = json.dumps(res)
         else:

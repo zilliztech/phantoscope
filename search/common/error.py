@@ -1,5 +1,7 @@
 class Error(Exception):
-    pass
+    @property
+    def error_code(self):
+        return "503"
 
 
 class OperatorImportError(Error):
