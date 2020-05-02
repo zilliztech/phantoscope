@@ -5,6 +5,7 @@ from models.application import insert_application, search_application, del_appli
 from models.mapping import search_by_application, search_from_mapping, del_mapping
 from pipeline.pipeline import _all_pipelines
 from common.error import NotExistError
+from common.error import RequestError
 from storage.storage import S3Ins, MilvusIns
 from application.mapping import new_mapping_ins
 
@@ -87,6 +88,9 @@ def new_application(name, fields, s3_buckets):
             if v.get("type") == "object":
                 if v.get("pipeline") not in all_pipelines_names:
                     return NotExistError("pipeline not exist", "pipeline %s not exist" % v.get("value"))
+            if v.get("type") != "object":
+                if "value" not in v:
+                    return RequestError("key 'value' not exist", "request error")
         return app.save()
     except Exception as e:
         return e

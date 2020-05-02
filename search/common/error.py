@@ -77,3 +77,8 @@ class RPCExecError(Error):
     def __init__(self, message, error):
         self.message = message
         self.error = error
+
+class RequestError(Error):
+    def __init__(self, message, error):
+        self.message = message
+        self.error = error
