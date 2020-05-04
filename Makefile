@@ -1,4 +1,4 @@
-all:fronted api
+all:api
 	echo "build finish"
 api:
 	docker build -t milvus.io/om-search:v1 .
