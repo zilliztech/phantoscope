@@ -2,13 +2,15 @@ import logging.config
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_cors import CORS
-from common.config import UPLOAD_FOLDER, META_DATABASE_ENDPOINT
+from common.config import UPLOAD_FOLDER
+from common.config import META_DATABASE_ENDPOINT
 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = META_DATABASE_ENDPOINT
 db = SQLAlchemy(app)
+db.init_app(app)
 db.create_all()
 CORS(app)
 
