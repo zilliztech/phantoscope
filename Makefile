@@ -1,3 +1,4 @@
+.PHONY: all test lint
 all:api
 	echo "build finish"
 api:
