@@ -1,7 +1,7 @@
 class Error(Exception):
     @property
     def error_code(self):
-        return "503"
+        return 503
 
 
 class OperatorImportError(Error):
@@ -63,11 +63,19 @@ class DecodeError(Error):
         self.message = message
         self.error = error
 
+    @property
+    def error_code(self):
+        return 400
+
 
 class DownloadFileError(Error):
     def __init__(self, message, error):
         self.message = message
         self.error = error
+
+    @property
+    def error_code(self):
+        return 598
 
 
 class PipelineIlegalError(Error):
@@ -75,12 +83,25 @@ class PipelineIlegalError(Error):
         self.message = message
         self.error = error
 
+    @property
+    def error_code(self):
+        return 400
+
+
 class RPCExecError(Error):
     def __init__(self, message, error):
         self.message = message
         self.error = error
 
+    @property
+    def error_code(self):
+        return 503
+
 class RequestError(Error):
     def __init__(self, message, error):
         self.message = message
         self.error = error
+
+    @property
+    def error_code(self):
+        return 400
