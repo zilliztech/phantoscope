@@ -1,5 +1,4 @@
 import logging
-import importlib
 from typing import List
 from models.pipeline import Pipeline as DB
 from models.pipeline import insert_pipeline
@@ -7,15 +6,14 @@ from models.pipeline import search_pipeline
 from models.pipeline import del_pipeline
 from models.pipeline import update_pipeline
 from common.error import PipelineCheckError
-from common.error import OperatorImportError
 from common.error import PipelineIlegalError
 from common.error import RPCExecError
 from common.error import NotExistError
 from common.const import OPERATOR_TYPE_ENCODER
 from common.const import OPERATOR_TYPE_PROCESSOR
 from operators.operator import all_operators
-from storage.storage import MilvusIns
 from operators.client import execute
+from storage.storage import MilvusIns
 
 logger = logging.getLogger(__name__)
 
@@ -243,7 +241,7 @@ def run_pipeline(p, **kwargs):
 
 
 def pipeline_ilegal(pipe):
-    registed_operators = [x for x in all_operators() if x.type==OPERATOR_TYPE_ENCODER]
+    registed_operators = [x for x in all_operators() if x.type == OPERATOR_TYPE_ENCODER]
     for op in registed_operators:
         if pipe.encoder == op.name:
             if pipe.dimension == op.dimension and pipe.metric_type == op.metric_type:
