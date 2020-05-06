@@ -45,7 +45,7 @@ class Application():
         try:
             S3Ins.new_s3_buckets(self.buckets.split(","))
             insert_application(app)
-            logger.info(f"create new application {self.name}")
+            logger.info("create new application %s", self.name)
         except Exception as e:
             logger.error(e)
             raise e
@@ -105,7 +105,7 @@ def delete_application(name):
         fields = json.loads(x.fields)
         app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
         S3Ins.del_s3_buckets(x.s3_buckets.split(","))
-        logger.info("delete application %s" % name)
+        logger.info("delete application %s", name)
         return app
     except Exception as e:
         logger.error(e)
@@ -119,7 +119,7 @@ def patch_application(name, fields, s3_buckets):
         if not x:
             raise NotExistError(f"application {name} not exist", "")
         app = Application(name=x.name, fields=fields, buckets=s3_buckets)
-        logger.info(f"change appication {name} config")
+        logger.info("change appication %s config", name)
         return app
     except Exception as e:
         logger.error(e)
@@ -133,7 +133,7 @@ def entities_list(name, num, page):
             res.append(new_mapping_ins(id=i.id, app_name=i.app_name,
                                        image_url=i.image_url,
                                        fields=i.fields, target_fields=i.target_fields))
-        logger.info(f"get application {name} entity list")
+        logger.info("get application %s entity list", name)
         return res
     except Exception as e:
         logger.error(e)
@@ -150,7 +150,7 @@ def delete_entity(app_name, entity_name):
         object_name = entity.image_url.split("/")[-1]
         S3Ins.del_object(bucket_name, object_name)
         del_mapping(entity_name)
-        logger.info(f"delete entity {entity_name} in application {app_name}")
+        logger.info("delete entity %s in application %s", entity_name, app_name)
         return new_mapping_ins(
             id=entity.id, app_name=entity.app_name, image_url=entity.image_url,
             fields=entity.fields, target_fields=entity.target_fields
