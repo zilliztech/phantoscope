@@ -11,8 +11,11 @@ def create_tables_before_run():
     db.create_all()
 
 
-def app_runner():
-    app.run(host="0.0.0.0", debug=True, port=5000)
+def app_runner(args):
+    if args.debug:
+        debug = True
+    app.run(host="0.0.0.0", debug=debug, port=5000)
+
 
 
 def run_with_args():
@@ -20,8 +23,7 @@ def run_with_args():
     parser = argparse.ArgumentParser(description='Start args')
     parser.add_argument('--debug', action="store_true")
     args = parser.parse_args()
-    if args.debug:
-        app_runner()
+    app_runner(args)
 
 
 if __name__ == "__main__":
