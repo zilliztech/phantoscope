@@ -4,6 +4,7 @@ from models.operator import search_operator, insert_operator, del_operator
 from operators.client import identity
 from operators.client import health
 from common.error import NotExistError
+from common.error import OperatorRegistError
 
 
 logger = logging.getLogger(__name__)
@@ -79,7 +80,7 @@ def regist_operators(endpoint, name):
                             metric_type=op.metric_type)
     except Exception as e:
         logger.error(e)
-        return e
+        return OperatorRegistError("opeartor %s regist error" % name, e)
 
 
 def delete_operators(name):

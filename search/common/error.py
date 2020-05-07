@@ -11,6 +11,9 @@ class Error(Exception):
 class OperatorImportError(Error):
     pass
 
+class OperatorRegistError(Error):
+    pass
+
 class PipelineCheckError(Error):
     pass
 

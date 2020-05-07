@@ -4,18 +4,21 @@ import operators.rpc_pb2_grpc as rpc_pb2_grpc
 
 
 def identity(endpoint):
-    with grpc.insecure_channel(endpoint) as channel:
-        stub = rpc_pb2_grpc.OperatorStub(channel)
-        res = stub.Identity(pb.IdentityRequest())
-        return {
-            "name": res.name,
-            "endpoint": res.endpoint,
-            "type": res.type,
-            "input": res.input,
-            "output": res.output,
-            "dimension": res.dimension,
-            "metric_type": res.metricType
-        }
+    try:
+        with grpc.insecure_channel(endpoint) as channel:
+            stub = rpc_pb2_grpc.OperatorStub(channel)
+            res = stub.Identity(pb.IdentityRequest())
+            return {
+                "name": res.name,
+                "endpoint": res.endpoint,
+                "type": res.type,
+                "input": res.input,
+                "output": res.output,
+                "dimension": res.dimension,
+                "metric_type": res.metricType
+            }
+    except Exception as e:
+        raise e
 
 
 def health(operator):
