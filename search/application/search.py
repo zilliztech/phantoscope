@@ -22,7 +22,8 @@ def search(name, fields={}, topk=10, nprobe=16):
             file_data = value.get('data')
             url = value.get('url')
             vectors = run_pipeline(pipe, data=file_data, url=url)
-            vids = MilvusIns.search_vectors(p, vectors, topk=topk, nprobe=nprobe)
+            milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
+            vids = MilvusIns.search_vectors(milvus_collection_name, vectors, topk=topk, nprobe=nprobe)
             for id in vids[0]:
                 db = search_from_mapping(id.id)
                 if db:

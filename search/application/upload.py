@@ -41,7 +41,8 @@ def upload(name, **kwargs):
             file_path = save_tmp_file(file_name, file_data, url)
             S3Ins.upload2bucket(bucket_name, file_path, file_name)
             vectors = run_pipeline(pipe, data=file_data, url=url)
-            vids = MilvusIns.insert_vectors(p, vectors)
+            milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
+            vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
             for vid in vids:
                 m = DB(id=vid, app_name=name,
                        image_url=gen_url(bucket_name, file_name),
