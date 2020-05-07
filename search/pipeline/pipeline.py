@@ -150,7 +150,7 @@ def new_pipeline(name, input, output, dimension, index_file_size, metric_type,
     try:
         if pipeline_ilegal(pipe):
             return PipelineIlegalError("Pipeline ilegal check error", "")
-        milvus_collection_name = f"{name}-{encoder}"
+        milvus_collection_name = f"{name}_{encoder}"
         MilvusIns.new_milvus_collection(milvus_collection_name, dimension, index_file_size, metric_type)
         return pipe.save()
     except Exception as e:
@@ -164,7 +164,7 @@ def delete_pipeline(name):
         if not p:
             raise NotExistError("pipeline %s is not exist" % name, "")
         p = p[0]
-        milvus_collection_name = f"{name}-{p.encoder}"
+        milvus_collection_name = f"{name}_{p.encoder}"
         MilvusIns.del_milvus_collection(milvus_collection_name)
         pipe = Pipeline(name=p.name, input=p.input,
                         output=p.output, dimension=p.dimension,
