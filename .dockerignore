@@ -1,0 +1,5 @@
+.git
+.cache
+tmp/*
+venv/*
+*.md

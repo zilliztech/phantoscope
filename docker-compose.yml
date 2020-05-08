@@ -23,6 +23,8 @@ services:
       - MYSQL_ROOT_PASSWORD=passwd
     ports:
       - "3306:3306"
+    volumes:
+      - /mnt/om/mysql:/var/lib/mysql
   milvus:
     image: milvusdb/milvus:0.7.0-cpu-d031120-de409b
     ports:
@@ -35,5 +37,5 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - /mnt/minio/data:/data
+      - /mnt/om/minio/data:/data
     command: ["server","/data"]
