@@ -8,7 +8,7 @@ class Mapping(db.Model):
     app = db.relationship('Application', foreign_keys=app_name)
     image_url = db.Column(db.String(500), nullable=True)
     fields = db.Column(db.String(30000), nullable=True)
-    target_fields = db.Column(db.String(6000), nullable=True)
+    target_fields = db.Column(db.String(30000), nullable=True)
 
     def __repr__(self):
         return '<Mapping %r>' % self.id
