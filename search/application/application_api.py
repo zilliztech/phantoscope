@@ -73,8 +73,8 @@ def application_do_search_api(name):
 @json_response
 def application_do_upload_api(name):
     args = reqparse.RequestParser(). \
-        add_argument("fields", type=dict). \
-        add_argument("targetFields", type=dict). \
+        add_argument("fields", type=dict, required=True). \
+        add_argument("targetFields", type=dict, required=True). \
         parse_args()
     args = from_view_dict(args)
     return upload(name, **args)
