@@ -39,3 +39,11 @@ services:
     volumes:
       - /mnt/om/minio/data:/data
     command: ["server","/data"]
+  vgg:
+    image: milvus.io/om-operators/vgg16:v1
+    ports:
+      - "50001:50001"
+    environment:
+      - OP_ENDPOINT=192.168.10:50001
+    depends_on:
+      - api
