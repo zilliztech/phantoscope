@@ -1,27 +1,19 @@
-# What is omnisearch
-Omnisearch is a search engine powered by neural networks
-# Quick Start
-## Install Omnisearch
+# Omnisearch
+Omnisearch is a cloud native search engine powered by neural networks
+
+# Install
 
     docker-compose up -d
-## Download example data (Optional)
 
-## Use example application
-
-    curl localhost:5000/v1/application/example/upload
-
-    curl localhost:5000/v1/application/example/search
-
-# Features
-# How to use
-## choose a encoder
-## create a pipeline
-## create a application
-## use application upload
-## use application search
-# How to build
+# QuickStart
+    Run a example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
+# To start using Omnisearch
+## Regist a operator
+## Create a pipeline
+## Create a application
+## Use application upload
+## Use application search
+# Build omnisearch from code
 
     make all
-
-# Backup and restore
-# How to develop a operator
+# How to develop
