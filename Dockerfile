@@ -1,6 +1,6 @@
 # mkdir tmp/video
 From ubuntu:bionic-20200219
-RUN mkdir -p /app
+RUN mkdir -p /app/tmp
 
 COPY search /app
 COPY requirements.txt /app/requirements.txt

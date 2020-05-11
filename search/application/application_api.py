@@ -45,18 +45,6 @@ def delete_application_api(name):
     return delete_application(name)
 
 
-@application.route("/<name>", methods=['PUT'])
-@json_response
-def patch_pipeline_api(name):
-    args = reqparse.RequestParser(). \
-        add_argument("fields", type=dict, required=True). \
-        add_argument("s3Buckets", type=str, required=True). \
-        parse_args()
-    args = from_view_dict(args)
-    args['name'] = name
-    return patch_application(**args)
-
-
 @application.route("/<name>/search", methods=['POST'])
 @json_response
 def application_do_search_api(name):
