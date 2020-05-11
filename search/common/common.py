@@ -25,7 +25,10 @@ def format_response(values):
 def json_response(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        res = func(*args, **kwargs)
+        try:
+            res = func(*args, **kwargs)
+        except Exception as e:
+            res = e
         res_code = 200
         if isinstance(res, list):
             res_body = json.dumps([r.__dict__ for r in res])

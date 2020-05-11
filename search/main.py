@@ -14,7 +14,7 @@ def create_tables_before_run():
 def app_runner(args):
     if args.debug:
         debug = True
-    app.run(host="0.0.0.0", debug=debug, port=5000)
+    app.run(host="0.0.0.0", debug=debug, port=6000)
 
 
 
