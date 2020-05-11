@@ -12,6 +12,7 @@ from common.error import NotExistError
 from common.const import OPERATOR_TYPE_ENCODER
 from common.const import OPERATOR_TYPE_PROCESSOR
 from operators.operator import all_operators
+from operators.operator import operator_detail
 from operators.client import execute
 from storage.storage import MilvusIns
 
@@ -141,19 +142,20 @@ def pipeline_detail(name):
         return e
 
 
-def new_pipeline(name, input, output, dimension, index_file_size, metric_type,
-                 processors, encoder, description=None):
-    pipe = Pipeline(name=name, input=input, output=output, dimension=dimension,
-                    index_file_size=index_file_size, metric_type=metric_type,
-                    description=description,
-                    processors=processors.split(","), encoder=encoder)
+def new_pipeline(name, input, index_file_size, processors, encoder, description=None):
     try:
+        encoder = operator_detail(encoder)
+        pipe = Pipeline(name=name, input=input, output=encoder.output, dimension=encoder.dimension,
+                        index_file_size=index_file_size, metric_type=encoder.metric_type,
+                        description=description,
+                        processors=processors.split(","), encoder=encoder.name)
         if pipeline_ilegal(pipe):
             return PipelineIlegalError("Pipeline ilegal check error", "")
-        milvus_collection_name = f"{name}_{encoder}"
-        MilvusIns.new_milvus_collection(milvus_collection_name, dimension, index_file_size, metric_type)
+        milvus_collection_name = f"{name}_{encoder.name}"
+        MilvusIns.new_milvus_collection(milvus_collection_name, encoder.dimension, index_file_size, encoder.metric_type)
         return pipe.save()
     except Exception as e:
+        print(e)
         logger.error(e)
         return e
 
@@ -166,29 +168,6 @@ def delete_pipeline(name):
         p = p[0]
         milvus_collection_name = f"{name}_{p.encoder}"
         MilvusIns.del_milvus_collection(milvus_collection_name)
-        pipe = Pipeline(name=p.name, input=p.input,
-                        output=p.output, dimension=p.dimension,
-                        index_file_size=p.index_file_size,
-                        metric_type=p.metric_type,
-                        description=p.description,
-                        processors=p.processors.split(","),
-                        encoder=p.encoder)
-        return pipe
-    except Exception as e:
-        logger.error(e)
-        return e
-
-
-def patch_pipeline(name, input="", output="", dimension=0, index_file_size=0,
-                   metric_type="", processors="", encoder="",
-                   description=None):
-    try:
-        p_model = DB(name=name, input=input, output=output, dimension=dimension,
-                     index_file_size=index_file_size, metric_type=metric_type,
-                     processors=processors,
-                     encoder=encoder, description=description)
-
-        p = update_pipeline(name, p_model)
         pipe = Pipeline(name=p.name, input=p.input,
                         output=p.output, dimension=p.dimension,
                         index_file_size=p.index_file_size,

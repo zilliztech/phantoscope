@@ -41,6 +41,15 @@ class Operator:
     def dimension(self):
         return self._dimension
 
+    @property
+    def output(self):
+        return self._output
+
+    @property
+    def input(self):
+        return self._input
+
+
 def new_operator(name, backend, type, input, output, endpoint, dimension, metric_type):
     return Operator(name=name, backend=backend, type=type, input=input, output=output,
                     endpoint=endpoint, dimension=dimension, metric_type=metric_type)
@@ -114,7 +123,7 @@ def operator_detail(name):
                             metric_type=op.metric_type)
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 def operator_health(name):
     try:
