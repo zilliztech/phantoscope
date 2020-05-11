@@ -1,5 +1,7 @@
 # Omnisearch Quick Start
 ## Run operators
+
+    docker-compose up -d 
 ## Regist operators
 ## Create a pipeline
 ## Create a application
