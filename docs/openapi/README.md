@@ -1,4 +1,4 @@
-# Omnisearch docs
+# Omnisearch open api docs
 
 ## How to use it 
 
