@@ -44,6 +44,6 @@ services:
     ports:
       - "50001:50001"
     environment:
-      - OP_ENDPOINT=192.168.10:50001
+      - OP_ENDPOINT=192.168.1.10:50001
     depends_on:
       - api
