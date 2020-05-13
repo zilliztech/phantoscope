@@ -205,7 +205,7 @@ def run_pipeline(p, **kwargs):
                 if i.type == "processor":
                     _, metadatas = execute(i, urls=urls, datas=datas)
                     urls = [x.url for x in metadatas]
-                    datas = [x.metadata for x in metadatas]
+                    datas = [x.data for x in metadatas]
                 if i.type == "encoder":
                     vectors, _ = execute(i, urls=urls, datas=datas)
                     return vectors
