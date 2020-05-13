@@ -6,9 +6,7 @@ from models.mapping import Mapping
 from models.operator import Operator
 from service.api import app
 
-
-def create_tables_before_run():
-    db.create_all()
+db.create_all()
 
 
 def app_runner(args):
@@ -17,9 +15,7 @@ def app_runner(args):
     app.run(host="0.0.0.0", debug=debug, port=6000)
 
 
-
 def run_with_args():
-    create_tables_before_run()
     parser = argparse.ArgumentParser(description='Start args')
     parser.add_argument('--debug', action="store_true")
     args = parser.parse_args()
