@@ -3,7 +3,8 @@ Omnisearch is a cloud native search engine powered by neural networks
 
 # Install
 
-    docker-compose up -d
+    git clone https://github.com/zilliztech/omnisearch.git
+    cd omnisearch && docker-compose up -d
 
 # QuickStart
 Run a example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
@@ -17,3 +18,4 @@ Run a example omnisearch application from [here](https://github.com/zilliztech/o
 
     make all
 # How to develop
+Read the omnisearch design principles from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/design-principles)
