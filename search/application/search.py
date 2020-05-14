@@ -10,20 +10,17 @@ def search(name, fields={}, topk=10, nprobe=16):
     res = []
     try:
         app = application_detail(name)
-        if not app:
-            raise NotExistError("application not exist", "application %s not exist" % name)
 #        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "object"]
         pipeline_fields = {x: y['pipeline'] for x, y in app.fields.items() if y.get('type') == "object"}
         for n, p in pipeline_fields.items():
             pipe = pipeline_detail(p)
-            if not pipe:
-                raise NotExistError("pipeline not exist", "pipeline %s not exist" % p)
             value = fields.get(n)
             file_data = value.get('data')
             url = value.get('url')
             vectors = run_pipeline(pipe, data=file_data, url=url)
             milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
             vids = MilvusIns.search_vectors(milvus_collection_name, vectors, topk=topk, nprobe=nprobe)
+            # here add scoreling function
             for id in vids[0]:
                 db = search_from_mapping(id.id)
                 if db:

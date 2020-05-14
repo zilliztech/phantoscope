@@ -4,8 +4,16 @@ class Error(Exception):
         self.error = error
 
     @property
-    def error_code(self):
+    def code(self):
         return 503
+
+    @property
+    def name(self):
+        return self.__class__.__name__
+
+    @property
+    def description(self):
+        return self.message
 
 
 class OperatorImportError(Error):
@@ -30,7 +38,9 @@ class UpdateFromSQLError(Error):
     pass
 
 class NotExistError(Error):
-    pass
+    @property
+    def code(self):
+        return 404
 
 class MilvusError(Error):
     pass
@@ -41,29 +51,29 @@ class S3Error(Error):
 
 class DecodeError(Error):
     @property
-    def error_code(self):
+    def code(self):
         return 400
 
 
 class DownloadFileError(Error):
     @property
-    def error_code(self):
+    def code(self):
         return 598
 
 
 class PipelineIlegalError(Error):
     @property
-    def error_code(self):
+    def code(self):
         return 400
 
 
 class RPCExecError(Error):
     @property
-    def error_code(self):
+    def code(self):
         return 503
 
 
 class RequestError(Error):
     @property
-    def error_code(self):
+    def code(self):
         return 400

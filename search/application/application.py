@@ -77,7 +77,7 @@ def application_detail(name):
         return app
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def new_application(name, fields, s3_buckets):

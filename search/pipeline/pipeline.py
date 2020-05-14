@@ -139,7 +139,7 @@ def pipeline_detail(name):
                         encoder=p.encoder)
         return pipe
     except Exception as e:
-        return e
+        raise e
 
 
 def new_pipeline(name, input, index_file_size, processors, encoder, description=None):
