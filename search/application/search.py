@@ -2,6 +2,7 @@ from application.application import application_detail
 from application.mapping import new_mapping_ins
 from pipeline.pipeline import pipeline_detail, run_pipeline
 from common.error import NotExistError
+from common.error import NoneVectorError
 from storage.storage import MilvusIns
 from models.mapping import search_from_mapping
 
@@ -18,6 +19,8 @@ def search(name, fields={}, topk=10, nprobe=16):
             file_data = value.get('data')
             url = value.get('url')
             vectors = run_pipeline(pipe, data=file_data, url=url)
+            if not vectors:
+                raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
             milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
             vids = MilvusIns.search_vectors(milvus_collection_name, vectors, topk=topk, nprobe=nprobe)
             # here add scoreling function
