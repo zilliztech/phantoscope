@@ -3,14 +3,14 @@ Omnisearch is a cloud native search engine powered by neural networks
 
 ## Table of Contents
 
- - [Background](##Background)
- - [Install](##Install)
- - [QuickStart](##QuickStart)
- - [Examples](##Examples)
- - [Contributing](##Contributing)
- - [Community](##Community)
- - [Roadmap](##Roadmap)
- - [License](##License)
+ - [Background](https://github.com/zilliztech/omnisearch#Background)
+ - [Install](https://github.com/zilliztech/omnisearch#Install)
+ - [QuickStart](https://github.com/zilliztech/omnisearch#QuickStart)
+ - [Examples](https://github.com/zilliztech/omnisearch#Examples)
+ - [Contributing](https://github.com/zilliztech/omnisearch#Contributing)
+ - [Community](https://github.com/zilliztech/omnisearch#Community)
+ - [Roadmap](https://github.com/zilliztech/omnisearch#Roadmap)
+ - [License](https://github.com/zilliztech/omnisearch#License)
 ## Background
 ## Install
 
