@@ -28,7 +28,7 @@ omnisearch 提供支持多重维度上传与搜索的搜索引擎
 Run a example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
 
 ## Examples
-从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/example)你可以看到 omnisearch 在不同场景下的应用
+从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/examples)你可以看到 omnisearch 在不同场景下的应用
 
 ## Contributing
 Read the omnisearch design principles from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/design-principles)
