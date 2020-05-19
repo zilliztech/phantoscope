@@ -12,6 +12,13 @@ Omnisearch is a cloud native search engine powered by neural networks
  - [Roadmap](https://github.com/zilliztech/omnisearch#Roadmap)
  - [License](https://github.com/zilliztech/omnisearch#License)
 ## Background
+音频、视频的数据会越来越多，搜索变成了一件困难的事情
+
+单一的文本搜索无法满足维度日益增加的搜索需求
+
+omnisearch 提供支持多重维度上传与搜索的搜索引擎
+
+根据需要选择模型与处理流程然后构建属于自己的搜索引擎
 ## Install
 
     git clone https://github.com/zilliztech/omnisearch.git
