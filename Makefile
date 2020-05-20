@@ -2,6 +2,7 @@ COMMIT_ID = $(shell git rev-parse --short HEAD)
 GIT_TAG = $(shell git tag --points-at HEAD)
 
 .PHONY: api test lint release
+all: test lint api clean
 api:
 	docker build -t milvus.io/om-search:$(COMMIT_ID) .
 test:
