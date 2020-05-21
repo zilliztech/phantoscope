@@ -1,4 +1,4 @@
-# Here is Logo and Badges 
+![](https://github.com/zilliztech/omnisearch/blob/master/.github/logo-fake.png)
 创建完全贴合你自己的图片搜索引擎
 
 Omnisearch is a cloud native image search engine powered by neural networks
