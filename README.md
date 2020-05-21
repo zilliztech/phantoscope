@@ -1,5 +1,4 @@
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/logo-fake.png)
-创建完全贴合你自己的图片搜索引擎
 
 Omnisearch is a cloud native image search engine powered by neural networks
 
@@ -16,23 +15,25 @@ Omnisearch is a cloud native image search engine powered by neural networks
  - [Background](https://github.com/zilliztech/omnisearch#Background)
  - [Install](https://github.com/zilliztech/omnisearch#Install)
  - [QuickStart](https://github.com/zilliztech/omnisearch#QuickStart)
- - [Examples](https://github.com/zilliztech/omnisearch#Examples)
+ - [Concepts](https://github.com/zilliztech/omnisearch#Concepts)
  - [Contributing](https://github.com/zilliztech/omnisearch#Contributing)
  - [Community](https://github.com/zilliztech/omnisearch#Community)
  - [Roadmap](https://github.com/zilliztech/omnisearch#Roadmap)
  - [License](https://github.com/zilliztech/omnisearch#License)
 ## Background
-音频、视频的数据会越来越多，搜索变成了一件复杂的事情
+人类的搜索不应该被局限在单词与短句
 
-单一的文本搜索无法满足维度日益增加的搜索需求
-
-一张图片中附带的信息量要大于一个单词附带的信息量
+随着音频、视频的数据所占比重越来越大，在未来还会有更多更高维度的数据出现在我们的日常生活当中
 
 人们需要搜索拥有更高密度信息的数据，目前的图片、视频、音频，在未来还会有 3D 模型、VR 数据等等更复杂的数据
 
-人类的搜索不应该被局限在单词与短句
+搜索变成了一件复杂的事情
+
+单一的文本搜索无法满足维度日益增加的搜索需求
 
 然而多维度的搜索面临着问题---搜索的重心在哪里?
+
+一张图片中包含的几十个单词构成的信息，一个几秒钟的视频又包含了上百长的图片以及对应的音频，传统的搜索模式无法满足现有的场景
 
 不同人在不同条件下搜索的重心各不相同，针对不同场景的多维度搜索成为了重要功能
 
@@ -45,20 +46,26 @@ Omnisearch is a cloud native image search engine powered by neural networks
     wget https://github.com/zilliztech/omnisearch/blob/master/docker-compose.yml
     docker-compose up -d
 
+### build from code
+	
+	make all
 ## QuickStart
 Run a example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
 
 ## Concepts
-从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/example)你可以看到 omnisearch 在不同场景下的应用
-从图片了解 omnisearch 中的概念
+从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/example)你可以看到 omnisearch 在不同场景下的应用:
+
+ - 根据图片中的人脸进行搜索
+ - 根据图片中的物体进行搜索
+
+从下面了解 omnisearch 中的概念
 
 雨水与水厂的动图 10s 或者短视频
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/omnisearch-explain.png)
 ## Contributing
-Read the omnisearch design principles from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/design-principles)
-### Build omnisearch from code
+Contributions are welcomed and greatly appreciated. Please read our  [contribution guidelines](https://github.com/zilliztech/omnisearch/blob/master/CONTRIBUTING.md)  for detailed contribution workflow.
 
-    make all
+We use  [GitHub issues](https://github.com/zilliztech/omnisearch/issues)  to track issues and bugs. For general questions and public discussions, please join our community.
     
 ## Community
 
