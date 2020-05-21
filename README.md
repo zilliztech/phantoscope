@@ -53,7 +53,7 @@ Omnisearch is a cloud native image search engine powered by neural networks
 Run a example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
 
 ## Concepts
-从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/example)你可以看到 omnisearch 在不同场景下的应用:
+从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/examples)你可以看到 omnisearch 在不同场景下的应用:
 
  - 根据图片中的人脸进行搜索
  - 根据图片中的物体进行搜索
@@ -63,9 +63,13 @@ Run a example omnisearch application from [here](https://github.com/zilliztech/o
 雨水与水厂的动图 10s 或者短视频
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/omnisearch-explain.png)
 ## Contributing
-Contributions are welcomed and greatly appreciated. Please read our  [contribution guidelines](https://github.com/zilliztech/omnisearch/blob/master/CONTRIBUTING.md)  for detailed contribution workflow.
+Contributions are welcomed and greatly appreciated. 
 
-We use  [GitHub issues](https://github.com/zilliztech/omnisearch/issues)  to track issues and bugs. For general questions and public discussions, please join our community.
+Please read our  [contribution guidelines](https://github.com/zilliztech/omnisearch/blob/master/CONTRIBUTING.md)  for detailed contribution workflow.
+
+We use  [GitHub issues](https://github.com/zilliztech/omnisearch/issues)  to track issues and bugs. 
+
+For general questions and public discussions, please join our community.
     
 ## Community
 
