@@ -21,7 +21,7 @@ def save_tmp_file(name, file_data=None, url=None):
                 extension = data_type.split(";")[0]
                 encode_method = data_type.split(";")[1]
                 if encode_method != "base64":
-                    raise DecodeError("Encode method not base64")
+                    raise DecodeError("Encode method not base64", Exception())
                 imgstring = img_data[1]
             else:
                 imgstring = img_data[0]

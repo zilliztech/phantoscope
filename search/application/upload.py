@@ -7,7 +7,7 @@ from models.mapping import Mapping as DB
 from models.mapping import add_mapping_data
 from application.mapping import new_mapping_ins
 from common.config import MINIO_ADDR
-from common.util import save_tmp_file
+from common.utils import save_tmp_file
 
 
 def upload(name, **kwargs):
