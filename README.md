@@ -2,19 +2,19 @@
 
 Omnisearch is a cloud native image search engine powered by neural networks
 
-📑**通过配置快速组装一个高性能图片搜索引擎**
+📑 **通过配置快速组装一个高性能图片搜索引擎**
 
-🚀**极快的搜索速度并可以处理十亿级别的数据**
+🚀 **极快的搜索速度并可以处理十亿级别的数据**
 
-🎭**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
+🎭 **完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
 
-📝**提供了丰富的扩展，也可以在五分钟内使用自己的模型创造一个自己的扩展**
+📝 **提供了丰富的扩展，也可以在五分钟内使用自己的模型创造一个自己的扩展**
 
-📇**提供了 dashboard 的图形界面，在 dashboard 中你可以直观快速的验证自己的扩展提供的效果并管理自己的数据**
+📇 **提供了 dashboard 的图形界面，在 dashboard 中你可以直观快速的验证自己的扩展提供的效果并管理自己的数据**
 
-🏭**即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
+🏭 **即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
 
-🚢**即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
+🚢 **即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
 
 [Here need a gif show what omnisearch can do]()
 ## Table of Contents
