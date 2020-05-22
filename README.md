@@ -71,11 +71,11 @@ Run a example omnisearch application from [here](https://github.com/zilliztech/o
 雨水与水厂的动图 10s 或者短视频
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/omnisearch-explain.png)
 
-| Tutorails                                                                                                 | level  |
-|-----------------------------------------------------------------------------------------------------------|--------|
-| [What is operators](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/operator.md)      | simple |
-| [What is pipeline](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/pipeline.md)       | simple |
-| [What is application](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/application.md) | simple |
+| Tutorails                                                                                              <img width=500/> | level  |
+|-------------------------------------------------------------------------------------------------------------------------|--------|
+| [What is operators](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/operator.md)                    | simple |
+| [What is pipeline](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/pipeline.md)                     | simple |
+| [What is application](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/application.md)               | simple |
 ## Contributing
 Contributions are welcomed and greatly appreciated. 
 
