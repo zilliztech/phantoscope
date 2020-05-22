@@ -2,14 +2,21 @@
 
 Omnisearch is a cloud native image search engine powered by neural networks
 
- - 使用 omnisearch 提供的扩展可以快速组装一个图片搜索引擎无须写一行代码
- - 借助于 milvus omnisearch 拥有极快的搜索速度并可以处理十亿级别的数据
- - omnisearch 完全兼容 tensorflow pytorch TensorRT ONNX XGBoost 等框架
- - omnisearch 提供了丰富的扩展，也可以使用自己的模型创造一个自己的扩展
- - omnisearch 即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展
- - omnisearch 提供了 dashboard 的图形界面，在 dashboard 中你可以直观快速的验证自己的扩展提供的效果
- - omnisearch 即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes
+📑**通过配置快速组装一个高性能图片搜索引擎**
 
+🚀**极快的搜索速度并可以处理十亿级别的数据**
+
+🎭**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
+
+📝**提供了丰富的扩展，也可以在五分钟内使用自己的模型创造一个自己的扩展**
+
+📇**提供了 dashboard 的图形界面，在 dashboard 中你可以直观快速的验证自己的扩展提供的效果并管理自己的数据**
+
+🏭**即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
+
+🚢**即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
+
+[Here need a gif show what omnisearch can do]()
 ## Table of Contents
 
  - [Background](https://github.com/zilliztech/omnisearch#Background)
@@ -63,6 +70,12 @@ Run a example omnisearch application from [here](https://github.com/zilliztech/o
 
 雨水与水厂的动图 10s 或者短视频
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/omnisearch-explain.png)
+
+| Tutorails                                                                                                 | level  |
+|-----------------------------------------------------------------------------------------------------------|--------|
+| [What is operators](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/operator.md)      | simple |
+| [What is pipeline](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/pipeline.md)       | simple |
+| [What is application](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/application.md) | simple |
 ## Contributing
 Contributions are welcomed and greatly appreciated. 
 
@@ -71,14 +84,23 @@ Please read our  [contribution guidelines](https://github.com/zilliztech/omnisea
 We use  [GitHub issues](https://github.com/zilliztech/omnisearch/issues)  to track issues and bugs. 
 
 For general questions and public discussions, please join our community.
-    
+
 ## Community
 
- - Slack Channel
- - Google group
+ - Slack Channel 这里可以进行沟通与咨询在使用过程中遇到的问题
+ - Google group  这里包含了设计文档、社区讨论纪要等资源
+ - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
 ## Roadmap
 [GitHub milestones](https://github.com/zilliztech/omnisearch/milestones) lay out the path to the future improvements.
 
+除了在 Roadmao 中的计划之外，我们希望更多的人可以一起参与到 operators 的开发当中
+
+在 [这里](https://github.com/ReigenAraka/omnisearch-operators) 你可以找到如何开发一个 operator
+
+如果您有任何问题请随时联系我们 omnisearch@zilliz.com
+
 ## License
-Omnisearch is licensed under the Apache License, Version 2.0. [See LICENSE for the full license text.](https://github.com/zilliztech/omnisearch/blob/master/LICENSE)
+Omnisearch is licensed under the Apache License, Version 2.0. 
+
+[See LICENSE for the full license text.](https://github.com/zilliztech/omnisearch/blob/master/LICENSE)
