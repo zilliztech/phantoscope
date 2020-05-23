@@ -10,14 +10,15 @@ face embedding && MTCNN-face-detector  in [omnisearch operators](https://github.
 curl http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar -o /tmp/VOCtrainval_11-May-2012.tar
 ```
 
-
 ## 开始
-1.运行 face-embedding 与 mtcnn-face-detector 
+1.运行 face-embedding 与 mtcnn-face-detector, 环境变量 host_ip 的值需要替换为本机局域网ip
+```bash
+export host_ip=192.168.2.3
+docker run -d -p 50004:50004 -e OP_ENDPOINT=${host_ip}:50004 milvus.io/om-operators/face-embedding:v1
+docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 milvus.io/om-operators/mtcnn-face-detector:v1
+```
 
-    docker run -d -p 50004:50004 -e OP_ENDPOINT=127.0.0.1:50004 milvus.io/om-operators/face-embedding:v1
-    docker run -d -p 50005:50005 -e OP_ENDPOINT=127.0.0.1:50005 milvus.io/om-operators/mtcnn-face-detector:v1
-
-2.将 face-embedding 与 mtcnn-face-detector 加载到 omnisearch 中, ${host_ip} 需要替换为本机局域网ip
+2.将 face-embedding 与 mtcnn-face-detector 加载到 omnisearch 中
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
@@ -51,19 +52,19 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/face' \
 curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-"fields":{
-	"face": {
-		"type": "object",
-		"pipeline": "face"
- 	}
-},
-"s3Buckets": "face"
+    "fields":{
+        "face": {
+            "type": "object",
+            "pipeline": "face"
+        }
+    },
+    "s3Buckets": "face"
 }'
 ```
 5.上传下载好的的数据
 ```bash
 tar xvf /tmp/VOCtrainval_11-May-2012.tar
-python load_data.py /tmp/VOCdevkit/
+python load_data.py -d /tmp/VOCdevkit/ -n face-example
 ```
 6.开始进行搜索
 ```bash
@@ -71,7 +72,7 @@ curl --location --request POST '127.0.0.1:5000/v1/application/face-example/searc
 --header 'Content-Type: application/json' \
 --data-raw '{
 	"fields": {
-        "full": {
+        "face": {
             "url": "https://tse2-mm.cn.bing.net/th/id/OIP.d0Uth461I3nJDr28WXudhgHaHa?w=204&h=189&c=7&o=5&dpr=2&pid=1.7"
         }
     },
