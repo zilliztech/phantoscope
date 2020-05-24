@@ -1,11 +1,13 @@
 import os
 import json
+import logging
 from milvus import Milvus, MetricType
 from minio import Minio
 from common.config import MILVUS_ADDR, MILVUS_PORT
 from common.error import MilvusError, S3Error
 from common.const import MINIO_BUCKET_PUBLIC_POLICY
 from common.config import MINIO_ADDR, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+logger = logging.getLogger(__name__)
 
 
 class Storage:
@@ -59,7 +61,7 @@ class MilvusIns:
                 raise MilvusError("There has some error when insert vectors", res)
             return ids
         except Exception as e:
-            print(e)
+            logger.error("There has some error when insert vectors", exc_info=True)
             raise MilvusError("There has some error when insert vectors", e)
 
     @staticmethod
@@ -103,7 +105,7 @@ class S3Ins:
                 minioClient.make_bucket(x)
                 minioClient.set_bucket_policy(x, json.dumps(gen_public_policy(x)))
         except Exception as e:
-            print(e)
+            logger.error("There has some error when create s3 buckets", exc_info=True)
             raise S3Error("There has some error when create s3 buckets", e)
 
     @classmethod
