@@ -1,3 +1,4 @@
+import time
 import logging.config
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import database_exists, create_database
@@ -9,8 +10,14 @@ from common.config import META_DATABASE_ENDPOINT
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = META_DATABASE_ENDPOINT
-if not database_exists(META_DATABASE_ENDPOINT):
-    create_database(META_DATABASE_ENDPOINT)
+
+for i in range(5):
+    try:
+        if not database_exists(META_DATABASE_ENDPOINT):
+            create_database(META_DATABASE_ENDPOINT)
+    except Exception as e:
+        print(f"count {i+1}; retry to connect to database {META_DATABASE_ENDPOINT}")
+        time.sleep(1)
 db = SQLAlchemy(app)
 db.init_app(app)
 db.create_all()
