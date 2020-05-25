@@ -15,9 +15,10 @@ for i in range(5):
     try:
         if not database_exists(META_DATABASE_ENDPOINT):
             create_database(META_DATABASE_ENDPOINT)
+            break
     except Exception as e:
         print(f"count {i+1}; retry to connect to database {META_DATABASE_ENDPOINT}")
-        time.sleep(1)
+        time.sleep(3)
 db = SQLAlchemy(app)
 db.init_app(app)
 db.create_all()
