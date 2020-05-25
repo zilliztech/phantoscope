@@ -91,7 +91,7 @@ For general questions and public discussions, please join our community.
 ## Roadmap
 [GitHub milestones](https://github.com/zilliztech/omnisearch/milestones) lay out the path to the future improvements.
 
-除了在 Roadmap 中的计划之外，我们希望更多的人可以一起参与到 operators 的开发当中
+包括 Roadmap 在内，我们希望更多的人可以一起参与到 operators 的开发当中
 
 在 [这里](https://github.com/ReigenAraka/omnisearch-operators) 你可以找到如何开发一个 operator
 
@@ -99,5 +99,3 @@ For general questions and public discussions, please join our community.
 
 ## License
 Omnisearch is licensed under the Apache License, Version 2.0. 
-
-[See LICENSE for the full license text.](https://github.com/zilliztech/omnisearch/blob/master/LICENSE)
