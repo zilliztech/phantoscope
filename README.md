@@ -1,16 +1,14 @@
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/logo-fake.png)
 
-Omnisearch is a cloud native image search engine powered by neural networks
+Omnisearch is a cloud native image search engine powered by Milvus and neural networks
 
-📑 **通过配置快速组装一个高性能图片搜索引擎**
-
-🚀 **极快的搜索速度并可以处理十亿级别的数据**
+🚀 **极快的搜索速度并可以处理十亿级别的图片**
 
 🎭 **完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
 
 📝 **提供了丰富的扩展，也可以在五分钟内使用自己的模型创造一个自己的扩展**
 
-📇 **提供了 dashboard 的图形界面，在 dashboard 中你可以直观快速的验证自己的扩展提供的效果并管理自己的数据**
+📇 **提供了 gui 快速的验证自己的扩展提供的效果并管理自己的数据**
 
 🏭 **即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
 
@@ -50,14 +48,14 @@ Omnisearch is a cloud native image search engine powered by neural networks
 
 ## Install
 
-    wget https://github.com/zilliztech/omnisearch/blob/master/docker-compose.yml
-    docker-compose up -d
+    $ wget https://github.com/zilliztech/omnisearch/blob/master/docker-compose.yml
+    $ docker-compose up -d
 
-### build from code
+## Build from code
 	
-	make all
+	$ make all
 ## QuickStart
-Run a example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
+Run an example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
 
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
 ## Concepts
@@ -71,11 +69,11 @@ Run a example omnisearch application from [here](https://github.com/zilliztech/o
 雨水与水厂的动图 10s 或者短视频
 ![](https://github.com/zilliztech/omnisearch/blob/master/.github/omnisearch-explain.png)
 
-| Tutorails                                                                                              <img width=700/> | level  |
+| Tutorials                                                                                              <img width=700/> | level  |
 |-------------------------------------------------------------------------------------------------------------------------|--------|
-| [What is operators](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/operator.md)                    | simple |
-| [What is pipeline](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/pipeline.md)                     | simple |
-| [What is application](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorails/application.md)               | simple |
+| [What is operators](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorials/operator.md)                    | simple |
+| [What is pipeline](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorials/pipeline.md)                     | simple |
+| [What is application](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorials/application.md)               | simple |
 ## Contributing
 Contributions are welcomed and greatly appreciated. 
 
@@ -88,7 +86,6 @@ For general questions and public discussions, please join our community.
 ## Community
 
  - Slack Channel 这里可以进行沟通与咨询在使用过程中遇到的问题
- - Google group  这里包含了设计文档、社区讨论纪要等资源
  - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
 ## Roadmap
