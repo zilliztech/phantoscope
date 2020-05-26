@@ -4,7 +4,10 @@ from models.pipeline import Pipeline
 from models.application import Application
 from models.mapping import Mapping
 from models.operator import Operator
-db.create_all()
+try:
+    db.create_all()
+except Exception as e:
+    print(e)
 from service.api import app
 
 
