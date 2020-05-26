@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: milvus.io/om-search:v1
+    image: milvus.io/om-search:10ea4ce
     ports:
       - "5000:5000"
     environment:
@@ -31,7 +31,7 @@ services:
       - "19530:19530"
       - "8080:8080"
     volumes:
-      - /mnt/milvus/db:/var/lib/milvus/db
+      - /mnt/om/milvus/db:/var/lib/milvus/db
   minio:
     image: minio/minio:latest
     ports:
