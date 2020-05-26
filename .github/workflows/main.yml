@@ -25,5 +25,5 @@ jobs:
       run: |
         sudo apt install python3-pip python3-setuptools
         pip3 install wheel pylint
-    - name: make all
-      run: make all
+    - name: make api
+      run: make api
