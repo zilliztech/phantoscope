@@ -29,6 +29,7 @@ def search_from_mapping(id):
 
 def search_ids_from_mapping(ids):
     try:
+        ids = [str(x) for x in ids]
         res = db.session.query(Mapping).filter(Mapping.id.in_(ids)).all()
         return res
     except Exception as e:
