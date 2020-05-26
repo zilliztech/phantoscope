@@ -18,14 +18,6 @@ def upload(name, **kwargs):
         bucket_name = app.buckets.split(",")[0]
         accept_fields = [x for x, y in app.fields.items() if y.get('type') != "object"]
         pipeline_fields = {x: y['pipeline'] for x, y in app.fields.items() if y.get('type') == "object"}
-        target_fields = kwargs['target_fields']
-        if target_fields:
-            target_file_name = "{}-{}-{}".format(name, "source", uuid.uuid4().hex)
-            target_url = target_fields.get('url')
-            target_data = target_fields.get("data")
-            target_tmp_path = save_tmp_file(target_file_name, target_data, target_url)
-            S3Ins.upload2bucket(bucket_name, target_tmp_path, target_file_name)
-
         new_fields = app.fields.copy()
         for k, v in kwargs.items():
             if k in accept_fields:
@@ -47,15 +39,14 @@ def upload(name, **kwargs):
             for vid in vids:
                 m = DB(id=vid, app_name=name,
                        image_url=gen_url(bucket_name, file_name),
-                       fields=new_fields,
-                       target_fields=target_fields)
+                       fields=new_fields)
                 add_mapping_data(m)
                 res.append(new_mapping_ins(id=vid, app_name=name,
                                            image_url=gen_url(bucket_name, file_name),
-                                           fields=new_fields,
-                                           target_fields=target_fields))
+                                           fields=new_fields))
         return res
     except Exception as e:
+        print(e)
         return e
 
 

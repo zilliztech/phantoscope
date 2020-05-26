@@ -132,7 +132,7 @@ def entities_list(name, num, page):
         for i in search_by_application(name, num, num*page):
             res.append(new_mapping_ins(id=i.id, app_name=i.app_name,
                                        image_url=i.image_url,
-                                       fields=i.fields, target_fields=i.target_fields))
+                                       fields=i.fields))
         logger.info("get application %s entity list", name)
         return res
     except Exception as e:
@@ -153,8 +153,7 @@ def delete_entity(app_name, entity_name):
         logger.info("delete entity %s in application %s", entity_name, app_name)
         return new_mapping_ins(
             id=entity.id, app_name=entity.app_name, image_url=entity.image_url,
-            fields=entity.fields, target_fields=entity.target_fields
-        )
+            fields=entity.fields)
     except Exception as e:
         logger.error(e)
         return e

@@ -27,8 +27,7 @@ def search(name, fields={}, topk=10, nprobe=16):
             dbs = search_ids_from_mapping([x.id for x in vids[0]])
             for db in dbs:
                 m = new_mapping_ins(id=db.id, app_name=db.app_name,
-                                    image_url=db.image_url, fields=db.fields,
-                                    target_fields=db.target_fields)
+                                    image_url=db.image_url, fields=db.fields)
                 res.append(m)
         return res
     except Exception as e:
