@@ -27,3 +27,7 @@ jobs:
         pip3 install wheel pylint
     - name: make api
       run: make api
+    - name: docker login
+      env:
+        DOCKERHUB_TOKEN: ${{ secrets.dockerhub }}
+      run: make push
