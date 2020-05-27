@@ -1,7 +1,7 @@
-![](https://github.com/zilliztech/omnisearch/blob/master/.github/logo-fake.png)
+![](https://github.com/zilliztech/phantoscope/blob/master/.github/logo-fake.png)
 
-Omnisearch is a cloud native image search engine powered by Milvus and neural networks
-
+Phantoscope is a cloud native image search engine powered by Milvus and neural networks
+![CI](https://github.com/zilliztech/phantoscope/workflows/CI/badge.svg?branch=master)
 🚀 **极快的搜索速度并可以处理十亿级别的图片**
 
 🎭 **完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
@@ -14,17 +14,17 @@ Omnisearch is a cloud native image search engine powered by Milvus and neural ne
 
 🚢 **即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
 
-[Here need a gif show what omnisearch can do]()
+[Here need a gif show what phantoscope can do]()
 ## Table of Contents
 
- - [Background](https://github.com/zilliztech/omnisearch#Background)
- - [Install](https://github.com/zilliztech/omnisearch#Install)
- - [QuickStart](https://github.com/zilliztech/omnisearch#QuickStart)
- - [Concepts](https://github.com/zilliztech/omnisearch#Concepts)
- - [Contributing](https://github.com/zilliztech/omnisearch#Contributing)
- - [Community](https://github.com/zilliztech/omnisearch#Community)
- - [Roadmap](https://github.com/zilliztech/omnisearch#Roadmap)
- - [License](https://github.com/zilliztech/omnisearch#License)
+ - [Background](https://github.com/zilliztech/phantoscope#Background)
+ - [Install](https://github.com/zilliztech/phantoscope#Install)
+ - [QuickStart](https://github.com/zilliztech/phantoscope#QuickStart)
+ - [Concepts](https://github.com/zilliztech/phantoscope#Concepts)
+ - [Contributing](https://github.com/zilliztech/phantoscope#Contributing)
+ - [Community](https://github.com/zilliztech/phantoscope#Community)
+ - [Roadmap](https://github.com/zilliztech/phantoscope#Roadmap)
+ - [License](https://github.com/zilliztech/phantoscope#License)
 ## Background
 人类的搜索不应该被局限在单词与短句
 
@@ -44,42 +44,42 @@ Omnisearch is a cloud native image search engine powered by Milvus and neural ne
 
 人们无法覆盖到所有的使用场景，那么就需要根据不同的场景进行改动，
 
-经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 omnisearch 
+经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 phantoscope 
 
 ## Install
 
-    $ wget https://github.com/zilliztech/omnisearch/blob/master/docker-compose.yml
+    $ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
     $ docker-compose up -d
 
 ## Build from code
 	
 	$ make all
 ## QuickStart
-Run an example omnisearch application from [here](https://github.com/zilliztech/omnisearch/tree/master/docs/quickstart)
+Run an example phantoscope application from [here](https://github.com/zilliztech/phantoscope/tree/master/docs/quickstart)
 
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
 ## Concepts
-从[这里](https://github.com/zilliztech/omnisearch/tree/master/docs/examples)你可以看到 omnisearch 在不同场景下的应用:
+从[这里](https://github.com/zilliztech/phantoscope/tree/master/docs/examples)你可以看到 phantoscope 在不同场景下的应用:
 
- - 根据图片中的人脸进行搜索![](https://github.com/zilliztech/omnisearch/blob/master/docs/examples/face.md)
- - 根据图片中的物体进行搜索![](https://github.com/zilliztech/omnisearch/blob/master/docs/examples/object.md)
+ - 根据图片中的人脸进行搜索![](https://github.com/zilliztech/phantoscope/blob/master/docs/examples/face.md)
+ - 根据图片中的物体进行搜索![](https://github.com/zilliztech/phantoscope/blob/master/docs/examples/object.md)
 
-从下面了解 omnisearch 中的概念
+从下面了解 phantoscope 中的概念
 
 雨水与水厂的动图 10s 或者短视频
-![](https://github.com/zilliztech/omnisearch/blob/master/.github/omnisearch-explain.png)
+![](https://github.com/zilliztech/phantoscope/blob/master/.github/phantoscope-explain.png)
 
 | Tutorials                                                                                              <img width=700/> | level  |
 |-------------------------------------------------------------------------------------------------------------------------|--------|
-| [What is operators](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorials/operator.md)                    | simple |
-| [What is pipeline](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorials/pipeline.md)                     | simple |
-| [What is application](https://github.com/zilliztech/omnisearch/tree/master/docs/tutorials/application.md)               | simple |
+| [What is operators](https://github.com/zilliztech/phantoscope/tree/master/docs/tutorials/operator.md)                    | simple |
+| [What is pipeline](https://github.com/zilliztech/phantoscope/tree/master/docs/tutorials/pipeline.md)                     | simple |
+| [What is application](https://github.com/zilliztech/phantoscope/tree/master/docs/tutorials/application.md)               | simple |
 ## Contributing
 Contributions are welcomed and greatly appreciated. 
 
-Please read our  [contribution guidelines](https://github.com/zilliztech/omnisearch/blob/master/CONTRIBUTING.md)  for detailed contribution workflow.
+Please read our  [contribution guidelines](https://github.com/zilliztech/phantoscope/blob/master/CONTRIBUTING.md)  for detailed contribution workflow.
 
-We use  [GitHub issues](https://github.com/zilliztech/omnisearch/issues)  to track issues and bugs. 
+We use  [GitHub issues](https://github.com/zilliztech/phantoscope/issues)  to track issues and bugs. 
 
 For general questions and public discussions, please join our community.
 
@@ -89,13 +89,13 @@ For general questions and public discussions, please join our community.
  - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
 ## Roadmap
-[GitHub milestones](https://github.com/zilliztech/omnisearch/milestones) lay out the path to the future improvements.
+[GitHub milestones](https://github.com/zilliztech/phantoscope/milestones) lay out the path to the future improvements.
 
 包括 Roadmap 在内，我们希望更多的人可以一起参与到 operators 的开发当中
 
-在 [这里](https://github.com/ReigenAraka/omnisearch-operators) 你可以找到如何开发一个 operator
+在 [这里](https://github.com/ReigenAraka/phantoscope-operators) 你可以找到如何开发一个 operator
 
-如果您有任何问题请随时联系我们 omnisearch@zilliz.com
+如果您有任何问题请随时联系我们 phantoscope@zilliz.com
 
 ## License
-Omnisearch is licensed under the Apache License, Version 2.0. 
+Phantoscope is licensed under the Apache License, Version 2.0. 
