@@ -1,24 +1,18 @@
 import base64
-import getopt
 import json
 import logging
 import os
-import sys
+import argparse
 import requests
 import multiprocessing
 import time
 from itertools import islice, takewhile, repeat
 
 logging.basicConfig(level=logging.INFO)
-data_dir = "/tmp/256_ObjectCategories"
-server_addr = "127.0.0.1:5000"
-app_name = "example"
-pipeline_name = None
 
 
-def get_app_body_fields(app_name):
-    global server_addr
-    url = "http://%s/v1/application/%s" % (server_addr, app_name)
+def get_app_body_fields(address, app_name):
+    url = "http://%s/v1/application/%s" % (address, app_name)
     try:
         reply = requests.get(url)
         content = json.loads(reply.content)
@@ -29,7 +23,8 @@ def get_app_body_fields(app_name):
         raise e
 
 
-def get_pipeline_field(all_fields, pipeline_name):
+def get_app_field_name(address, app_name, pipeline_name=None):
+    all_fields = get_app_body_fields(address, app_name)
     for field_name, value in all_fields.items():
         if value.get("type", None) == 'object':
             if (not pipeline_name) or value.get("pipeline") == pipeline_name:
@@ -41,21 +36,12 @@ def get_pipeline_field(all_fields, pipeline_name):
     raise Exception(err_msg)
 
 
-def get_app_field_name(app_name, pipeline_name=None):
-    app_fileds = get_app_body_fields(app_name)
-    image_field = get_pipeline_field(app_fileds, pipeline_name)
-    return image_field
-
-
 def construt_request_body(image_field, base64_image):
     template_data = {
         "fields": {
             image_field: {
                 "data": base64_image
             }
-        },
-        "targetFields": {
-            "data": base64_image
         }
     }
     return template_data
@@ -70,10 +56,13 @@ def get_file_num(data_path):
     return num
 
 
-def get_file_generator(data_path):
+def get_file_generator(data_path, file_max_num):
+    i = 0
     for root, dirs, files in os.walk(data_path):
         for file in files:
             if file.endswith(".jpg"):
+                i += 1
+                if i > file_max_num: break
                 yield os.path.join(root, file)
 
 
@@ -86,15 +75,17 @@ def upload_image(file_num, file_generator, field_name):
             encoded_string = base64.b64encode(image_file.read())
             encoded_string = str(encoded_string, encoding='utf-8')
             data = construt_request_body(field_name, encoded_string)
-
-            r = requests.post(upload_url, json=data)
-            if r.status_code == 200:
-                success_count += 1
-            else:
-                fail_count += 1
-                logging.warning("Upload file '%s' error due to: %s" % (img, r.content))
-            logging.debug("success: {} fail: {} total: {}".format(
-                success_count, fail_count, file_num))
+            try:
+                r = requests.post(upload_url, json=data)
+                if r.status_code == 200:
+                    success_count += 1
+                else:
+                    fail_count += 1
+                    logging.warning("Upload file '%s' error due to: %s" % (img, r.content))
+                logging.debug("success: {} fail: {} total: {}".format(
+                    success_count, fail_count, file_num))
+            except Exception as e:
+                logging.error("Upload file '%s' error due to: %s" % (img, str(e)))
 
     logging.info("All data has been uploaded: \n"
                  "success: {} fail: {} total: {}".format(
@@ -103,12 +94,11 @@ def upload_image(file_num, file_generator, field_name):
     logging.info('upload %d images cost: {:.3f}s'.format(end - start), file_num)
 
 
-def parallel_upload(file_num, file_generator, field_name, batch_size):
+def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_num=12):
     split_every = (lambda n, it:
                    takewhile(bool, (list(islice(it, n)) for _ in repeat(None))))
-    core = 8
     start = time.time()
-    with multiprocessing.Pool(processes=core) as pool:
+    with multiprocessing.Pool(processes=pool_num) as pool:
         pool_list = []
         splited_list = split_every(batch_size, iter(file_generator))
         for tmp_list in splited_list:
@@ -120,33 +110,26 @@ def parallel_upload(file_num, file_generator, field_name, batch_size):
 
 
 if __name__ == "__main__":
-    opts, args = getopt.getopt(sys.argv[1:], '-h-d:-s:-a:-p:',
-                               ['help', 'data_path=', "server=", 'app_name', 'pipeline_name'])
-    for opt_name, opt_value in opts:
-        if opt_name in ('-h', '--help'):
-            logging.info("[*] Help info")
-            exit()
-        if opt_name in ('-s', '--server'):
-            server_addr = opt_value
-            logging.info("[*] Server address:port is %s", server_addr)
-            continue
-        if opt_name in ('-d', '--data_path'):
-            data_dir = opt_value
-            logging.info("[*] Data directory is %s", data_dir)
-            continue
-        if opt_name in ('-a', '--app_name'):
-            app_name = opt_value
-            logging.info("[*] Application name is %s", app_name)
-            continue
-        if opt_name in ('-p', '--pipeline_name'):
-            pipeline_name = opt_value
-            logging.info("[*] Pipeline name is %s", pipeline_name)
-            continue
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--app_name", type=str, help='assigned app name',
+                        dest='app_name', default='example')
+    parser.add_argument("-p", "--pipeline_name", type=str, help='assigned pipeline name',
+                        dest='pipeline_name', default=None)
+    parser.add_argument("-d", "--data_path", type=str, help='assigned data path',
+                        dest='data_dir')
+    parser.add_argument("-s", "--server", type=str, help='assigned search api address',
+                        dest='server_addr', default='127.0.0.1:5000')
+    args = parser.parse_args()
 
-    upload_url = "http://%s/v1/application/%s/upload" % (server_addr, app_name)
+    upload_url = "http://%s/v1/application/%s/upload" % (args.server_addr, args.app_name)
     logging.info("upload url is %s", upload_url)
 
-    image_field_name = get_app_field_name(app_name, pipeline_name)
-    file_num = get_file_num(data_dir)
-    file_generator = get_file_generator(data_dir)
-    parallel_upload(file_num, file_generator, image_field_name, 500)
+    batch_size = 500
+    pool_num = 12
+
+    image_field_name = get_app_field_name(args.server_addr, args.app_name, args.pipeline_name)
+    file_num = get_file_num(args.data_dir)
+    # ensure all images can be allocated to processes evently [[for test speed]]
+    # file_num = file_num // (batch_size * pool_num) * (batch_size * pool_num)
+    file_generator = get_file_generator(args.data_dir, file_num)
+    parallel_upload(file_num, file_generator, image_field_name, batch_size, pool_num)
