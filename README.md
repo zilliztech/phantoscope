@@ -1,7 +1,9 @@
 ![](https://github.com/zilliztech/phantoscope/blob/master/.github/logo-fake.png)
 
 Phantoscope is a cloud native image search engine powered by Milvus and neural networks
+
 ![CI](https://github.com/zilliztech/phantoscope/workflows/CI/badge.svg?branch=master)
+
 🚀 **极快的搜索速度并可以处理十亿级别的图片**
 
 🎭 **完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
