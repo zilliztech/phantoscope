@@ -51,6 +51,7 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 ## Install
 
     $ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
+    $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
     $ docker-compose up -d
 
 ## Build from code

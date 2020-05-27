@@ -1,14 +1,14 @@
 version: '3'
 services:
   api:
-    image: milvus.io/om-search:10ea4ce
+    image: phantoscope/api-server:5f492c2
     ports:
       - "5000:5000"
     environment:
-      - MINIO_ADDR=192.168.1.10:9000
+      - MINIO_ADDR=minio:9000
       - UPLOAD_FOLDER=/tmp
-      - MILVUS_ADDR=192.168.1.10
-      - SEARCH_IMAGES_DATABASE_EP=mysql://root:passwd@192.168.1.10:3306/search
+      - MILVUS_ADDR=milvus
+      - SEARCH_IMAGES_DATABASE_EP=mysql://root:passwd@mysql:3306/search
       - SEARCH_IMAGES_DATABASE_USERNAME=root
       - SEARCH_IMAGES_DATABASE_PASSWD=passwd
       - MILVUS_PORT=19530
@@ -44,6 +44,6 @@ services:
     ports:
       - "50001:50001"
     environment:
-      - OP_ENDPOINT=192.168.1.10:50001
+      - OP_ENDPOINT=${LOCAL_ADDRESS}:50001
     depends_on:
       - api

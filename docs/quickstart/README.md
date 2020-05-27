@@ -1,39 +1,6 @@
 # Omnisearch Quick Start
 ## Before you begin
-Install Omnisearch
-## Regist operators
-
-    curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-	    "endpoint": "127.0.0.1:50001",
-	    "name": "vgg_example"
-    }'
-## Create a pipeline
-
-    curl --location --request POST '127.0.0.1:5000/v1/pipeline/vgg' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-    	"input": "image",
-    	"description": "pipeline test",
-    	"processors": "",
-    	"encoder": "vgg_example",
-    	"indexFileSize": 1024
-    }'
-
-## Create a application
-
-    curl --location --request POST '127.0.0.1:5000/v1/application/example' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-    "fields":{
-    	"full": {
-    		"type": "object",
-    		"pipeline": "vgg"
-     	}
-    },
-    "s3Buckets": "example"
-    }'
+确定 omnisearch 已经成功安装在您的系统当中
 
 ## Download image data
 
@@ -41,14 +8,14 @@ Install Omnisearch
 
 ## Upload image data
 		tar xvf /tmp/vgg-example.tar
-		python load_data.py
+		python load_data.py -s 127.0.0.1:5000 -a example -p example /tmp/vgg-example
 ## Use application to search
 
     curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
     --header 'Content-Type: application/json' \
     --data-raw '{
     	"fields": {
-            "full": {
+            "example": {
                 "url": "https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7"
             }
         },
