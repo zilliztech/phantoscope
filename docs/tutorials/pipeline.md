@@ -1,5 +1,5 @@
 # 什么是 Pipeline
-Pipeline 是 omnisearch 中用来组合 Operator 的，是对数据处理流程的抽象
+Pipeline 是 phatoscope 中用来组合 Operator 的，是对数据处理流程的抽象
 
 负责将上一个 operator 的输出传送到下一个 operator 的输入
 

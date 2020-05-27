@@ -1,6 +1,6 @@
-# Omnisearch Quick Start
+# Phantoscope Quick Start
 ## Before you begin
-确定 omnisearch 已经成功安装在您的系统当中
+确定 Phantoscope 已经成功安装在您的系统当中
 
 ## Download image data
 

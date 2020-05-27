@@ -96,7 +96,7 @@ For general questions and public discussions, please join our community.
 
 包括 Roadmap 在内，我们希望更多的人可以一起参与到 operators 的开发当中
 
-在 [这里](https://github.com/ReigenAraka/phantoscope-operators) 你可以找到如何开发一个 operator
+在 [这里](https://github.com/ReigenAraka/omnisearch-operators) 你可以找到如何开发一个 operator
 
 如果您有任何问题请随时联系我们 phantoscope@zilliz.com
 
