@@ -5,7 +5,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MINIO_ADDR=minio:9000
+      - MINIO_ADDR=${LOCAL_ADDRESS}:9000
       - UPLOAD_FOLDER=/tmp
       - MILVUS_ADDR=milvus
       - SEARCH_IMAGES_DATABASE_EP=mysql://root:passwd@mysql:3306/search

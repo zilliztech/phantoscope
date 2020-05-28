@@ -31,4 +31,4 @@ def search(name, fields={}, topk=10, nprobe=16):
                 res.append(m)
         return res
     except Exception as e:
-        return e
+        raise e
