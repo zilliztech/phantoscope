@@ -16,20 +16,22 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 
 🚢 **即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
 
-[Here need a gif show what phantoscope can do]()
+
 
 ## Table of Contents
 
- - [Background](#background)
- - [Install](#install)
- - [QuickStart](#quickStart)
- - [Concepts](#concepts)
- - [Contributing](#contributing)
- - [Community](#community)
- - [Roadmap](#roadmap)
- - [License](#license)
+- [Background](#background)
+- [Install](#install)
+- [QuickStart](#quickStart)
+- [Concepts](#concepts)
+- [Contributing](#contributing)
+- [Community](#community)
+- [Roadmap](#roadmap)
+- [License](#license)
 
-<a href=”#background”/>
+
+
+<a href="#background"></a>
 ## Background
 
 人类的搜索不应该被局限在单词与短句。
@@ -52,28 +54,31 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 
 经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 Phantoscope。
 
-<a href="#install"/>
+<a href="#install"></a>
 ## Install
 
-    $ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
-    $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-    $ docker-compose up -d
+```
+$ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
+$ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+$ docker-compose up -d
+```
 
 ## Build from code
 
-	$ make all
+```
+$ make all
+```
 
-<a href="#quickstart"/>
-
+<a href="#quickstart"></a>
 ## QuickStart
 
 Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
 
-<a href="#concepts"/>
-
+<a href="#concepts"></a>
 ## Concepts
+
 从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
 
  - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
@@ -90,7 +95,7 @@ Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 | [What is pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                     | simple |
 | [What is application](./docs/site/zh-CN/tutorials/application.md)               | simple |
 
-<a href="#contributing"/>
+<a href="#contributing"></a>
 ## Contributing
 
 Contributions are welcomed and greatly appreciated. 
@@ -101,14 +106,13 @@ We use [GitHub issues](https://github.com/zilliztech/phantoscope/issues) to trac
 
 For general questions and public discussions, please join our community.
 
-<a href="#community"/>
-
+<a href="#community"></a>
 ## Community
 
 - Slack Channel 这里可以进行沟通与咨询在使用过程中遇到的问题
 - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
-<a href="#roadmap"/>
+<a href="#roadmap"></a>
 
 ## Roadmap
 [GitHub milestones](https://github.com/zilliztech/phantoscope/milestones) lay out the path to the future improvements.
@@ -119,7 +123,7 @@ For general questions and public discussions, please join our community.
 
 如果您有任何问题请随时联系我们 phantoscope@zilliz.com
 
-<a href="#license"/>
-
+<a href="#license"></a>
 ## License
+
 Phantoscope is licensed under the Apache License, Version 2.0. 
