@@ -55,17 +55,17 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
     $ docker-compose up -d
 
 ## Build from code
-	
+
 	$ make all
 ## QuickStart
-Run an example phantoscope application from [here](https://github.com/zilliztech/phantoscope/tree/master/docs/quickstart)
+Run an example phantoscope application from [here](./docs/site/cn/quickstart)
 
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
 ## Concepts
-从[这里](https://github.com/zilliztech/phantoscope/tree/master/docs/examples)你可以看到 phantoscope 在不同场景下的应用:
+从[这里](./docs/site/zh-CN/examples)你可以看到 Phantoscope 在不同场景下的应用:
 
- - 根据图片中的人脸进行搜索![](https://github.com/zilliztech/phantoscope/blob/master/docs/examples/face.md)
- - 根据图片中的物体进行搜索![](https://github.com/zilliztech/phantoscope/blob/master/docs/examples/object.md)
+ - 根据图片中的人脸进行搜索![](./docs/examples/face.md)
+ - 根据图片中的物体进行搜索![](./docs/examples/object.md)
 
 从下面了解 phantoscope 中的概念
 
@@ -74,13 +74,13 @@ Run an example phantoscope application from [here](https://github.com/zilliztech
 
 | Tutorials                                                                                              <img width=700/> | level  |
 |-------------------------------------------------------------------------------------------------------------------------|--------|
-| [What is operators](https://github.com/zilliztech/phantoscope/tree/master/docs/tutorials/operator.md)                    | simple |
-| [What is pipeline](https://github.com/zilliztech/phantoscope/tree/master/docs/tutorials/pipeline.md)                     | simple |
-| [What is application](https://github.com/zilliztech/phantoscope/tree/master/docs/tutorials/application.md)               | simple |
+| [What is operators](./docs/tutorials/operator.md)                    | simple |
+| [What is pipeline](./docs/tutorials/pipeline.md)                     | simple |
+| [What is application](./docs/tutorials/application.md)               | simple |
 ## Contributing
 Contributions are welcomed and greatly appreciated. 
 
-Please read our  [contribution guidelines](https://github.com/zilliztech/phantoscope/blob/master/CONTRIBUTING.md)  for detailed contribution workflow.
+Please read our  [contribution guidelines](CONTRIBUTING.md)  for detailed contribution workflow.
 
 We use  [GitHub issues](https://github.com/zilliztech/phantoscope/issues)  to track issues and bugs. 
 
