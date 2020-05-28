@@ -1,4 +1,4 @@
-# Omnisearch open api docs
+# Phantoscope open api docs
 
 ## How to use it 
 

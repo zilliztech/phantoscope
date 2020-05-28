@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: This is omnisearch open api
+  description: Following are Phantoscope open APIs.
   version: 1.0.0
   title: Omnisearch Open Api
   contact:
