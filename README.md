@@ -29,8 +29,9 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
  - [Roadmap](#roadmap)
  - [License](#license)
 
-<a href=”#background”>
+<a href=”#background”/>
 ## Background
+
 人类的搜索不应该被局限在单词与短句。
 
 随着音频、视频的数据所占比重越来越大，在未来还会有更多更高维度的数据出现在我们的日常生活当中。
@@ -52,7 +53,6 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 Phantoscope。
 
 <a href="#install"/>
-
 ## Install
 
     $ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
@@ -66,6 +66,7 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 <a href="#quickstart"/>
 
 ## QuickStart
+
 Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
@@ -73,7 +74,7 @@ Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 <a href="#concepts"/>
 
 ## Concepts
-从[这里](./docs/site/zh-CN/examples)你可以看到 Phantoscope 在不同场景下的应用:
+从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
 
  - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
  - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
@@ -90,13 +91,13 @@ Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 | [What is application](./docs/site/zh-CN/tutorials/application.md)               | simple |
 
 <a href="#contributing"/>
-
 ## Contributing
+
 Contributions are welcomed and greatly appreciated. 
 
-Please read our  [contribution guidelines](CONTRIBUTING.md)  for detailed contribution workflow.
+Please read our [contribution guidelines](CONTRIBUTING.md) for detailed contribution workflow.
 
-We use  [GitHub issues](https://github.com/zilliztech/phantoscope/issues)  to track issues and bugs. 
+We use [GitHub issues](https://github.com/zilliztech/phantoscope/issues) to track issues and bugs. 
 
 For general questions and public discussions, please join our community.
 
@@ -104,8 +105,8 @@ For general questions and public discussions, please join our community.
 
 ## Community
 
- - Slack Channel 这里可以进行沟通与咨询在使用过程中遇到的问题
- - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
+- Slack Channel 这里可以进行沟通与咨询在使用过程中遇到的问题
+- [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
 <a href="#roadmap"/>
 
