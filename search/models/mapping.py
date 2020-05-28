@@ -31,7 +31,7 @@ def search_ids_from_mapping(ids):
     try:
         ids = [str(x) for x in ids]
         res = db.session.query(Mapping).filter(Mapping.id.in_(ids)).all()
-        c = sorted(res, key = lambda x: ids.index(x.id))
+        res.sort(key=lambda x: ids.index(x.id))
         return res
     except Exception as e:
         raise QueryFromSQLError("query from sql error", e.orig.args[-1])
