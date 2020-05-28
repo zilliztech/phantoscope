@@ -3,7 +3,7 @@
 ##  背景
 提取画面中的人脸并进行搜索
 ##  使用到的模块
-face embedding && MTCNN-face-detector  in [omnisearch operators](https://github.com/ReigenAraka/omnisearch-operators)
+face embedding && MTCNN-face-detector  in [Phantoscope operators](https://github.com/ReigenAraka/omnisearch-operators)
 ##  准备数据
 下载包含人脸的实验数据
 ```bash
@@ -18,7 +18,8 @@ docker run -d -p 50004:50004 -e OP_ENDPOINT=${host_ip}:50004 milvus.io/om-operat
 docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 milvus.io/om-operators/mtcnn-face-detector:v1
 ```
 
-2.将 face-embedding 与 mtcnn-face-detector 加载到 omnisearch 中
+2.将 face-embedding 与 mtcnn-face-detector 加载到 Phantoscope 中
+
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
@@ -34,7 +35,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
     "name": "mtcnn_face_detector"
 }'
 ```
-    
+
 3.创建一条 pipeline 用于提取人脸并将数据转化为向量
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/pipeline/face' \

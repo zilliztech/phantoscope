@@ -2,6 +2,10 @@
 ## Before you begin
 确定 Phantoscope 已经成功安装在您的系统当中
 
+## Prepare environment
+    chmod +x prepare.sh
+    ./prepare.sh
+
 ## Download image data
 
     curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar

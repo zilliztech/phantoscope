@@ -3,7 +3,7 @@
 ##  背景
 提取画面中的物体并进行搜索
 ##  使用到的模块
-ssd-object-detector &&  xception in [omnisearch operators](https://github.com/ReigenAraka/omnisearch-operators)
+ssd-object-detector &&  xception in [Phantoscope operators](https://github.com/ReigenAraka/omnisearch-operators)
 
 ##  准备数据
 下载包含物体的实验数据
@@ -18,8 +18,9 @@ export host_ip=192.168.2.3
 docker run -d -p 50010:50010 -e OP_ENDPOINT=${host_ip}:50010 milvus.io/om-operators/ssd-object-detector:v1 
 docker run -d -p 50011:50011 -e OP_ENDPOINT=${host_ip}:50011 milvus.io/om-operators/xception:v1 
 ```
-    
-2.将 ssd-object-detector与 xception 加载到 omnisearch 中
+
+2.将 ssd-object-detector与 xception 加载到 Phantoscope 中
+
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
@@ -34,7 +35,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
     "name": "xception"
 }'
 ```
-   
+
 3.创建一条 pipeline 用于提取物体并将数据转化为向量
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
