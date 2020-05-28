@@ -19,35 +19,38 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 [Here need a gif show what phantoscope can do]()
 ## Table of Contents
 
- - [Background](https://github.com/zilliztech/phantoscope#Background)
- - [Install](https://github.com/zilliztech/phantoscope#Install)
- - [QuickStart](https://github.com/zilliztech/phantoscope#QuickStart)
- - [Concepts](https://github.com/zilliztech/phantoscope#Concepts)
- - [Contributing](https://github.com/zilliztech/phantoscope#Contributing)
- - [Community](https://github.com/zilliztech/phantoscope#Community)
- - [Roadmap](https://github.com/zilliztech/phantoscope#Roadmap)
- - [License](https://github.com/zilliztech/phantoscope#License)
+ - [Background](#background)
+ - [Install](#install)
+ - [QuickStart](#quickStart)
+ - [Concepts](#concepts)
+ - [Contributing](#contributing)
+ - [Community](#community)
+ - [Roadmap](#roadmap)
+ - [License](#license)
+
+<a href=”#background”>
 ## Background
-人类的搜索不应该被局限在单词与短句
+人类的搜索不应该被局限在单词与短句。
 
-随着音频、视频的数据所占比重越来越大，在未来还会有更多更高维度的数据出现在我们的日常生活当中
+随着音频、视频的数据所占比重越来越大，在未来还会有更多更高维度的数据出现在我们的日常生活当中。
 
-人们需要搜索拥有更高密度信息的数据，目前的图片、视频、音频，在未来还会有 3D 模型、VR 数据等等更复杂的数据
+人们需要搜索拥有更高密度信息的数据，目前的图片、视频、音频，在未来还会有 3D 模型、VR 数据等等更复杂的数据。
 
-搜索变成了一件复杂的事情
+搜索变成了一件复杂的事情。
 
-单一的文本搜索无法满足维度日益增加的搜索需求
+单一的文本搜索无法满足维度日益增加的搜索需求。
 
 然而多维度的搜索面临着问题---搜索的重心在哪里?
 
-一张图片中包含的几十个单词构成的信息，一个几秒钟的视频又包含了上百长的图片以及对应的音频，传统的搜索模式无法满足现有的场景
+一张图片中包含的几十个单词构成的信息，一个几秒钟的视频又包含了上百长的图片以及对应的音频，传统的搜索模式无法满足现有的场景。
 
-不同人在不同条件下搜索的重心各不相同，针对不同场景的多维度搜索成为了重要功能
+不同人在不同条件下搜索的重心各不相同，针对不同场景的多维度搜索成为了重要功能。
 
 人们无法覆盖到所有的使用场景，那么就需要根据不同的场景进行改动，
 
-经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 phantoscope 
+经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 Phantoscope。
 
+<a href=”#install”>
 ## Install
 
     $ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
@@ -57,26 +60,32 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 ## Build from code
 
 	$ make all
+
+<a href=”#quickstart”>
 ## QuickStart
-Run an example phantoscope application from [here](./docs/site/cn/quickstart)
+Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
+
+<a href=”#concepts”>
 ## Concepts
 从[这里](./docs/site/zh-CN/examples)你可以看到 Phantoscope 在不同场景下的应用:
 
- - 根据图片中的人脸进行搜索![](./docs/examples/face.md)
- - 根据图片中的物体进行搜索![](./docs/examples/object.md)
+ - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
+ - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
 
-从下面了解 phantoscope 中的概念
+从下面了解 Phantoscope 中的概念
 
 雨水与水厂的动图 10s 或者短视频
-![](https://github.com/zilliztech/phantoscope/blob/master/.github/phantoscope-explain.png)
+![](/.github/phantoscope-explain.png)
 
 | Tutorials                                                                                              <img width=700/> | level  |
 |-------------------------------------------------------------------------------------------------------------------------|--------|
-| [What is operators](./docs/tutorials/operator.md)                    | simple |
-| [What is pipeline](./docs/tutorials/pipeline.md)                     | simple |
-| [What is application](./docs/tutorials/application.md)               | simple |
+| [What is operators](./docs/site/zh-CN/tutorials/operator.md)                    | simple |
+| [What is pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                     | simple |
+| [What is application](./docs/site/zh-CN/tutorials/application.md)               | simple |
+
+<a href=”#contributing”>
 ## Contributing
 Contributions are welcomed and greatly appreciated. 
 
@@ -85,6 +94,7 @@ Please read our  [contribution guidelines](CONTRIBUTING.md)  for detailed contri
 We use  [GitHub issues](https://github.com/zilliztech/phantoscope/issues)  to track issues and bugs. 
 
 For general questions and public discussions, please join our community.
+
 
 ## Community
 
