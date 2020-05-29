@@ -6,9 +6,10 @@ logging.basicConfig(level=logging.INFO)
 # now hard-code in local
 host_ip = "192.168.2.3"
 vgg_port = 50001
-face_detector_port = 50004
-face_encoder_port = 50005
-face_images_folder = os.path.join(os.getcwd(), "")
+face_detector_port = 50005
+face_encoder_port = 50004
+# ensure all face images exist a well-detected face
+face_images_folder = os.path.join(os.getcwd(), "99.face")
 dogs_images_folder = os.path.join(os.getcwd(), "056.dog")
 giraffe_images_folder = os.path.join(os.getcwd(), "084.giraffe")
 
@@ -32,6 +33,29 @@ def vgg_app():
     delete_operator(operator_name)
 
 
+@pytest.fixture()
+def face_app():
+    operator_endpoint1 = "%s:%d" % (host_ip, face_detector_port)
+    operator_endpoint2 = "%s:%d" % (host_ip, face_encoder_port)
+    operator_name1 = "face_detector"
+    operator_name2 = "face_embedding"
+    pipeline_name = "face_pipeline"
+    image_field_name = pipeline_name + "_image"
+    app_name = "face_app"
+
+    register_operator(operator_endpoint1, operator_name1)
+    register_operator(operator_endpoint2, operator_name2)
+    create_pipeline(pipeline_name, encoder_name=operator_name2, processors=operator_name1)
+    create_app(app_name, pipeline_name, image_field_name)
+
+    yield
+
+    delete_application(app_name)
+    delete_pipeline(pipeline_name)
+    delete_operator(operator_name1)
+    delete_operator(operator_name2)
+
+
 def test_object_app(vgg_app):
     pipeline_name = "vgg_pipeline"
     image_field_name = pipeline_name + "_image"
@@ -45,31 +69,19 @@ def test_object_app(vgg_app):
     search(app_name, image_field_name, giraffe_images_folder, if_show=global_show_search_result)
 
 
-@pytest.mark.skip(reason='test images do not exist')
-def test_face_app():
-    operator_endpoint1 = "%s:%d" % (host_ip, face_detector_port)
-    operator_endpoint2 = "%s:%d" % (host_ip, face_encoder_port)
-    operator_name1 = "face_detector"
-    operator_name2 = "face_embedding"
+# @pytest.mark.skip(reason='test images do not exist')
+def test_face_app(face_app):
     pipeline_name = "face_pipeline"
     image_field_name = pipeline_name + "_image"
     app_name = "face_app"
 
-    register_operator(operator_endpoint1, operator_name1)
-    register_operator(operator_endpoint2, operator_name2)
-
-    create_pipeline(pipeline_name, encoder_name=operator_name2, processors=operator_name1)
-    create_app(app_name, pipeline_name, image_field_name)
-
-    search(app_name, image_field_name, face_images_folder)
+    with pytest.raises(Exception) as e:
+        search(app_name, image_field_name, face_images_folder, if_show=global_show_search_result)
     upload(app_name, image_field_name, face_images_folder)
-    search(app_name, image_field_name, dogs_images_folder)
-    search(app_name, image_field_name, face_images_folder)
-
-    delete_application(app_name)
-    delete_pipeline(pipeline_name)
-    delete_operator(operator_name1)
-    delete_operator(operator_name2)
+    # error due to no face detected, maybe this need to be adjusted
+    with pytest.raises(Exception) as e:
+        search(app_name, image_field_name, dogs_images_folder, if_show=global_show_search_result)
+    search(app_name, image_field_name, face_images_folder, if_show=global_show_search_result)
 
 
 def test_none_search():
