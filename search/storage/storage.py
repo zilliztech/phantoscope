@@ -72,10 +72,10 @@ class MilvusIns:
             milvus.connect(MILVUS_ADDR, MILVUS_PORT)
             res, ids = milvus.search(collection_name=name, query_records=vector, top_k=topk, params=search_param)
             if not res.OK():
-                raise MilvusError("There has some error when insert vectors", res)
+                raise MilvusError("There has some error when search vectors", res)
             return ids
         except Exception as e:
-            raise MilvusError("There has some error when insert vectors", e)
+            raise MilvusError("There has some error when search vectors", e)
 
     @staticmethod
     def del_vectors(collection_name, ids):
