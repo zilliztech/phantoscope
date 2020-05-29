@@ -9,6 +9,7 @@ import time
 from itertools import islice, takewhile, repeat
 
 logging.basicConfig(level=logging.INFO)
+accept_image_ends = ["jpg", "jpeg", "png"]
 
 
 def get_app_body_fields(address, app_name):
@@ -51,7 +52,7 @@ def get_file_num(data_path):
     num = 0
     for root, dirs, files in os.walk(data_path):
         for file in files:
-            if file.endswith(".jpg"):
+            if file.split('.')[-1] in accept_image_ends:
                 num += 1
     return num
 
@@ -60,7 +61,7 @@ def get_file_generator(data_path, file_max_num):
     i = 0
     for root, dirs, files in os.walk(data_path):
         for file in files:
-            if file.endswith(".jpg"):
+            if file.split('.')[-1] in accept_image_ends:
                 i += 1
                 if i > file_max_num: break
                 yield os.path.join(root, file)
