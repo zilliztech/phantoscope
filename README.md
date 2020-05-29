@@ -50,7 +50,7 @@ $ make all
 <a href="#quickstart"></a>
 ## QuickStart
 
-Click [here](./docs/site/zh-CN/quickstart) to set up a simple Phantoscope application. You can use it to upload and search images.
+Click [here](./docs/site/en/quickstart) to set up a simple Phantoscope application. You can use it to upload and search images.
 
 <a href="#concepts"></a>
 ## Concepts
