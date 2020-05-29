@@ -31,6 +31,8 @@ def vgg_app():
     delete_application(app_name)
     delete_pipeline(pipeline_name)
     delete_operator(operator_name)
+    # wait for 1s ensure all are been deleted
+    time.sleep(1)
 
 
 @pytest.fixture()
@@ -84,17 +86,11 @@ def test_face_app(face_app):
     search(app_name, image_field_name, face_images_folder, if_show=global_show_search_result)
 
 
-def test_none_search():
-    operator_endpoint = "%s:%d" % (host_ip, vgg_port)
-    operator_name = "none_vgg16"
-    pipeline_name = "none_vgg_pipeline"
+def test_none_search(vgg_app):
+    pipeline_name = "vgg_pipeline"
     image_field_name = pipeline_name + "_image"
-    app_name = "none_app"
-    none_app_name = "none_app_none"
-
-    register_operator(operator_endpoint, operator_name)
-    create_pipeline(pipeline_name, operator_name)
-    create_app(app_name, pipeline_name, image_field_name)
+    app_name = "vgg_app"
+    none_app_name = "vgg_app_none"
 
     # search before upload
     logging.debug("search in a nonexistent app with no images1")
@@ -128,21 +124,11 @@ def test_none_search():
     nprob = random.randint(1, 1000)
     search(app_name, image_field_name, dogs_images_folder, topk=topk, nprob=nprob)
 
-    delete_application(app_name)
-    delete_pipeline(pipeline_name)
-    delete_operator(operator_name)
 
-
-def test_search_topk():
-    operator_endpoint = "%s:%d" % (host_ip, vgg_port)
-    operator_name = "topk_vgg16"
-    pipeline_name = "topk_vgg_pipeline"
+def test_search_topk(vgg_app):
+    pipeline_name = "vgg_pipeline"
     image_field_name = pipeline_name + "_image"
-    app_name = "topk_app"
-
-    register_operator(operator_endpoint, operator_name)
-    create_pipeline(pipeline_name, operator_name)
-    create_app(app_name, pipeline_name, image_field_name)
+    app_name = "vgg_app"
 
     upload(app_name, image_field_name, dogs_images_folder)
 
@@ -158,21 +144,11 @@ def test_search_topk():
         with pytest.raises(Exception) as e:
             search(app_name, image_field_name, dogs_images_folder, topk=i, nprob=nprob)
 
-    delete_application(app_name)
-    delete_pipeline(pipeline_name)
-    delete_operator(operator_name)
 
-
-def test_search_nprobe():
-    operator_endpoint = "%s:%d" % (host_ip, vgg_port)
-    operator_name = "nprobe_vgg16"
-    pipeline_name = "nprobe_vgg_pipeline"
+def test_search_nprobe(vgg_app):
+    pipeline_name = "vgg_pipeline"
     image_field_name = pipeline_name + "_image"
-    app_name = "nprobe_app"
-
-    register_operator(operator_endpoint, operator_name)
-    create_pipeline(pipeline_name, operator_name)
-    create_app(app_name, pipeline_name, image_field_name)
+    app_name = "vgg_app"
 
     upload(app_name, image_field_name, dogs_images_folder)
 
@@ -186,7 +162,3 @@ def test_search_nprobe():
     for i in range(-10, 1):
         nprob = random.randint(1, 1000)
         search(app_name, image_field_name, dogs_images_folder, topk=nprob, nprob=i)
-
-    delete_application(app_name)
-    delete_pipeline(pipeline_name)
-    delete_operator(operator_name)
