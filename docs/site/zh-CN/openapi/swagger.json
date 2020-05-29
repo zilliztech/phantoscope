@@ -76,13 +76,13 @@ paths:
           $ref: '#/definitions/Application'
       responses:
         201:
-          description: successful create
+          description: successfully created
           schema:
             $ref: '#/definitions/Application'
     delete:
       tags:
       - application
-      summary: delete applicaiton
+      summary: delete application
       produces:
       - application/json
       parameters:
@@ -112,11 +112,11 @@ paths:
       - in: body
         name: fields
         description: none
-        schema:
+        schema:s
           $ref: '#/definitions/Fields'
       responses:
         200:
-          description: succesful
+          description: successful
   /application/{applicationName}/upload:
     post:
       tags:
@@ -134,12 +134,12 @@ paths:
         required: true
       - in: body
         name: fields
-        description: none
+        description: nones
         schema:
           $ref: '#/definitions/Fields'
       responses:
         200:
-          description: succesful
+          description: successful
   /application/{applicationName}/entity:
     get:
       tags:
@@ -155,7 +155,7 @@ paths:
         required: true
       responses:
         200:
-          description: succesful
+          description: successful
   /application/{applicationName}/entity/{entityName}:
     delete:
       tags:
@@ -175,10 +175,10 @@ paths:
         name: entityName
         description: none
         type: string
-        required: true
+        required: trues
       responses:
         200:
-          description: succesful
+          description: successful
   /pipeline:
     get:
       tags:
@@ -283,11 +283,11 @@ paths:
         schema:
           $ref: '#/definitions/OperatorPost'
       responses:
-        200:
+        200:r
           description: OK
           schema:
             $ref: '#/definitions/Operator'
-  /opetator/{operatorName}:
+  /operator/{operatorName}:
     get:
       tags:
       - operator
@@ -371,7 +371,7 @@ definitions:
         type: string
       input:
         type: string
-      outout:
+      output:
         type: string
       endpoint:
         type: string

@@ -1,19 +1,19 @@
-# Phantoscope Quick Start
+# Phantoscope 快速开始
 ## Before you begin
-确定 Phantoscope 已经成功安装在您的系统当中
+确定 Phantoscope 已经成功安装在您的系统当中。
 
-## Prepare environment
+## 准备环境
     chmod +x prepare.sh
     ./prepare.sh
 
-## Download image data
+## 下载图片数据
 
     curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
 
-## Upload image data
+## 上传图片数据
 		tar xvf /tmp/vgg-example.tar
 		python load_data.py -s 127.0.0.1:5000 -a example -p example /tmp/vgg-example
-## Use application to search
+## 使用默认的 application 进行搜索
 
     curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
     --header 'Content-Type: application/json' \

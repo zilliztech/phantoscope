@@ -1,4 +1,4 @@
-# Phantoscope open api docs
+# Phantoscope open API docs
 
 ## How to use it 
 
