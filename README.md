@@ -1,6 +1,13 @@
 ![](https://github.com/zilliztech/phantoscope/blob/master/.github/phantoscope-logo-fake.png)
 
 ![CI](https://github.com/zilliztech/phantoscope/workflows/CI/badge.svg?branch=master)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
 
 Phantoscope is an image search engine developed on Milvus and neutral networks. 
 
