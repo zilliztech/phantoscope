@@ -74,6 +74,7 @@ $ make all
 
 Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
 
+
 这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
 
 <a href="#concepts"></a>
