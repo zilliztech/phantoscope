@@ -1,0 +1,93 @@
+# Detect Human Face from an Image and Search
+
+##  Description
+This article describe how to extract human face from an image and use it to conduct a face search. 
+##  Operators to Use
+
+- **face-embedding** 
+- **mtcnn-face-detector**
+
+>  You can find the these two operators from [Phantoscope operators](https://github.com/ReigenAraka/omnisearch-operators)
+
+##  Prerequisite
+Ensure that you have downloaded the following **.tar** package.
+```bash
+curl http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar -o /tmp/VOCtrainval_11-May-2012.tar
+```
+
+## Steps
+1. Run **face-embedding** and **mtcnn-face-detector**. Set the environment variable `host_ip` as your local intranet IP.  
+
+```bash
+export host_ip=192.168.2.3
+docker run -d -p 50004:50004 -e OP_ENDPOINT=${host_ip}:50004 milvus.io/om-operators/face-embedding:v1
+docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 milvus.io/om-operators/mtcnn-face-detector:v1
+```
+
+2. Load the **face-embedding** and **mtcnn-face-detector** to Phantoscope.
+
+```bash
+curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "endpoint": "${host_ip}:50004",
+    "name": "face_embedding"
+}'
+	
+curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "endpoint": "${host_ip}:50005",
+    "name": "mtcnn_face_detector"
+}'
+```
+
+3. Create a pipeline for extracting human face and converting it to vector. 
+
+```bash
+curl --location --request POST '127.0.0.1:5000/v1/pipeline/face' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"input": "image",
+	"description": "face detect and encode",
+	"processors": "mtcnn_face_detector",
+	"encoder": "face_embedding",
+	"indexFileSize": 1024
+}'
+```
+4. Create an application for running the pipeline.
+
+```bash
+curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "fields":{
+        "face": {
+            "type": "object",
+            "pipeline": "face"
+        }
+    },
+    "s3Buckets": "face"
+}'
+```
+5. Upload the package you have downloaded. 
+
+```bash
+tar xvf /tmp/VOCtrainval_11-May-2012.tar
+python load_data.py -d /tmp/VOCdevkit/ -n face-example
+```
+6. Conduct a human face search. 
+
+```bash
+curl --location --request POST '127.0.0.1:5000/v1/application/face-example/search' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"fields": {
+        "face": {
+            "url": "https://tse2-mm.cn.bing.net/th/id/OIP.d0Uth461I3nJDr28WXudhgHaHa?w=204&h=189&c=7&o=5&dpr=2&pid=1.7"
+        }
+    },
+    "topk": 10,
+    "nprobe": 20
+}'
+```
