@@ -14,8 +14,8 @@ curl http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar 
 1.运行 face-embedding 与 mtcnn-face-detector, 环境变量 host_ip 的值需要替换为本机局域网ip
 ```bash
 export host_ip=192.168.2.3
-docker run -d -p 50004:50004 -e OP_ENDPOINT=${host_ip}:50004 milvus.io/om-operators/face-embedding:v1
-docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 milvus.io/om-operators/mtcnn-face-detector:v1
+docker run -d -p 50004:50004 -e OP_ENDPOINT=${host_ip}:50004 psoperator/face-encoder:latest
+docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 psoperator/face-detector:latest
 ```
 
 2.将 face-embedding 与 mtcnn-face-detector 加载到 Phantoscope 中
