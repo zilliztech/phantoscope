@@ -5,7 +5,7 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
+  pull_request:
     branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -21,11 +21,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: install requirements
       run: |
-        sudo apt install python3-pip python3-setuptools
-        pip3 install wheel pylint
-    - name: make api
-      run: make api
-    - name: push to dockerhub
-      env:
-        DOCKERHUB_TOKEN: ${{ secrets.dockerhub }}
-      run: make push
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+    - name: run test
+      run: make test
