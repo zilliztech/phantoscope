@@ -12,3 +12,4 @@ inflection
 grpcio==1.27.2
 wheel==0.34.2
 sqlalchemy-utils==0.36.5
+pylint==2.5.2
