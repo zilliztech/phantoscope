@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: install requirements
       run: |
-        sudo apt install python3-pip python3-setuptools pylint
-        pip3 install -r requirements.txt
+        sudo apt install pylint
+        export PYTHONPATH=$(pwd)/phantoscope/search
     - name: run test
       run: make test
