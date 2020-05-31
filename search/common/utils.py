@@ -10,15 +10,11 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-import os
 import urllib.request
 import urllib.error
 import urllib.parse
-import errno
-import tarfile
 import base64
 from common.error import DecodeError, DownloadFileError
-from common.config import ALLOWED_IMAGE_EXTENSIONS
 
 
 def save_tmp_file(name, file_data=None, url=None):
