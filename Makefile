@@ -6,9 +6,9 @@ all: test lint api clean
 api:
 	docker build -t phantoscope/api-server:$(COMMIT_ID) .
 test: lint
-	PYTHONPATH=$(shell pwd)/search pytest tests
+	pytest tests
 lint:
-	PYTHONPATH=$(shell pwd)/search pylint --rcfile=pylint.conf search --msg-template='{msg_id}:{line:3d},{column}: {obj}: {msg}' --exit-zero > lintoutput
+	pylint --rcfile=pylint.conf search --msg-template='{msg_id}:{line:3d},{column}: {obj}: {msg}' --exit-zero > lintoutput
 	echo $(shell tail -2 lintoutput | grep -P "\d+" -o |sed -n "1p").$(shell tail -2 lintoutput | grep -P "\d+" -o |sed -n "2p")
 clean:
 	rm -rf .pytest_cache
