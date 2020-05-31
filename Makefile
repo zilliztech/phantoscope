@@ -5,7 +5,7 @@ GIT_TAG = $(shell git tag --points-at HEAD)
 all: test lint api clean
 api:
 	docker build -t phantoscope/api-server:$(COMMIT_ID) .
-test: lint
+test:
 	pytest tests
 lint:
 	pylint --rcfile=pylint.conf search --msg-template='{msg_id}:{line:3d},{column}: {obj}: {msg}' --exit-zero > lintoutput

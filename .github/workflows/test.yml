@@ -22,10 +22,6 @@ jobs:
     - name: install requirements
       run: |
         sudo apt install python3-pip python3-setuptools
-        pip3 install wheel pylint
-        which pylint
-        env
-        ls /usr/local/bin
-        export PYTHONPATH=$(pwd)/phantoscope/search
+        pip3 install wheel pytest
     - name: run test
       run: make test
