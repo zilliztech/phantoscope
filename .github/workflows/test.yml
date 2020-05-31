@@ -23,5 +23,6 @@ jobs:
       run: |
         sudo apt install python3-pip python3-setuptools
         pip3 install wheel pytest
+        which pytest
     - name: run test
       run: make test
