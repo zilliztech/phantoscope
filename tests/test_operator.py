@@ -1,7 +1,8 @@
 import pytest
 from test_basic import client
 from test_basic import local_ip
-from operator import operator
+from operator.operator import new_operator
+from operator.operator import Operator
 
 
 class TestOperatorApi:
@@ -36,4 +37,4 @@ class TestOperatorApi:
 
 
 def test_new_operator():
-    assert operator.new_operator("test", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2") == operator.Operator("test", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2")
+    assert new_operator("test", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2") == Operator("test", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2")
