@@ -37,4 +37,4 @@ class TestOperatorApi:
 
 
 def test_new_operator():
-    assert new_operator("test", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2") == Operator("test", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2")
+    assert new_operator("test", "back", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2") == Operator("test", "back", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2")
