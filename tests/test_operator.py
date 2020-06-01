@@ -1,8 +1,8 @@
 import pytest
 from test_basic import client
 from test_basic import local_ip
-from operator.operator import new_operator
-from operator.operator import Operator
+from operators.operator import new_operator
+from operators.operator import Operator
 
 
 class TestOperatorApi:
