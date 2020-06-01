@@ -43,7 +43,7 @@ def upload(name, **kwargs):
             pipe = pipeline_detail(p)
             if not pipe:
                 raise NotExistError("pipeline not exist", "pipeline %s not exist" % p)
-            value = kwargs['fields'].get(n)
+            value = kwargs.get(n)
             file_data = value.get('data')
             url = value.get('url')
             file_name = "{}-{}".format(name, uuid.uuid4().hex)

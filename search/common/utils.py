@@ -15,6 +15,7 @@ import urllib.error
 import urllib.parse
 import base64
 from common.error import DecodeError, DownloadFileError
+from common.error import RequestError
 
 
 def save_tmp_file(name, file_data=None, url=None):
@@ -45,3 +46,11 @@ def save_tmp_file(name, file_data=None, url=None):
         except Exception as e:
             raise DownloadFileError("Download file from url %s" % url, e)
     return None
+
+
+def prepare_request_arg(data, key, a_type):
+    value = data.get(key, None)
+    if not isinstance(value, a_type) and value is None:
+        raise RequestError("%s do not exist in request body" % key, Exception())
+    del data[key]
+    return value
