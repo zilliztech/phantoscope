@@ -63,12 +63,6 @@ $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | gr
 $ docker-compose up -d
 ```
 
-## Build from code
-
-```
-$ make all
-```
-
 <a href="#quickstart"></a>
 
 ## QuickStart
