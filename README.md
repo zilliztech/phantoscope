@@ -7,6 +7,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
 ![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 
 Phantoscope is an image search engine developed on Milvus and neutral networks. 
 
