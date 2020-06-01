@@ -25,4 +25,4 @@ class TestPipelineApi:
         json_data = rv.get_json()
         PreOperator().delete({"name": "pytestop"})
         assert rv.status_code == 200
-        assert json_data['_name'] == self.name
+        assert json_data['_pipeline_name'] == self.name
