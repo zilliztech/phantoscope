@@ -42,7 +42,7 @@ English | [中文版](README_CN.md)
 ## Install
 
 ```
-$ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
+$ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
 ```

@@ -30,5 +30,5 @@ curl --location --request POST '127.0.0.1:5000/v1/application/example' \
                 "pipeline": "example"
         }
 },
-"s3Buckets": "example"
+        "s3Buckets": "example"
 }'
