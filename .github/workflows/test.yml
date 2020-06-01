@@ -35,5 +35,5 @@ jobs:
       run: make test
     - name: send to codecov
       env:
-        CODECOV_TOKEN: ${{ secrects.CODECOV_TOKEN }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: bash <(curl -s https://codecov.io/bash)
