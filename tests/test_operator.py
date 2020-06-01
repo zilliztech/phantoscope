@@ -34,7 +34,3 @@ class TestOperatorApi:
     def test_delete_operator(self, client):
         rv = client.delete(f"/v1/operator/{self.name}")
         assert rv.status_code == 200
-
-
-def test_new_operator():
-    assert new_operator("test", "back", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2") == Operator("test", "back", "encoder", "image", "vector", "127.0.0.1:50001", 512, "l2")
