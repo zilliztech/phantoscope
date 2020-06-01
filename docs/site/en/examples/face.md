@@ -19,9 +19,9 @@ curl http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar 
 1. Run **face-embedding** and **mtcnn-face-detector**. Set the environment variable `host_ip` as your local intranet IP.  
 
 ```bash
-export host_ip=192.168.2.3
-docker run -d -p 50004:50004 -e OP_ENDPOINT=${host_ip}:50004 psoperator/face-encoder:latest
-docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 psoperator/face-detector:latest
+$ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+docker run -d -p 50004:50004 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50004 psoperator/face-encoder:latest
+docker run -d -p 50005:50005 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50005 psoperator/face-detector:latest
 ```
 
 2. Load the **face-embedding** and **mtcnn-face-detector** to Phantoscope.
@@ -30,14 +30,14 @@ docker run -d -p 50005:50005 -e OP_ENDPOINT=${host_ip}:50005 psoperator/face-det
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "endpoint": "${host_ip}:50004",
+    "endpoint": "${LOCAL_ADDRESS}:50004",
     "name": "face_embedding"
 }'
 	
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "endpoint": "${host_ip}:50005",
+    "endpoint": "${LOCAL_ADDRESS}:50005",
     "name": "mtcnn_face_detector"
 }'
 ```
@@ -73,8 +73,8 @@ curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
 5. Upload the package you have downloaded. 
 
 ```bash
-tar xvf /tmp/VOCtrainval_11-May-2012.tar
-python load_data.py -d /tmp/VOCdevkit/ -n face-example
+tar xvf /tmp/VOCtrainval_11-May-2012.tar -C /tmp
+python load_data.py -d /tmp/VOCdevkit/ -a face-example -p face
 ```
 6. Conduct a human face search. 
 
