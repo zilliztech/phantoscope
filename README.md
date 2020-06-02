@@ -1,4 +1,4 @@
-![](https://github.com/zilliztech/phantoscope/blob/master/.github/phantoscope-logo-fake.png)
+![](https://github.com/zilliztech/phantoscope/blob/master/.github/phantoscope.png)
 
 ![CI](https://github.com/zilliztech/phantoscope/workflows/CI/badge.svg?branch=master)
 ![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
