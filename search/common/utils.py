@@ -40,11 +40,11 @@ def save_tmp_file(name, file_data=None, url=None):
                 f.write(base64.b64decode(imgstring))
             return file_path
         except Exception as e:
-            raise DecodeError("Decode string error", e)
+            raise DecodeError("Decode string error to %s" % file_path, e)
     if url:
         try:
             urllib.request.urlretrieve(url, file_path)
             return file_path
         except Exception as e:
-            raise DownloadFileError("Download file from url %s" % url, e)
+            raise DownloadFileError("Download file from url %s to %s" % (url, file_path), e)
     return None
