@@ -4,20 +4,20 @@ Ensure that you have installed Phantoscope in your operating system. See [Instal
 
 ## Prepare Your Environment
 
-    chmod +x prepare.sh
-    ./prepare.sh
+    $ chmod +x prepare.sh
+    $ ./prepare.sh
 
 ## Download Image Package
 
-    curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
+    $ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
 
 ## Upload Image Package
 
-    tar xvf /tmp/vgg-example.tar -C /tmp
-	python load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
+    $ tar xvf /tmp/vgg-example.tar -C /tmp
+	$ python load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
 ## Search with the Default Application
 
-    curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
+    $ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
     --header 'Content-Type: application/json' \
     --data-raw '{
     	"fields": {
