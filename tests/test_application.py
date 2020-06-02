@@ -41,7 +41,7 @@ class TestApplicationApi:
                     'pipeline': self.pipeline_name
                 }
             },
-            's3Buckets': "s3example7"
+            's3Buckets': "s3example"
         }
         rv = client.post(f'/v1/application/{self.name}', json=data)
         json_data = rv.get_json()
