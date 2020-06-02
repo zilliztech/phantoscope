@@ -1,6 +1,14 @@
 ![](https://github.com/zilliztech/phantoscope/blob/master/.github/phantoscope-logo-fake.png)
 
 ![CI](https://github.com/zilliztech/phantoscope/workflows/CI/badge.svg?branch=master)
+![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
+![GitHub top language](https://img.shields.io/github/languages/top/zilliztech/phantoscope)
+![GitHub All Releases](https://img.shields.io/github/downloads/zilliztech/phantoscope/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
+![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
+[![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
 Phantoscope is a cloud native image search engine powered by Milvus and neural networks
 
@@ -58,7 +66,7 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 ## Install
 
 ```
-$ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
+$ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
 ```
@@ -126,4 +134,4 @@ For general questions and public discussions, please join our community.
 
 ## License
 
-Phantoscope is licensed under the Apache License, Version 2.0. 
+Apache License 2.0
