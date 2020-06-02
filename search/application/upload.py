@@ -16,6 +16,7 @@ import logging
 from application.application import application_detail
 from pipeline.pipeline import pipeline_detail, run_pipeline
 from common.error import NotExistError
+from common.error import RequestError
 from storage.storage import MilvusIns, S3Ins
 from models.mapping import Mapping as DB
 from models.mapping import add_mapping_data
@@ -39,6 +40,9 @@ def upload(name, **kwargs):
             if k in accept_fields:
                 new_fields[k]['value'] = v
         res = []
+        for k, _ in kwargs.get('fields').items():
+            if k not in accept_fields and k not in pipeline_fields:
+                raise RequestError(f"fields {k} not in application", "")
         for n, p in pipeline_fields.items():
             pipe = pipeline_detail(p)
             if not pipe:
@@ -46,6 +50,8 @@ def upload(name, **kwargs):
             value = kwargs['fields'].get(n)
             file_data = value.get('data')
             url = value.get('url')
+            if not file_data and not url:
+                raise RequestError("can't find data or url from request", "")
             file_name = "{}-{}".format(name, uuid.uuid4().hex)
             file_path = save_tmp_file(file_name, file_data, url)
 
