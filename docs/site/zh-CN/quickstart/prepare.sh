@@ -24,11 +24,9 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/example' \
 curl --location --request POST '127.0.0.1:5000/v1/application/example' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-"fields":{
-        "example": {
-                "type": "object",
-                "pipeline": "example"
-        }
-},
+    "example": {
+            "type": "object",
+            "pipeline": "example"
+    }
 "s3Buckets": "example"
 }'
