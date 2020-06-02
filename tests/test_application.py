@@ -46,7 +46,7 @@ class TestApplicationApi:
         json_data = rv.get_json()
         assert rv.status_code == 200
         assert json_data['_application_name'] == self.name
-        # os.mkdir('./tmp')
+        os.mkdir('./tmp')
 
     def test_application_detail_api(self, client):
         rv = client.get(f"/v1/application/{self.name}")
@@ -92,5 +92,5 @@ class TestApplicationApi:
         PreOperator().delete({'name': self.op_name})
         rv = client.delete(f"/v1/application/{self.name}")
         assert rv.status_code == 200
-        # shutil.rmtree('./tmp', ignore_errors=True)
+        shutil.rmtree('./tmp', ignore_errors=True)
 
