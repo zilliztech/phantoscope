@@ -13,11 +13,10 @@
 from application.application import application_detail
 from application.mapping import new_mapping_ins
 from pipeline.pipeline import pipeline_detail, run_pipeline
-from common.error import NotExistError
 from common.error import NoneVectorError
 from common.error import RequestError
 from storage.storage import MilvusIns
-from models.mapping import search_ids_from_mapping, search_from_mapping
+from models.mapping import search_ids_from_mapping
 
 
 def search(name, fields={}, topk=10, nprobe=16):
