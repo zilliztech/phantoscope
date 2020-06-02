@@ -110,6 +110,8 @@ def new_application(name, fields, s3_buckets):
 
 def delete_application(name):
     try:
+        if len(entities_list(name, 100, 0)):
+            raise RequestError("There still have entity in this application", "")
         x = del_application(name)
         if not x:
             raise NotExistError("application %s not exist" % name, "")
@@ -121,7 +123,7 @@ def delete_application(name):
         return app
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def patch_application(name, fields, s3_buckets):

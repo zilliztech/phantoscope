@@ -90,6 +90,7 @@ class RequestError(Error):
     def code(self):
         return 400
 
+
 class NoneVectorError(Error):
     @property
     def code(self):
