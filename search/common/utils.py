@@ -10,6 +10,7 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
+import os
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -18,8 +19,9 @@ from common.error import DecodeError, DownloadFileError
 
 
 def save_tmp_file(name, file_data=None, url=None):
-    DEFAULT_PATH = "./tmp/"
+    DEFAULT_PATH = os.path.abspath('./tmp/')
     extension = "jpg"
+    file_path = os.path.join(DEFAULT_PATH, name + "." + extension)
     if file_data:
         try:
             img_data = file_data.split(",")
@@ -33,15 +35,16 @@ def save_tmp_file(name, file_data=None, url=None):
                 imgstring = img_data[1]
             else:
                 imgstring = img_data[0]
-            with open(DEFAULT_PATH + name + "." + extension, "wb") as f:
+            file_path = os.path.join(DEFAULT_PATH, name + "." + extension)
+            with open(file_path, "wb") as f:
                 f.write(base64.b64decode(imgstring))
-            return DEFAULT_PATH + name + "." + extension
+            return file_path
         except Exception as e:
-            raise DecodeError("Decode string error", e)
+            raise DecodeError("Decode string error to %s" % file_path, e)
     if url:
         try:
-            urllib.request.urlretrieve(url, DEFAULT_PATH + name + "." + extension)
-            return DEFAULT_PATH + name + "." + extension
+            urllib.request.urlretrieve(url, file_path)
+            return file_path
         except Exception as e:
-            raise DownloadFileError("Download file from url %s" % url, e)
+            raise DownloadFileError("Download file from url %s to %s" % (url, file_path), e)
     return None

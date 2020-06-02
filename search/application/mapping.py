@@ -20,6 +20,7 @@ class Mapping:
         self._image_url = image_url
         self._fields = fields
 
+
 def new_mapping_ins(id, app_name, image_url, fields):
     if isinstance(fields, str):
         fields = ast.literal_eval(fields)

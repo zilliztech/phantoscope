@@ -32,12 +32,14 @@ def add_mapping_data(mapping):
     except Exception as e:
         raise Insert2SQLError("insert mapping to sql error", e.orig.args[-1])
 
+
 def search_from_mapping(id):
     try:
-        res = db.session.query(Mapping).filter(Mapping.id==id).first()
+        res = db.session.query(Mapping).filter(Mapping.id == id).first()
         return res
     except Exception as e:
         raise QueryFromSQLError("query from sql error", e.orig.args[-1])
+
 
 def search_ids_from_mapping(ids):
     try:
@@ -51,7 +53,7 @@ def search_ids_from_mapping(ids):
 
 def search_by_application(app, limit, offset):
     try:
-        res = db.session.query(Mapping).filter(Mapping.app_name==app).limit(limit).offset(offset).all()
+        res = db.session.query(Mapping).filter(Mapping.app_name == app).limit(limit).offset(offset).all()
         return res
     except Exception as e:
         raise QueryFromSQLError("query from sql error", e.orig.args[-1])
@@ -59,8 +61,8 @@ def search_by_application(app, limit, offset):
 
 def del_mapping(id):
     try:
-        res = db.session.query(Mapping).filter(Mapping.id==id).all()
-        db.session.query(Mapping).filter(Mapping.id==id).delete()
+        res = db.session.query(Mapping).filter(Mapping.id == id).all()
+        db.session.query(Mapping).filter(Mapping.id == id).delete()
         db.session.commit()
         return res
     except Exception as e:
