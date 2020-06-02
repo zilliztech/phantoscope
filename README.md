@@ -7,6 +7,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
 ![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 
 Phantoscope is an image search engine developed on Milvus and neutral networks. 
 
@@ -42,15 +43,9 @@ English | [中文版](README_CN.md)
 ## Install
 
 ```
-$ wget https://github.com/zilliztech/phantoscope/blob/master/docker-compose.yml
+$ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
-```
-
-## Build from code
-
-```
-$ make all
 ```
 
 <a href="#quickstart"></a>

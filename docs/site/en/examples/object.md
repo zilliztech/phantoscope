@@ -19,9 +19,9 @@ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategorie
 1. Run **ssd-object-detector** and **xception**. Set the environment variable `host_ip` as your local Intranet IP.  
 
 ```bash
-export host_ip=192.168.2.3
-docker run -d -p 50010:50010 -e OP_ENDPOINT=${host_ip}:50010 milvus.io/om-operators/ssd-object-detector:v1 
-docker run -d -p 50011:50011 -e OP_ENDPOINT=${host_ip}:50011 milvus.io/om-operators/xception:v1 
+export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 milvus.io/om-operators/ssd-detector:latest
+docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 milvus.io/om-operators/ssd-encoder:latest
 ```
 
 2. Load **ssd-object-detector** and **xception** to Phantoscope. 
@@ -30,14 +30,14 @@ docker run -d -p 50011:50011 -e OP_ENDPOINT=${host_ip}:50011 milvus.io/om-operat
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "endpoint": "${host_ip}:50010",
-    "name": "ssd_object"
+    "endpoint": "${LOCAL_ADDRESS}:50010",
+    "name": "ssd_detector"
 }'
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "endpoint": "${host_ip}:50011",
-    "name": "xception"
+    "endpoint": "${LOCAL_ADDRESS}:50011",
+    "name": "ssd_encoder"
 }'
 ```
 
@@ -49,8 +49,8 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
 --data-raw '{
 	"input": "image",
 	"description": "object detect and encode",
-	"processors": "ssd_object",
-	"encoder": "xception",
+	"processors": "ssd_detector",
+	"encoder": "ssd_encoder",
 	"indexFileSize": 1024
 }'
 ```
@@ -72,8 +72,8 @@ curl --location --request POST '127.0.0.1:5000/v1/application/object-example' \
 5. Upload the package you have downloaded. 
 
 ```bash
-tar xvf /tmp/256-object.tar
-python load_data.py -d /tmp/256_ObjectCategories -n object-example
+tar xvf /tmp/256-object.tar -C /tmp
+python load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
 ```
 
 6. Conduct an object search. 

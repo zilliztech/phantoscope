@@ -14,14 +14,27 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name: install requirements
+    - name: set up python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: install dependencies
       run: |
-        sudo apt install python3-pip python3-setuptools
-        pip3 install -r requirements.txt
+        python -m pip install --upgrade pip
+        pip install pytest-cov
+        pip install -r requirements.txt
+    - name: prepare
+      run: make env
     - name: run test
       run: make test
+    - name: send to codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: bash <(curl -s https://codecov.io/bash)
