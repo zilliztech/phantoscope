@@ -16,7 +16,6 @@ from inflection import underscore
 from flask import jsonify
 from flask import Response
 from common.config import ALLOWED_EXTENSIONS
-from common.config import LOCAL_CACHE_PATH
 
 
 def allowed_file(filename):
