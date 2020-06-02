@@ -35,6 +35,9 @@ class TestPipelineApi:
     def test_pipeline_detail_api(self, client):
         rv = client.get(f"/v1/pipeline/{self.name}")
         assert rv.status_code == 200
+        # query none exist pipeline
+        rv = client.get(f"/v1/pipeline/none_exist_pipeline")
+        assert rv.status_code != 200
 
     def test_delete_pipeline_api(self,client):
         rv = client.delete(f"/v1/pipeline/{self.name}")

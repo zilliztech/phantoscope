@@ -1,5 +1,6 @@
 import os
 import shutil
+import time
 import pytest
 from test_basic import client
 from test_basic import local_ip
@@ -40,13 +41,56 @@ class TestApplicationApi:
                     'pipeline': self.pipeline_name
                 }
             },
-            's3Buckets': "s3example"
+            's3Buckets': "s3example7"
         }
         rv = client.post(f'/v1/application/{self.name}', json=data)
         json_data = rv.get_json()
         assert rv.status_code == 200
         assert json_data['_application_name'] == self.name
-        os.mkdir('./tmp')
+        try:
+            os.mkdir('./tmp')
+        except Exception as e:
+            pass
+
+    def test_new_application_api_error(self, client):
+        # create wrong app
+        none_exist_pipeline_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'object',
+                    'pipeline': 'none_exist_pipeline'
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=none_exist_pipeline_data)
+        json_data = rv.get_json()
+        assert rv.status_code != 200
+        data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'str',
+                    'pipeline': self.pipeline_name
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=data)
+        json_data = rv.get_json()
+        assert rv.status_code != 200
+        data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'object',
+                    'pipeline': self.pipeline_name
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/fail_app', json=data)
+        json_data = rv.get_json()
+        assert rv.status_code != 200
+
 
     def test_application_detail_api(self, client):
         rv = client.get(f"/v1/application/{self.name}")
@@ -62,6 +106,19 @@ class TestApplicationApi:
         }
         rv = client.post(f"/v1/application/{self.name}/upload", json=data)
         assert rv.status_code == 200
+        base_txt = os.path.join(os.path.dirname(__file__), 'base64.txt')
+        with open(base_txt, 'r')as file:
+            base_data = file.readline()
+            data = {
+                'fields': {
+                    self.field_name: {
+                        'data': base_data
+                    }
+                }
+            }
+            rv = client.post(f"/v1/application/{self.name}/upload", json=data)
+            assert rv.status_code == 200
+        time.sleep(2)
 
     def test_search_api(self, client):
         data = {
@@ -86,11 +143,19 @@ class TestApplicationApi:
             assert reply.status_code == 200
             json_reply = reply.get_json()
             assert json_reply['_id'] == data['_id']
+        # delete none exist entity
+        reply = client.delete(
+            f"/v1/application/{self.name}/entity/-1")
+        assert reply.status_code != 200
 
     def test_delete_application_api(self, client):
         PrePipeline().delete({'name': self.pipeline_name})
         PreOperator().delete({'name': self.op_name})
         rv = client.delete(f"/v1/application/{self.name}")
         assert rv.status_code == 200
+        # delete none exist application
+        rv = client.delete(f"/v1/application/{self.name}")
+        assert rv.status_code != 200
         shutil.rmtree('./tmp', ignore_errors=True)
+
 
