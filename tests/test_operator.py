@@ -17,11 +17,9 @@ class TestOperatorApi:
         assert json_data["_endpoint"] == self.endpoint
         assert json_data["_name"] == self.name
 
-
     def test_opreator_detail(self, client):
         rv = client.get(f"/v1/operator/{self.name}")
         assert rv.status_code == 200
-
 
     def test_operator_list(self, client):
         rv = client.get("/v1/operator/")

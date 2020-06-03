@@ -17,7 +17,6 @@ from application.application import new_application
 from application.application import all_applications
 from application.application import application_detail
 from application.application import delete_application
-from application.application import patch_application
 from application.application import entities_list
 from application.application import delete_entity
 from application.upload import upload

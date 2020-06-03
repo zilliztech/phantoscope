@@ -10,7 +10,6 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-import json
 from flask import Blueprint
 from flask_restful import reqparse
 from common.common import json_response

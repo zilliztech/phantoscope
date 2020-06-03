@@ -64,6 +64,10 @@ The coding style used in Phatoscope generally follow [PEP8 Style Guide](https://
 ### Format code
 Use [autopep8](https://github.com/hhatto/autopep8) for your code
 
+```shell
+make lint
+```
+
 ## Run unit test with code coverage
 
 Before submitting your PR, make sure you have run unit test, and your code coverage rate is >= 90%.

@@ -16,7 +16,6 @@ from models.pipeline import Pipeline as DB
 from models.pipeline import insert_pipeline
 from models.pipeline import search_pipeline
 from models.pipeline import del_pipeline
-from models.pipeline import update_pipeline
 from common.error import PipelineCheckError
 from common.error import PipelineIlegalError
 from common.error import RPCExecError
