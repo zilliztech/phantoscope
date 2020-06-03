@@ -60,7 +60,7 @@ Click [here](./docs/site/en/quickstart) to set up a simple Phantoscope applicati
 From [here](./docs/site/en/examples), you can get an idea as to how you can apply Phantoscope to different scenarios:
 
  - Search by human face![](./docs/site/en/examples/face.md)
- - Search by ![](./docs/site/en/examples/object.md)
+ - Search by object![](./docs/site/en/examples/object.md)
 
 The following figure illustrates the basic concepts of the Phantoscope project.
 

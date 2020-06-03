@@ -92,6 +92,7 @@ def upload_image(file_num, file_generator, field_name):
         success_count, fail_count, file_num))
     end = time.time()
     logging.info('upload %d images cost: {:.3f}s'.format(end - start), file_num)
+    return (success_count, fail_count)
 
 
 def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_num=12):
@@ -104,9 +105,16 @@ def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_n
         for tmp_list in splited_list:
             num = len(tmp_list)
             pool_list.append(pool.apply_async(upload_image, (num, tmp_list, field_name)))
-        [res.get() for res in pool_list]
+        result = [res.get() for res in pool_list]
+    # sum all result
+    success_cnt = 0
+    failed_cnt = 0
+    for item in result:
+        success_cnt += item.first
+        failed_cnt += item.second
     end = time.time()
     logging.info('upload %d images cost: {:.3f}s'.format(end - start), file_num)
+    return success_cnt, failed_cnt
 
 
 if __name__ == "__main__":
@@ -123,7 +131,7 @@ if __name__ == "__main__":
 
     upload_url = "http://%s/v1/application/%s/upload" % (args.server_addr, args.app_name)
     logging.info("upload url is %s", upload_url)
-
+    logging.info("Now begin to load image data and upload to phantoscope: ...")
     batch_size = 500
     pool_num = 12
 
@@ -132,4 +140,5 @@ if __name__ == "__main__":
     # ensure all images can be allocated to processes evently [[for test speed]]
     # file_num = file_num // (batch_size * pool_num) * (batch_size * pool_num)
     file_generator = get_file_generator(args.data_dir, file_num)
-    parallel_upload(file_num, file_generator, image_field_name, batch_size, pool_num)
+    sucess_cnt, failed_cnt = parallel_upload(file_num, file_generator, image_field_name, batch_size, pool_num)
+    logging.info("All images has been uploaded: success: {} fail: {}".format(sucess_cnt, failed_cnt))

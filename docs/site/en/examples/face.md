@@ -16,7 +16,7 @@ curl http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar 
 ```
 
 ## Steps
-1. Run **face-embedding** and **mtcnn-face-detector**. Set the environment variable `host_ip` as your local intranet IP.  
+1. Run **face-embedding** and **mtcnn-face-detector**. Set the environment variable `LOCAL_ADDRESS` as your local intranet IP.  
 
 ```bash
 export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
@@ -55,6 +55,7 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/face' \
 	"indexFileSize": 1024
 }'
 ```
+
 4. Create an application for running the pipeline.
 
 ```bash
@@ -70,12 +71,14 @@ curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
     "s3Buckets": "face"
 }'
 ```
+
 5. Upload the package you have downloaded. 
 
 ```bash
 tar xvf /tmp/VOCtrainval_11-May-2012.tar -C /tmp
-python load_data.py -d /tmp/VOCdevkit/ -a face-example -p face
+python3 load_data.py -d /tmp/VOCdevkit/ -a face-example -p face
 ```
+
 6. Conduct a human face search. 
 
 ```bash
