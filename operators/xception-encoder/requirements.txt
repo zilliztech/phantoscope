@@ -1,0 +1,4 @@
+Keras
+tensorflow==1.14.0
+grpcio==1.27.2
+pillow
