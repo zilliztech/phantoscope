@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package omnisearch;
+
+service Operator {
+  rpc Execute(ExecuteRequest) returns (ExecuteReply) {}
+  rpc Healthy(HealthyRequest) returns (HealthyReply) {}
+  rpc Identity(IdentityRequest) returns (IdentityReply) {}
+}
+
+
+message ExecuteRequest {
+  repeated string urls = 1;
+  repeated string datas = 2;
+}
+
+message Vector {
+  repeated float element = 1;
+}
+
+message MetaData {
+  string url = 1;
+  bytes data = 2;
+} 
+
+message ExecuteReply {
+  int64 nums = 1;
+  repeated Vector vectors = 2;
+  repeated MetaData metadata = 3;
+}
+
+message HealthyRequest {
+}
+
+message HealthyReply {
+  string healthy = 1;
+}
+
+message IdentityRequest {
+}
+
+message IdentityReply {
+  string name = 1;
+  string endpoint = 2;
+  string type = 3;
+  string input = 4;
+  string output = 5;
+  string dimension = 6;
+  string metricType = 7;
+}
