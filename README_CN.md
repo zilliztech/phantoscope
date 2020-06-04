@@ -10,7 +10,7 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
-Phantoscope is a cloud native image search engine powered by Milvus and neural networks
+Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
 🚀 **极快的搜索速度并可以处理十亿级别的图片**
 
@@ -24,24 +24,23 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 
 🚢 **即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
 
-[中文版](README_CN.md) 
+中文版 | [英文版](README.md)
 
 ## Table of Contents
 
-- [Background](#background)
-- [Install](#install)
-- [QuickStart](#quickStart)
-- [Concepts](#concepts)
-- [Contributing](#contributing)
-- [Community](#community)
-- [Roadmap](#roadmap)
-- [License](#license)
+- [背景](#背景)
+- [安装](#安装)
+- [快速开始](#快速开始)
+- [教程](#教程)
+- [示例](#示例)
+- [API](#API)
+- [贡献者指南](#贡献者指南)
+- [加入社区](#加入社区)
+- [路线图](#路线图)
+- [协议](#协议)
 
 
-
-<a href="#background"></a>
-
-## Background
+## 背景
 
 人类的搜索不应该被局限在单词与短句。
 
@@ -61,77 +60,65 @@ Phantoscope is a cloud native image search engine powered by Milvus and neural n
 
 经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 Phantoscope。
 
-<a href="#install"></a>
-
-## Install
-
+## 安装
+### 安装环境说明
+1. docker >= 19.03
+2. docker-compose >= 1.25.0
+### 开始安装
 ```
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
 ```
+执行 ```docker-compose ps``` 确认所有的容器状态均为 Up
 
-<a href="#quickstart"></a>
+## 快速开始
+从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
 
-## QuickStart
 
-Run an example phantoscope application from [here](./docs/site/zh-CN/quickstart)
+## 教程
 
-这个example 创建了一个最小的 Application,你可以使用它来上传与搜索图片
-
-<a href="#concepts"></a>
-
-## Concepts
-
+| Tutorials                                                                                              <img width=700/> | level  |
+| ------------------------------------------------------------                                                            | ------ |
+| [如何使用 phantoscope preview](./docs/site/zh-CN/tutorials/preview.md)                                                  | ⭐     |
+| [什么是 operators](./docs/site/zh-CN/tutorials/operator.md)                                                             | ⭐⭐   |
+| [什么是 pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐⭐   |
+| [什么是 application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐⭐   |
+| [如何开发一个 operator](./operators/HowToAddAOperator.md)                                                               | ⭐⭐⭐ |
+## 示例
 从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
 
  - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
  - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
+## API
+Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./docs/site/zh-CN/openapi/README.md) 获取详情。
 
-从下面了解 Phantoscope 中的概念
+## 贡献者指南
+我们由衷欢迎您推送贡献。关于贡献流程的详细信息，请参阅 [贡献者指南](CONTRIBUTING.md)。
 
-雨水与水厂的动图 10s 或者短视频
-![](/.github/phantoscope-explain.png)
+本项目遵循 Phatoscope [行为准则](CODE_OF_CONDUCT.md)。如果您希望参与本项目，请遵守该准则的内容。
 
-| Tutorials                                                                                              <img width=700/> | level  |
-| ------------------------------------------------------------ | ------ |
-| [What is operators](./docs/site/zh-CN/tutorials/operator.md) | simple |
-| [What is pipeline](./docs/site/zh-CN/tutorials/pipeline.md)  | simple |
-| [What is application](./docs/site/zh-CN/tutorials/application.md) | simple |
+我们使用 [GitHub issues](https://github.com/zilliztech/phantoscope/issues) 追踪问题和补丁。
 
-<a href="#contributing"></a>
+若您希望提出问题或进行讨论，请加入我们的社区。
 
-## Contributing
 
-Contributions are welcomed and greatly appreciated. 
 
-Please read our [contribution guidelines](CONTRIBUTING.md) for detailed contribution workflow.
+## 加入社区
 
-We use [GitHub issues](https://github.com/zilliztech/phantoscope/issues) to track issues and bugs. 
-
-For general questions and public discussions, please join our community.
-
-<a href="#community"></a>
-
-## Community
-
-- Slack Channel 这里可以进行沟通与咨询在使用过程中遇到的问题
+- Slack [频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题
 - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
-<a href="#roadmap"></a>
 
-## Roadmap
+## 路线图
 
-[GitHub milestones](https://github.com/zilliztech/phantoscope/milestones) lay out the path to the future improvements.
+您可以参考我们的[路线图](https://github.com/zilliztech/phantoscope/milestones)。
 
-包括 Roadmap 在内，我们希望更多的人可以一起参与到 operators 的开发当中
+包括 Roadmap 在内，我们希望更多的人可以一起参与到 Pantoscope 的开发当中。
 
-在 [这里](https://github.com/ReigenAraka/omnisearch-operators) 你可以找到如何开发一个 operator
+如果您有任何问题请随时联系我们 phantoscope@zilliz.com。
 
-如果您有任何问题请随时联系我们 phantoscope@zilliz.com
 
-<a href="#license"></a>
-
-## License
+## 协议
 
 Apache License 2.0
