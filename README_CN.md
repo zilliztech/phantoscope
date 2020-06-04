@@ -28,16 +28,16 @@ Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
 
 ## Table of Contents
 
-- [背景](#background)
-- [安装](#install)
-- [快速开始](#quickStart)
-- [概念](#concepts)
-- [示例](#concepts)
+- [背景](#背景)
+- [安装](#安装)
+- [快速开始](#快速开始)
+- [概念](#概念)
+- [示例](#示例)
 - [API](#API)
-- [贡献者指南](#contributing)
-- [加入 Phantoscope 社区](#community)
-- [路线图](#roadmap)
-- [协议](#license)
+- [贡献者指南](#贡献者指南)
+- [加入 Phantoscope 社区](#加入 Phantoscope 社区)
+- [路线图](#路线图)
+- [协议](#协议)
 
 
 
