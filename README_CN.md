@@ -10,7 +10,7 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
-Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
+Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
 🚀 **极快的搜索速度并可以处理十亿级别的图片**
 
@@ -70,6 +70,7 @@ $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
 ```
+执行 ```docker-compose ps``` 确认所有的容器状态均为 Up
 
 ## 快速开始
 从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
