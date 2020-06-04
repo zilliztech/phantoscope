@@ -10,11 +10,13 @@ $ docker run -d -e API_URL=$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:la
 ## 使用 preview 进行搜索
 浏览器打开 http://127.0.0.1:8000
 
-[](../../../../.github/phantoscope-preview.png)
+![](../../../../.github/phantoscope-preview.png)
 
 在搜索区域可以选择从本地上传或者拖动图片到该区
 
 在剪裁区可以调整图片并用框选的部分重新进行搜索
 
 在 application 列表中可以切换系统中存在的 application
+
+在结果区域可以看到搜索前 50 个结果
 
