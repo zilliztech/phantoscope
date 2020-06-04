@@ -171,21 +171,20 @@ class SSDDetectObject:
         return [None]
 
     def bulk_execute(self, images):
-        with self.graph.as_default():
-            with tf.device(self.device_str):
-                if not self.model_init:
-                    self.load_model()
-                image_tensor = self.graph.get_tensor_by_name('image_tensor:0')
-                boxes = self.graph.get_tensor_by_name('detection_boxes:0')
-                scores = self.graph.get_tensor_by_name('detection_scores:0')
-                classes = self.graph.get_tensor_by_name('detection_classes:0')
-                with self.session.as_default():
-                    (boxes, scores, classes) = self.session.run([boxes, scores, classes], feed_dict={
-                        image_tensor: np.concatenate(np.expand_dims(images, axis=0), axis=0)})
-                    bboxes = self.get_bboxes(images, boxes, scores, classes)
-                    logging.debug(bboxes)
-                    objs = self.get_obj_image(images, bboxes)
-                    return objs
+        with tf.device(self.device_str):
+            if not self.model_init:
+                self.load_model()
+            image_tensor = self.graph.get_tensor_by_name('image_tensor:0')
+            boxes = self.graph.get_tensor_by_name('detection_boxes:0')
+            scores = self.graph.get_tensor_by_name('detection_scores:0')
+            classes = self.graph.get_tensor_by_name('detection_classes:0')
+
+            (boxes, scores, classes) = self.session.run([boxes, scores, classes], feed_dict={
+                image_tensor: np.concatenate(np.expand_dims(images, axis=0), axis=0)})
+            bboxes = self.get_bboxes(images, boxes, scores, classes)
+            logging.debug(bboxes)
+            objs = self.get_obj_image(images, bboxes)
+            return objs
 
     @property
     def name(self):
