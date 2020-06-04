@@ -166,7 +166,9 @@ class SSDDetectObject:
 
     def execute(self, image):
         objs = self.bulk_execute([image])
-        return objs[0]
+        if len(objs):
+            return objs[0]
+        return [None]
 
     def bulk_execute(self, images):
         with self.graph.as_default():

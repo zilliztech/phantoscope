@@ -10,11 +10,11 @@ endif
 cpu:
 	docker build  \
  	--build-arg base_tag=ubuntu:bionic-20200219 \
- 	-t zilliz/xception-encoder:$(TAG) \
+ 	-t psoperator/xception-encoder:$(TAG) \
  	-f Dockerfile .
 
 gpu:
 	docker build  \
  	--build-arg base_tag=nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04 \
- 	-t zilliz/xception-encoder-gpu:$(TAG) \
+ 	-t psoperator/xception-encoder-gpu:$(TAG) \
  	-f Dockerfile-gpu .
