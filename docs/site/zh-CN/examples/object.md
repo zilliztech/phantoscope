@@ -18,8 +18,8 @@ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategorie
 1.使用 ssd-object-detector 与 xception 的镜像创建对应的容器。如果是第一次运行需要从 dockerhub 拉取镜像，需要等待一段时间。
 ```bash
 export LOCAL_ADDRESS=LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 fsoperator/ssd-detector:latest
-docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 fsoperator/xception-encoder:latest
+docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 psoperator/ssd-detector:latest
+docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xception-encoder:latest
 ```
 
 2.将 ssd-object-detector 与 xception 作为 Operator 注册到 Phantoscope 中。此过程所需要提供的仅仅是 Operator 暴露的服务端口和一个自定义的 Operator 名称。
