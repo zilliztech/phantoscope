@@ -1,0 +1,4 @@
+grpcio==1.27.2
+pillow
+opencv-python
+paddlepaddle-gpu==1.7.2.post107
