@@ -35,7 +35,7 @@ Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
 - [示例](#示例)
 - [API](#API)
 - [贡献者指南](#贡献者指南)
-- [加入 Phantoscope 社区](#加入 Phantoscope 社区)
+- [加入社区](#加入社区)
 - [路线图](#路线图)
 - [协议](#协议)
 
@@ -113,7 +113,7 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 <a href="#community"></a>
 
-## 加入 Phantoscope 社区
+## 加入社区
 
 - Slack [频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题
 - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
