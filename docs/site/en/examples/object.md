@@ -20,8 +20,8 @@ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategorie
 
 ```bash
 export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 milvus.io/om-operators/ssd-detector:latest
-docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 milvus.io/om-operators/ssd-encoder:latest
+docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 fsoperator/ssd-detector:latest
+docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 fsoperator/xception-encoder:latest
 ```
 
 2. Load **ssd-object-detector** and **xception** to Phantoscope. 
@@ -37,7 +37,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "endpoint": "${LOCAL_ADDRESS}:50011",
-    "name": "ssd_encoder"
+    "name": "xception"
 }'
 ```
 
@@ -50,7 +50,7 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
 	"input": "image",
 	"description": "object detect and encode",
 	"processors": "ssd_detector",
-	"encoder": "ssd_encoder",
+	"encoder": "xception",
 	"indexFileSize": 1024
 }'
 ```
@@ -73,7 +73,7 @@ curl --location --request POST '127.0.0.1:5000/v1/application/object-example' \
 
 ```bash
 tar xvf /tmp/256-object.tar -C /tmp
-python load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
+python3 load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
 ```
 
 6. Conduct an object search. 
