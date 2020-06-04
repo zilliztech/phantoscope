@@ -28,15 +28,16 @@ Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
 
 ## Table of Contents
 
-- [Background](#background)
-- [Install](#install)
-- [QuickStart](#quickStart)
-- [Concepts](#concepts)
+- [背景](#background)
+- [安装](#install)
+- [快速开始](#quickStart)
+- [概念](#concepts)
+- [示例](#concepts)
 - [API](#API)
-- [Contributing](#contributing)
-- [Community](#community)
-- [Roadmap](#roadmap)
-- [License](#license)
+- [贡献者指南](#contributing)
+- [加入 Phantoscope 社区](#community)
+- [路线图](#roadmap)
+- [协议](#license)
 
 
 
@@ -78,19 +79,11 @@ $ docker-compose up -d
 <a href="#quickstart"></a>
 
 ## 快速开始
-从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用。
-
-这里创建了一个最小的应用,你可以使用它来上传与搜索图片。
+从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
 
 <a href="#concepts"></a>
 
-## 基础概念
-
-从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
-
- - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
- - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
-
+## 概念
 从下面了解 Phantoscope 中的概念
 
 | Tutorials                                                                                              <img width=700/> | level  |
@@ -99,11 +92,16 @@ $ docker-compose up -d
 | [什么是 pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐     |
 | [什么是 application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐     |
 | [如何开发一个 operator](./operators/HowToAddAOperator.md)                                                               | ⭐⭐   |
-<a href="#contributing"></a>
+<a href="#example"></a>
+## 示例
+从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
 
+ - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
+ - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
+ <a href="#API"></a>
 ## API
 Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./docs/site/zh-CN/openapi/README.md) 获取详情。
-
+<a href="#contributing"></a>
 ## 贡献者指南
 我们由衷欢迎您推送贡献。关于贡献流程的详细信息，请参阅 [贡献者指南](CONTRIBUTING.md)。
 
@@ -115,7 +113,7 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 <a href="#community"></a>
 
-## 加入 Milvus 社区
+## 加入 Phantoscope 社区
 
 - Slack [频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题
 - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
@@ -132,6 +130,6 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 <a href="#license"></a>
 
-## License
+## 协议
 
 Apache License 2.0
