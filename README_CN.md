@@ -31,7 +31,7 @@ Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
 - [背景](#背景)
 - [安装](#安装)
 - [快速开始](#快速开始)
-- [概念](#概念)
+- [教程](#教程)
 - [示例](#示例)
 - [API](#API)
 - [贡献者指南](#贡献者指南)
@@ -39,9 +39,6 @@ Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
 - [路线图](#路线图)
 - [协议](#协议)
 
-
-
-<a href="#background"></a>
 
 ## 背景
 
@@ -63,8 +60,6 @@ Phantoscope 是一个基于 Milvus 与神经网络的云原生图片搜索引擎
 
 经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 Phantoscope。
 
-<a href="#install"></a>
-
 ## 安装
 ### 安装环境说明
 1. docker >= 19.03
@@ -76,32 +71,27 @@ $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | gr
 $ docker-compose up -d
 ```
 
-<a href="#quickstart"></a>
-
 ## 快速开始
 从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
 
-<a href="#concepts"></a>
 
-## 概念
-从下面了解 Phantoscope 中的概念
+## 教程
 
 | Tutorials                                                                                              <img width=700/> | level  |
 | ------------------------------------------------------------                                                            | ------ |
-| [什么是 operators](./docs/site/zh-CN/tutorials/operator.md)                                                             | ⭐     |
-| [什么是 pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐     |
-| [什么是 application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐     |
-| [如何开发一个 operator](./operators/HowToAddAOperator.md)                                                               | ⭐⭐   |
-<a href="#example"></a>
+| [如何使用 phantoscope preview](./docs/site/zh-CN/tutorials/preview.md)                                                  | ⭐     |
+| [什么是 operators](./docs/site/zh-CN/tutorials/operator.md)                                                             | ⭐⭐   |
+| [什么是 pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐⭐   |
+| [什么是 application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐⭐   |
+| [如何开发一个 operator](./operators/HowToAddAOperator.md)                                                               | ⭐⭐⭐ |
 ## 示例
 从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
 
  - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
  - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
- <a href="#API"></a>
 ## API
 Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./docs/site/zh-CN/openapi/README.md) 获取详情。
-<a href="#contributing"></a>
+
 ## 贡献者指南
 我们由衷欢迎您推送贡献。关于贡献流程的详细信息，请参阅 [贡献者指南](CONTRIBUTING.md)。
 
@@ -111,14 +101,13 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 若您希望提出问题或进行讨论，请加入我们的社区。
 
-<a href="#community"></a>
+
 
 ## 加入社区
 
 - Slack [频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题
 - [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
 
-<a href="#roadmap"></a>
 
 ## 路线图
 
@@ -128,7 +117,6 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 如果您有任何问题请随时联系我们 phantoscope@zilliz.com。
 
-<a href="#license"></a>
 
 ## 协议
 
