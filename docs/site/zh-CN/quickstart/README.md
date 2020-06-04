@@ -1,6 +1,6 @@
 # Phantoscope 快速开始
 ## 在开始之前
-确定 Phantoscope 已经成功安装在您的系统当中。
+确定 Phantoscope 正在运行。
 
 ## 准备环境
 ```bash
