@@ -21,7 +21,7 @@ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep
 docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 psoperator/ssd-detector:latest
 docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xception-encoder:latest
 ```
-通过```docker ps`` 命令查看容器状态可以看到两个容器都启动成功
+通过```docker ps``` 命令查看容器状态可以看到两个容器都启动成功
 ![result1](/.github/example/object-example1.png)
 
 2.将 ssd-object-detector 与 xception 作为 Operator 注册到 Phantoscope 中。此过程所需要提供的仅仅是 Operator 暴露的服务端口和一个自定义的 Operator 名称。
