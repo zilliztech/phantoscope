@@ -95,3 +95,8 @@ class NoneVectorError(Error):
     @property
     def code(self):
         return 400
+
+class InstanceExistError(Error):
+    @property
+    def code(self):
+        return 409

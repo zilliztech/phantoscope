@@ -6,6 +6,8 @@ from flask import Flask
 from flask_cors import CORS
 from common.config import UPLOAD_FOLDER
 from common.config import META_DATABASE_ENDPOINT
+from common.config import DEFAULT_RUNTIME
+from operators.runtime import runtime_client_getter
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -26,6 +28,7 @@ db.init_app(app)
 #db.create_all()
 CORS(app)
 
+runtime_client = runtime_client_getter(DEFAULT_RUNTIME)
 
 logger_dict_config = {
     "version": 1,

@@ -24,3 +24,8 @@ class DockerRuntime:
     def start_operator(self, name, image, ports, args=None):
         container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
         return container
+
+
+def runtime_client_getter(name):
+    if name == "docker":
+        return DockerRuntime("unix://var/run/docker.sock", "1.35", 3, False, None, {})

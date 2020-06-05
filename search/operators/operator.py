@@ -15,9 +15,11 @@ from models.operator import Operator as DB
 from models.operator import search_operator, insert_operator, del_operator
 from operators.client import identity
 from operators.client import health
-from operators.runtime import DockerRuntime
 from common.error import NotExistError
 from common.error import OperatorRegistError
+from common.error import InstanceExistError
+from service import runtime_client
+
 
 logger = logging.getLogger(__name__)
 
@@ -115,9 +117,9 @@ def regist_operators(name):
 def create_operator_instance(name, ins_name):
     try:
         op = operator_detail(name)
-        client = DockerRuntime("unix://var/run/docker.sock", "1.35", 3, False, None, {})
+        client = runtime_client
         ports = {"50001/tcp": None}
         container = client.start_operator(f"phantoscope_{name}_{ins_name}", op.addr, ports)
         return container.id
     except Exception as e:
-        raise e
+        raise InstanceExistError(e.explanation, e)
