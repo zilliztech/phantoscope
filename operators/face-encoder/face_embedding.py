@@ -49,8 +49,8 @@ class EmbedFaces:
     def load_model(self):
         logging.info('[INFO] Loading model...')
         try:
-            with tf.device(self.device_str):
-                with self.graph.as_default():
+            with self.graph.as_default():
+                with tf.device(self.device_str):
                     with self.session.as_default():
                         model_path = self._model_dir
                         meta_file, ckpt_file = get_model_filenames(model_path)
