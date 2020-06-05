@@ -87,7 +87,7 @@ def upload_image(file_num, file_generator, field_name):
             except Exception as e:
                 logging.error("Upload file '%s' error due to: %s" % (img, str(e)))
 
-    logging.info("All data has been uploaded: \n"
+    logging.info("Data in this task has been uploaded: \n"
                  "success: {} fail: {} total: {}".format(
         success_count, fail_count, file_num))
     end = time.time()
@@ -110,8 +110,8 @@ def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_n
     success_cnt = 0
     failed_cnt = 0
     for item in result:
-        success_cnt += item.first
-        failed_cnt += item.second
+        success_cnt += item[0]
+        failed_cnt += item[1]
     end = time.time()
     logging.info('upload %d images cost: {:.3f}s'.format(end - start), file_num)
     return success_cnt, failed_cnt
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     logging.info("upload url is %s", upload_url)
     logging.info("Now begin to load image data and upload to phantoscope: ...")
     batch_size = 500
-    pool_num = 12
+    pool_num = 4
 
     image_field_name = get_app_field_name(args.server_addr, args.app_name, args.pipeline_name)
     file_num = get_file_num(args.data_dir)

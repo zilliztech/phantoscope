@@ -39,7 +39,7 @@ class Xception:
         self.graph = tf.Graph()
         with self.graph.as_default():
             with tf.device(self.device_str):
-                self.session = tf.Session(config=self.user_config)
+                self.session = tf.Session(config=self.user_config, graph=self.graph)
                 KTF.set_session(self.session)
                 self.model = KerasXception(weights=self.weight,
                                            input_shape=(self.input_shape[0],
@@ -52,6 +52,8 @@ class Xception:
                 self.model.trainable = False
                 self.model.predict(np.zeros(
                     (1, self.input_shape[0], self.input_shape[1], 3)))
+                self.graph.as_default()
+                self.session.as_default()
 
     def extract_feature(self, img_path):
         img = image.load_img(
@@ -63,9 +65,9 @@ class Xception:
         img = np.expand_dims(img, axis=0)
         img = preprocess_input_xception(img)
         with self.graph.as_default():
-            with tf.device(self.device_str):
-                with self.session.as_default():
-                    feat = self.model.predict(img)
+            with self.session.as_default():
+                # with tf.device(self.device_str):
+                feat = self.model.predict(img)
 
         norm_feat = feat[0] / LA.norm(feat[0])
         norm_feat = [i.item() for i in norm_feat]

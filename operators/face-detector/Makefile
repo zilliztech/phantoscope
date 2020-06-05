@@ -10,11 +10,11 @@ endif
 cpu:
 	docker build  \
  	--build-arg base_tag=ubuntu:bionic-20200219 \
- 	-t zilliz/face-detector:$(TAG) \
+ 	-t psoperator/face-detector:$(TAG) \
  	-f Dockerfile .
 
 gpu:
 	docker build  \
  	--build-arg base_tag=nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04 \
- 	-t zilliz/face-detector-gpu:$(TAG) \
+ 	-t psoperator/face-detector-gpu:$(TAG) \
  	-f Dockerfile-gpu .

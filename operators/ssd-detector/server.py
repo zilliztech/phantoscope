@@ -18,7 +18,9 @@ class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):
         grpc_metas = []
         result_images = run(self.detector, request.datas, request.urls)
         # just for test, need adjust proto
+        logging.info('len of result images： %d', len(result_images))
         result_images = result_images[0]
+
         for result_image in result_images:
             data = rpc.rpc_pb2.MetaData(data=bytes(result_image, encoding='utf-8'))
             grpc_metas.append(data)

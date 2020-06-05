@@ -160,16 +160,15 @@ class MTCNNDetectFace:
         return batch_frame_faces[0]
 
     def bulk_execute(self, imgs):
-        with self.graph.as_default():
-            with tf.device(self.device_str):
-                if self.pnet is None:
-                    self.load_model()
-                detections = align.detect_face.bulk_detect_face(
-                    imgs, self.detection_window_size_ratio, self.pnet,
-                    self.rnet, self.onet, self.threshold, self.factor)
-                bboxes = self.get_face_bboxes(imgs, detections)
-                batch_frame_faces = self.get_face_images(imgs, bboxes)
-                return batch_frame_faces
+        with tf.device(self.device_str):
+            if self.pnet is None:
+                self.load_model()
+            detections = align.detect_face.bulk_detect_face(
+                imgs, self.detection_window_size_ratio, self.pnet,
+                self.rnet, self.onet, self.threshold, self.factor)
+            bboxes = self.get_face_bboxes(imgs, detections)
+            batch_frame_faces = self.get_face_images(imgs, bboxes)
+            return batch_frame_faces
 
     @property
     def name(self):
