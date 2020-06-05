@@ -86,13 +86,16 @@ curl --location --request POST '127.0.0.1:5000/v1/application/object-example' \
 如下图所示，创建成功后会返回 Application 的详细信息：：
 ![result4](/.github/example/object-example4.png)
 
-5.在创建完成的 Phantoscope 应用中上传准备好的数据。因为该数据集包含3万多图片，此过程会比较耗时，在CPU环境、并行度为4的实验条件下大约耗时 4083.240s，实际上传时间取决于机器性能。
+如果一切顺利地运行到这里，一个完整的 Phantoscope 应用就创建完成了，接下来将演示如何使用该应用。
+
+5.在创建完成的 Phantoscope 应用中上传准备好的数据。请先切换到 ```Phantoscope/scripts``` 目录以执行导入命令。
+数据集包含3万多图片，此过程会比较耗时，在CPU环境、并行度为4的实验条件下大约耗时 4083.240s，实际上传时间取决于机器性能。
 
 ```bash
 tar xvf /tmp/256-object.tar -C /tmp
 python3 load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
 ```
-等待运行结束后，脚本会列出上传过程的结果汇总，以下是一次正确上传的结果汇总图。如果没有在上传的图片中检测出符合的实体，会产生上传
+等待运行结束后，脚本会列出上传过程的结果汇总，以下是一次正确上传的结果汇总图。如果没有在上传的图片中检测出符合的实体，会出现上传失败的报错。
 ![result5](/.github/example/object-example5.png)
 > 如果仅仅试用，可以选用自定义的数据集或者只上传一部分图片。
 

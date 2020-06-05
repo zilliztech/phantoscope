@@ -84,7 +84,8 @@ curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
 如下图所示，创建成功后会返回 Application 的详细信息：：
 ![result4](/.github/example/face-example4.png)
 
-出现此结果，一个完整的 Phantoscope 应用就创建完成了，接下来将演示如何使用该应用。
+如果一切顺利地运行到这里，一个完整的 Phantoscope 应用就创建完成了，接下来将演示如何使用该应用。
+
 5.在创建完成的 Phantoscope 应用中上传准备好的数据。因为该数据集包含1万多图片，此过程会比较耗时，在CPU环境、并行度为4的实验条件下大约耗时xxx s，实际上传时间可能因为机器性能差别而存在差异。
 ```bash
 tar xvf /tmp/VOCtrainval_11-May-2012.tar -C /tmp
