@@ -16,13 +16,11 @@ from common.error import QueryFromSQLError, Insert2SQLError, DeleteFromSQLError
 
 class Operator(db.Model):
     name = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
-    backend = db.Column(db.String(80), nullable=False)
+    addr = db.Column(db.String(80), nullable=False)
+    author = db.Column(db.String(80), nullable=False)
+    version = db.Column(db.String(80), nullable=False)
     type = db.Column(db.String(80), nullable=False)
-    input = db.Column(db.String(80), nullable=False)
-    output = db.Column(db.String(80), nullable=False)
-    dimension = db.Column(db.Integer, nullable=False)
-    metric_type = db.Column(db.String(120), nullable=False)
-    endpoint = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(300), nullable=False)
 
     def __repr__(self):
         return '<name %r>' % self.name

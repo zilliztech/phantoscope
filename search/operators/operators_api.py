@@ -17,7 +17,7 @@ from operators.operator import all_operators
 from operators.operator import regist_operators
 from operators.operator import delete_operators
 from operators.operator import operator_detail
-from operators.operator import operator_health
+from operators.operator import create_operator_instance
 from common.common import from_view_dict
 
 operator = Blueprint('operator', __name__)
@@ -57,4 +57,20 @@ def operator_detail_api(name):
 @operator.route("/<name>/health")
 @json_response
 def operator_health_api(name):
-    return operator_health(name)
+    return ""
+
+
+@operator.route("/<name>/runtime")
+@json_response
+def operator_runtime_list_api(name):
+    return ""
+
+@operator.route("/<name>/runtime", methods=['POST'])
+@json_response
+def create_operator_instance_api(name):
+    args = reqparse.RequestParser(). \
+        add_argument("instanceName", type=str, required=True). \
+        parse_args()
+    args = from_view_dict(args)
+    ins_name = args['instance_name']
+    return create_operator_instance(name, ins_name)
