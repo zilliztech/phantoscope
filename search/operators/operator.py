@@ -33,6 +33,7 @@ class Operator:
         self._version = version
         self._type = type
         self._description = description
+        self._runtime_client = runtime_client
 
     @property
     def type(self):
@@ -57,6 +58,18 @@ class Operator:
     @property
     def description(self):
         return self._description
+
+    @property
+    def runtime_client(self):
+        return self._runtime_client
+
+    def list_instances(self):
+        return self.runtime_client.list_instances(self.name)
+
+    def new_instance(self, name):
+        ports = {"50001/tcp": None}
+        ins = self.runtime_client.start_instance(f"phantoscope_{self.name}_{name}", self.addr, ports)
+        return ins
 
 
 def new_operator(name, addr, author, version, type, description):
@@ -114,20 +127,3 @@ def operator_detail(name):
 
 def regist_operators(name):
     pass
-
-
-def create_operator_instance(name, ins_name):
-    try:
-        op = operator_detail(name)
-        client = runtime_client
-        ports = {"50001/tcp": None}
-        ins = client.start_operator(f"phantoscope_{name}_{ins_name}", op.addr, ports)
-        return ins
-    except Exception as e:
-        raise InstanceExistError(e.explanation, e)
-
-
-def operator_instances_list(name):
-    client = runtime_client
-    res = client.list_instances(name)
-    return res
