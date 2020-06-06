@@ -19,6 +19,7 @@ from common.error import NotExistError
 from common.error import OperatorRegistError
 from common.error import InstanceExistError
 from service import runtime_client
+from operators.instance import OperatorInstance
 
 
 logger = logging.getLogger(__name__)
@@ -54,18 +55,8 @@ class Operator:
         return self._version
 
     @property
-    def dscription(self):
+    def description(self):
         return self._description
-
-class OperatorInstance:
-    def __init__(self, id, name, status):
-        self.id = id
-        self.name = name
-        self.status = status
-
-
-def new_operator_instance(id, name, status):
-    return OperatorInstance(id, name, status)
 
 
 def new_operator(name, addr, author, version, type, description):
@@ -130,15 +121,13 @@ def create_operator_instance(name, ins_name):
         op = operator_detail(name)
         client = runtime_client
         ports = {"50001/tcp": None}
-        container = client.start_operator(f"phantoscope_{name}_{ins_name}", op.addr, ports)
-        return container
+        ins = client.start_operator(f"phantoscope_{name}_{ins_name}", op.addr, ports)
+        return ins
     except Exception as e:
         raise InstanceExistError(e.explanation, e)
 
+
 def operator_instances_list(name):
-    res = []
     client = runtime_client
-    containers = client.list_instances(name)
-    for container in containers:
-        res.append(new_operator_instance(container.short_id, container.name, container.status))
+    res = client.list_instances(name)
     return res

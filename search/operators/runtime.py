@@ -10,6 +10,8 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 import docker
+from operators.instance import OperatorInstance
+from operators.instance import new_operator_instance
 
 
 class DockerRuntime:
@@ -23,7 +25,7 @@ class DockerRuntime:
 
     def start_instance(self, name, image, ports, args=None):
         container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
-        return container
+        return new_operator_instance(container.short_id, container.name, container.status)
 
     def stop_instance(self, name):
         container = self.client.containers.get(name)
@@ -39,8 +41,11 @@ class DockerRuntime:
 
     def list_instances(self, name):
         try:
+            res = []
             containers = self.client.containers.list(filters={"name": f"phantoscope_{name}"})
-            return containers
+            for container in containers:
+                res.append(new_operator_instance(container.short_id, container.name, container.status))
+            return res
         except Exception as e:
             print(e)
 
