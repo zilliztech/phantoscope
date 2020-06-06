@@ -21,9 +21,28 @@ class DockerRuntime:
                                           user_agent=user_agent,
                                           credstore_env=credstore_env)
 
-    def start_operator(self, name, image, ports, args=None):
+    def start_instance(self, name, image, ports, args=None):
         container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
         return container
+
+    def stop_instance(self, name):
+        container = self.client.containers.get(name)
+        container.stop()
+
+    def delete_instance(self, name):
+        container = self.client.containers.get(name)
+        containert.stop()
+
+    def restart_instance(self, name):
+        container = self.client.containers.get(name)
+        container.restart()
+
+    def list_instances(self, name):
+        try:
+            containers = self.client.containers.list(filters={"name": f"phantoscope_{name}"})
+            return containers
+        except Exception as e:
+            print(e)
 
 
 def runtime_client_getter(name):

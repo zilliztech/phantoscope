@@ -57,6 +57,16 @@ class Operator:
     def dscription(self):
         return self._description
 
+class OperatorInstance:
+    def __init__(self, id, name, status):
+        self.id = id
+        self.name = name
+        self.status = status
+
+
+def new_operator_instance(id, name, status):
+    return OperatorInstance(id, name, status)
+
 
 def new_operator(name, addr, author, version, type, description):
     return Operator(name=name, addr=addr, author=author, version=version,
@@ -114,12 +124,21 @@ def operator_detail(name):
 def regist_operators(name):
     pass
 
+
 def create_operator_instance(name, ins_name):
     try:
         op = operator_detail(name)
         client = runtime_client
         ports = {"50001/tcp": None}
         container = client.start_operator(f"phantoscope_{name}_{ins_name}", op.addr, ports)
-        return container.id
+        return container
     except Exception as e:
         raise InstanceExistError(e.explanation, e)
+
+def operator_instances_list(name):
+    res = []
+    client = runtime_client
+    containers = client.list_instances(name)
+    for container in containers:
+        res.append(new_operator_instance(container.short_id, container.name, container.status))
+    return res
