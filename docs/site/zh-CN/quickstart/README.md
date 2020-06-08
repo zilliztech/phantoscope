@@ -38,7 +38,7 @@ $ python3 load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_Objec
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
-浏览器打开 127.0.0.1:8000 选择图片进行搜索
+![](../../../../.github/preview.gif)
 
 
 ## 使用 API 上传一张图片
@@ -67,5 +67,5 @@ $ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' 
         }
     },
     \"topk\": 10
-}'
+}"
 ```
