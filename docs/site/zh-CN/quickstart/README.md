@@ -31,7 +31,7 @@ $ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategor
 ## 上传图片数据
 ```bash
 $ tar xvf /tmp/vgg-example.tar -C /tmp
-$ python3 load_data.py -s 127.0.0.1:5000 -a example -p example /tmp/256_ObjectCategories
+$ python3 load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
 ```
 上传图片根据机器性能不同,时间会有差异
 ## 使用 Preview 进行搜索
@@ -45,14 +45,14 @@ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/previ
 ``` bash
 $ curl --location --request POST '127.0.0.1:5000/v1/application/example/upload' \
 --header 'Content-Type: application/json' \
---data-raw '{
-    "fields": {
-        "example": {
-            "url": "https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7"
+--data "{
+    \"fields\": {
+        \"example\": {
+            \"url\": \"https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7\"
         }
     },
-    "s3Buckets": "example"
-}'
+    \"s3Buckets\": \"example\"
+}"
 
 ```
 
@@ -60,12 +60,12 @@ $ curl --location --request POST '127.0.0.1:5000/v1/application/example/upload' 
 ```bash
 $ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
 --header 'Content-Type: application/json' \
---data-raw '{
-    "fields": {
-        "example": {
-            "url": "https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7"
+--data "{
+    \"fields\": {
+        \"example\": {
+            \"url\": \"https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7\"
         }
     },
-    "topk": 10
+    \"topk\": 10
 }'
 ```
