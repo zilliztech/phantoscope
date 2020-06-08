@@ -12,24 +12,24 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 # Create pipeline with registed operator vgg16
 curl --location --request POST '127.0.0.1:5000/v1/pipeline/example' \
 --header 'Content-Type: application/json' \
---data-raw '{
-        "input": "image",
-        "description": "pipeline example",
-        "processors": "",
-        "encoder": "vgg16",
-        "indexFileSize": 1024
-}'
+--data "{
+        \"input\": \"image\",
+        \"description\": \"pipeline example\",
+        \"processors\": \"\",
+        \"encoder\": \"vgg16\",
+        \"indexFileSize\": 1024
+}"
 
 
 # Create application and use the pipeline which above created
 curl --location --request POST '127.0.0.1:5000/v1/application/example' \
 --header 'Content-Type: application/json' \
---data-raw '{
-"fields":{
-        "example": {
-                "type": "object",
-                "pipeline": "example"
+--data "{
+\"fields\":{
+        \"example\": {
+                \"type\": \"object\",
+                \"pipeline\": \"example\"
         }
 },
-"s3Buckets": "example"
-}'
+\"s3Buckets\": \"example\"
+}"
