@@ -1,6 +1,21 @@
 # Phantoscope 快速开始
 ## 在开始之前
-确定 Phantoscope 正在运行。
+确定 Phantoscope 正在运行
+
+```bash 
+$ docker-compose ps
+```
+
+看到如下输出
+        Name                      Command               State                        Ports
+----------------------------------------------------------------------------------------------------------------
+phantoscope_api_1      /usr/bin/gunicorn3 -w 4 -b ...   Up      0.0.0.0:5000->5000/tcp
+phantoscope_milvus_1   /var/lib/milvus/docker-ent ...   Up      0.0.0.0:19530->19530/tcp, 0.0.0.0:8080->8080/tcp
+phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->9000/tcp
+phantoscope_mysql_1    docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
+phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->50001/tcp
+
+即表示 phantoscope 正在运行
 
 ## 准备环境
 ```bash
@@ -25,6 +40,22 @@ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/previ
 ```
 浏览器打开 127.0.0.1:8000 选择图片进行搜索
 
+
+## 使用 API 上传一张图片
+``` bash
+$ curl --location --request POST '127.0.0.1:5000/v1/application/example/upload' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "fields": {
+        "example": {
+            "url": "https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7"
+        }
+    },
+    "s3Buckets": "example"
+}'
+
+```
+
 ## 使用 API 进行搜索
 ```bash
 $ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
@@ -35,7 +66,6 @@ $ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' 
             "url": "https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7"
         }
     },
-    "topk": 10,
-    "nprobe": 20
+    "topk": 10
 }'
 ```
