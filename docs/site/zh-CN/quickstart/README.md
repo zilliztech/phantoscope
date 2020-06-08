@@ -58,7 +58,19 @@ $ curl --location --request POST '127.0.0.1:5000/v1/application/example/upload' 
 
 在预期中会收到类似下方返回
 ```json
-[{"_id": 1591585583689787000, "_app_name": "example", "_image_url": "http://host:9000/example/example-19ef9e9ba7f745dd90b2d9373c1aed56", "_fields": {"example": {"type": "object", "pipeline": "example"}}}]
+[
+    {
+        "_id": 1591585583689787000,
+        "_app_name": "example",
+        "_image_url": "http://host:9000/example/example-19ef9e9ba7f745dd90b2d9373c1aed56",
+        "_fields": {
+        "example": {
+            "type": "object",
+            "pipeline": "example"
+            }
+        }
+    }
+]
 ```
 
 ## 使用 API 进行搜索
@@ -73,4 +85,33 @@ $ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' 
     },
     \"topk\": 10
 }"
+```
+
+在预期中会收到类似下方返回
+```json
+[
+    {
+        "_id": "1591584893762549000",
+        "_app_name": "example",
+        "_image_url": "http://host:9000/example/example-b26e52aa65df4c23bbd848e98df1f0a3",
+        "_fields": {
+            "example": {
+            "type": "object",
+            "pipeline": "example"
+            }
+        }
+    },
+    ...
+    {
+        "_id": "1591584895837488000",
+        "_app_name": "example",
+        "_image_url": "http://host:9000/example/example-e53e7a233c814b7f825f7b58c2647501",
+        "_fields": {
+        "example": {
+            "type": "object",
+            "pipeline": "example"
+            }
+        }
+    }
+]
 ```
