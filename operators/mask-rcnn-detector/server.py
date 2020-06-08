@@ -6,7 +6,7 @@ import rpc.rpc_pb2
 import rpc.rpc_pb2_grpc
 from mask_rcnn import run, MaskRCNNDetectObject as Detector
 
-ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:51003")
+ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:80")
 
 
 class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):

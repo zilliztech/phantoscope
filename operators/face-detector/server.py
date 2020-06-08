@@ -30,6 +30,7 @@ class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):
 
     def Identity(self, request, context):
         logging.info("identity")
+
         encoder = self.detector
         return rpc.rpc_pb2.IdentityReply(name=encoder.name,
                                          endpoint=ENDPOINT,

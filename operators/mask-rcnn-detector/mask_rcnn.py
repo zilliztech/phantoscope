@@ -224,18 +224,17 @@ class MaskRCNNDetectObject:
 
     def execute(self, image):
         with self.graph.as_default():
-            with tf.device(self.device_str):
-                with self.session.as_default():
-                    if not self.model_init:
-                        self.load_model()
-                    results = self.rcnn.detect([image])
-                    bboxes = self.get_bboxes(
-                        results[0]["rois"],
-                        results[0]["scores"],
-                        results[0]["class_ids"])
-                    bboxes[0].sort(key=lambda x: -x.score)
-                    objects_image = self.get_obj_image([image], bboxes)
-                    return objects_image[0]
+            with self.session.as_default():
+                if not self.model_init:
+                    self.load_model()
+                results = self.rcnn.detect([image])
+                bboxes = self.get_bboxes(
+                    results[0]["rois"],
+                    results[0]["scores"],
+                    results[0]["class_ids"])
+                bboxes[0].sort(key=lambda x: -x.score)
+                objects_image = self.get_obj_image([image], bboxes)
+                return objects_image[0]
 
     def bulk_execute(self, images):
         objs = []
