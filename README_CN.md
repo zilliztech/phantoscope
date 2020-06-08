@@ -12,7 +12,7 @@
 
 Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
-**极快的搜索速度并可以处理十亿级别的图片**
+**高性能搜索并可以处理十亿级别的图片**
 
 **完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
 
@@ -39,7 +39,6 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 - [路线图](#路线图)
 - [协议](#协议)
 
-
 ## 背景
 
 人类的搜索不应该被局限在单词与短句。
@@ -64,6 +63,9 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 ### 安装环境说明
 1. docker >= 19.03
 2. docker-compose >= 1.25.0
+### 注意
+phantoscope 已经在 X86 架构下 ubuntu 16.04 centos 7.3 以上经过验证
+在 macOS 与 windows 下可能会存在未知问题
 ### 开始安装
 ```
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
@@ -71,6 +73,12 @@ $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | gr
 $ docker-compose up -d
 ```
 执行 ```docker-compose ps``` 确认所有的容器状态均为 Up
+
+## 产品概述
+1. 上传与搜索图片
+2. 支持自定义图片处理流程
+3. 使用自定义模型处理图片数据
+
 
 ## 快速开始
 从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
