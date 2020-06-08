@@ -72,7 +72,25 @@ $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
 ```
-执行 ```docker-compose ps``` 确认所有的容器状态均为 Up
+执行 
+``` bash
+$ docker-compose ps
+``` 
+
+确认所有的容器状态均为 Up
+
+看到如下输出
+```
+Name                      Command               State                        Ports
+----------------------------------------------------------------------------------------------------------------
+phantoscope_api_1      /usr/bin/gunicorn3 -w 4 -b ...   Up      0.0.0.0:5000->5000/tcp
+phantoscope_milvus_1   /var/lib/milvus/docker-ent ...   Up      0.0.0.0:19530->19530/tcp, 0.0.0.0:8080->8080/tcp
+phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->9000/tcp
+phantoscope_mysql_1    docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
+phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->50001/tcp
+```
+即表示 phantoscope 正在运行
+
 
 ## 产品概述
 1. 上传与搜索图片
