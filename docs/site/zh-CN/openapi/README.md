@@ -2,7 +2,7 @@
 
 ## 如何访问在线的 API 文档
 
-你可以访问 https://app.swaggerhub.com/apis/ReigenAraka/Phantoscope/1.0.0 来阅读 Phantoscope 的 API 文档
+你可以访问 https://app.swaggerhub.com/apis-docs/ReigenAraka/Phantoscope/1.0.0#/ 来阅读 Phantoscope 的 API 文档
 
 ## 如何使用 swagger 在本地启动 swagger 
 
