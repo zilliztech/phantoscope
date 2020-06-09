@@ -18,6 +18,7 @@ from operators.client import health
 from common.error import NotExistError
 from common.error import OperatorRegistError
 from common.error import InstanceExistError
+from common.error import DockerRuntimeError
 from service import runtime_client
 from operators.instance import OperatorInstance
 
@@ -72,8 +73,11 @@ class Operator:
         return ins
 
     def delete_instance(self, name):
-        ins = self.runtime_client.delete_instance(f"phantoscope_{self.name}_{name}")
-        return ins
+        try:
+            ins = self.runtime_client.delete_instance(f"phantoscope_{self.name}_{name}")
+            return ins
+        except DockerRuntimeError as e:
+            raise e
 
     def stop_instance(self, name):
         ins = self.runtime_client.stop_instance(f"phantoscope_{self.name}_{name}")

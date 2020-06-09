@@ -100,3 +100,9 @@ class InstanceExistError(Error):
     @property
     def code(self):
         return 409
+
+
+class DockerRuntimeError(Error):
+    @property
+    def code(self):
+        return 400

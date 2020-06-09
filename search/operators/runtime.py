@@ -10,6 +10,8 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 import docker
+from docker.errors import APIError
+from common.error import DockerRuntimeError
 from operators.instance import OperatorInstance
 from operators.instance import new_operator_instance
 
@@ -24,31 +26,43 @@ class DockerRuntime:
                                           credstore_env=credstore_env)
 
     def create_instance(self, name, image, ports, args=None):
-        container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
-        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        try:
+            container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
+            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
     def start_instance(self, name):
-        container = self.client.container.get(name)
-        container.start()
-        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        try:
+            container = self.client.container.get(name)
+            container.start()
+            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
     def stop_instance(self, name):
-        container = self.client.containers.get(name)
-        container.stop()
-        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        try:
+            container = self.client.containers.get(name)
+            container.stop()
+            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
     def delete_instance(self, name):
         try:
             container = self.client.containers.get(name)
             container.remove(force=True)
             return new_operator_instance(container.short_id, container.name, "deleted", container.ports)
-        except Exception as e:
-            print(e)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
     def restart_instance(self, name):
-        container = self.client.containers.get(name)
-        container.restart()
-        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        try:
+            container = self.client.containers.get(name)
+            container.restart()
+            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
     def list_instances(self, name):
         try:
@@ -57,8 +71,8 @@ class DockerRuntime:
             for container in containers:
                 res.append(new_operator_instance(container.short_id, container.name, container.status, container.ports))
             return res
-        except Exception as e:
-            print(e)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
 
 def runtime_client_getter(name):
