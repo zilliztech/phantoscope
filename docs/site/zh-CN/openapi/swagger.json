@@ -349,6 +349,7 @@ definitions:
         $ref: '#/definitions/Fields'
       s3Buckets:
         type: string
+        description: the bucket name in s3 storage;the uploaded image will be saved here
   Fields:
     type: object
     additionalProperties:
@@ -356,8 +357,10 @@ definitions:
       properties:
         type:
           type: string
+          description: the type of fields;only the "integer" "string" "pipeline" is valid
         value:
           type: string
+          description: the value of fields; if the type is "pipeline",value is the pipeline name
   UploadFields:
     type: object
     additionalProperties:
@@ -365,76 +368,102 @@ definitions:
       properties:
         value:
           type: string
+          description: is required only if the corresponding fileds type is not pipeline.
         data:
           type: string
+          description: image base64 encoded data;is required only if the corresponding fields type is pipeline.If both exist with url, data prevails.
         url:
           type: string
+          description: image url;is required only if the corresponding fields type is pipeline.If both exist with data, data prevails.
   SearchFields:
     type: object
     properties:
       topk:
         type: string
+        description: return number
     additionalProperties:
       type: object
       properties:
         value:
           type: string
+          description: is required only if the corresponding fileds type is not pipeline.
         data:
           type: string
+          description: image base64 encoded data;is required only if the corresponding fields type is pipeline.If both exist with url, data prevails.
         url:
           type: string
+          description: image url;is required only if the corresponding fields type is pipeline.If both exist with data, data prevails.
   Pipeline:
     type: object
     properties:
       name:
         type: string
+        description: pipeline name
       input:
         type: string
+        description: the type of data processed by this pipeline
       description:
         type: string
+        description: pipeline description
       processors:
         type: array
         items:
           type: string
+          description: processor name
       encoder:
         type: string
+        description: encoder name
       indexFileSize:
         type: integer
+        description: number of documents automatically indexed
   Operator:
     type: object
     properties:
       name:
         type: string
+        description: operator name
       backend:
         type: string
+        description: the name of the container in which the operator is provided
       type:
         type: string
+        description: the type of operator;"encoder" or "processor"
       input:
         type: string
+        description: the type of input data
       outout:
         type: string
+        description: the type of output data
       endpoint:
         type: string
+        description: the endpoint of the container
       metric_type:
         type: string
+        description: the way to calculate vector distance;only in "encoder"
       dimension:
         type: integer
+        description: the dimension of the vector;only in "encoder"
   OperatorPost:
     type: object
     properties:
       name:
         type: string
+        description: the operator name
       endpoint:
         type: string
+        description: the endpoint of the container
   Entity:
     type: object
     properties:
       id:
         type: string
+        description: unique identifier
       app_name:
         type: string
+        description: application name
       image_url:
         type: string
+        description: the image url in s3 storage
       fields:
         $ref: '#/definitions/Fields'
   Error:
