@@ -31,7 +31,7 @@ $ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategor
 ## 上传图片数据
 ```bash
 $ tar xvf /tmp/vgg-example.tar -C /tmp
-$ python3 load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
+$ python3 scripts/load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
 ```
 上传图片根据机器性能不同,时间会有差异
 ## 使用 Preview 进行搜索
