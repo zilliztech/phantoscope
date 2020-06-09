@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  description: Following are Phantoscope open APIs.
+  description: Phantoscope open api
   version: 1.0.0
-  title: Omnisearch Open Api
+  title: Phantoscope Open Api
   contact:
     email: boyan.wang@zilliz.com
   license:
@@ -30,13 +30,15 @@ paths:
       parameters: []
       responses:
         200:
-          description: successful operation
+          description: successful get all applications
           schema:
             type: array
             items:
               $ref: '#/definitions/Application'
-        400:
-          description: Invalid status value
+        500:
+          description: server error
+          schema:
+            $ref: '#/definitions/Error'
   /application/{applicationName}:
     get:
       tags:
@@ -47,18 +49,22 @@ paths:
       parameters:
       - name: applicationName
         in: path
-        description: none
+        description: application name
         type: string
         required: true
       responses:
         200:
-          description: successful operation
+          description: successful get application message
           schema:
             $ref: '#/definitions/Application'
+        404:
+          description: application not found
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
       - application
-      summary: create application
+      summary: create a new application
       consumes:
       - application/json
       produces:
@@ -66,34 +72,36 @@ paths:
       parameters:
       - in: path
         name: applicationName
-        description: none
+        description: application name
         type: string
         required: true
       - in: body
         name: fields
-        description: none
+        description: custom fields; if type is "integer" or  "string",fields should contain "value", if type is "object", fields should contain "pipeline", the value of  "pipeline"  is pipeline name
         schema:
           $ref: '#/definitions/Application'
       responses:
         201:
-          description: successfully created
+          description: successful create
           schema:
             $ref: '#/definitions/Application'
     delete:
       tags:
       - application
-      summary: delete application
+      summary: delete a applicaiton
       produces:
       - application/json
       parameters:
       - in: path
         name: applicationName
-        description: none
+        description: application name
         type: string
         required: true
       responses:
         200:
           description: successful delete
+          schema:
+            $ref: '#/definitions/Application'
   /application/{applicationName}/search:
     post:
       tags:
@@ -106,22 +114,27 @@ paths:
       parameters:
       - in: path
         name: applicationName
-        description: none
+        description: application name
         type: string
         required: true
       - in: body
         name: fields
         description: none
-        schema:s
-          $ref: '#/definitions/Fields'
+        schema:
+          $ref: '#/definitions/SearchFields'
       responses:
         200:
-          description: successful
+          description: succesful search
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+
   /application/{applicationName}/upload:
     post:
       tags:
       - application
-      summary: search by application
+      summary: upload images to a application
       consumes:
       - application/json
       produces:
@@ -129,38 +142,44 @@ paths:
       parameters:
       - in: path
         name: applicationName
-        description: none
+        description: application name
         type: string
         required: true
       - in: body
         name: fields
-        description: nones
+        description: if the key which in application is "integer" or "string", fields only need "value";if it is "object", you need use "data" or "url";"data" is a string that is encoded in base64 for an image.if "data" and "url".only data is used if both data and url exist.
         schema:
-          $ref: '#/definitions/Fields'
+          $ref: '#/definitions/UploadFields'
       responses:
         200:
-          description: successful
+          description: succesful
+          schema:
+            $ref: '#/definitions/Entity'
   /application/{applicationName}/entity:
     get:
       tags:
       - application
-      summary: search by application
+      summary: get all data under a application
       produces:
       - application/json
       parameters:
       - in: path
         name: applicationName
-        description: none
+        description: applicaiton name
         type: string
         required: true
       responses:
         200:
-          description: successful
+          description: succesful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
   /application/{applicationName}/entity/{entityName}:
     delete:
       tags:
       - application
-      summary: search by application
+      summary: delete a entity under a application
       consumes:
       - application/json
       produces:
@@ -168,17 +187,19 @@ paths:
       parameters:
       - in: path
         name: applicationName
-        description: none
+        description: application name
         type: string
         required: true
       - in: path
         name: entityName
-        description: none
+        description: entity name
         type: string
-        required: trues
+        required: true
       responses:
         200:
-          description: successful
+          description: succesful delete a entity
+          schema:
+            $ref: '#/definitions/Entity'
   /pipeline:
     get:
       tags:
@@ -186,7 +207,6 @@ paths:
       summary: get all pipeline
       produces:
       - application/json
-      description: none
       responses:
         200:
           description: OK
@@ -204,10 +224,9 @@ paths:
       parameters:
       - in: path
         name: pipelineName
-        description: none
+        description: pipeline name
         required: true
         type: string
-      description: none
       responses:
         200:
           description: OK
@@ -224,17 +243,16 @@ paths:
       parameters:
       - in: path
         name: pipelineName
-        description: none
+        description: pipeline name
         required: true
         type: string
       - in: body
         name: body
         schema:
           $ref: '#/definitions/Pipeline'
-      description: none
       responses:
         200:
-          description: OK
+          description: successful create a pipeline
           schema:
             $ref: '#/definitions/Pipeline'
     delete:
@@ -246,7 +264,7 @@ paths:
       parameters:
       - in: path
         name: pipelineName
-        description: none
+        description: pipeline name
         required: true
         type: string
       description: none
@@ -279,15 +297,16 @@ paths:
       parameters:
       - name: body
         in: body
+        description: name and endpoint is required; endpoint need port like  ip:port;when you regist a oprator make sure you can visit this endpoint;
         required: true
         schema:
           $ref: '#/definitions/OperatorPost'
       responses:
-        200:r
+        200:
           description: OK
           schema:
             $ref: '#/definitions/Operator'
-  /operator/{operatorName}:
+  /opetator/{operatorName}:
     get:
       tags:
       - operator
@@ -297,6 +316,7 @@ paths:
       parameters:
       - name: operatorName
         in: path
+        description: operator name
         required: true
         type: string
       responses:
@@ -313,11 +333,12 @@ paths:
       parameters:
       - name: operatorName
         in: path
+        description: operator name
         required: true
         type: string
       responses:
         200:
-          description: OK
+          description: successful delete a oeprator
           schema:
             $ref: '#/definitions/Operator'
 definitions:
@@ -330,19 +351,38 @@ definitions:
         type: string
   Fields:
     type: object
+    additionalProperties:
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+  UploadFields:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        value:
+          type: string
+        data:
+          type: string
+        url:
+          type: string
+  SearchFields:
+    type: object
     properties:
-      type:
+      topk:
         type: string
-        enum:
-        - string
-        - integer
-        - object
-      value:
-        type: string
-        enum:
-        - integer
-        - string
-        - pipeline_name
+    additionalProperties:
+      type: object
+      properties:
+        value:
+          type: string
+        data:
+          type: string
+        url:
+          type: string
   Pipeline:
     type: object
     properties:
@@ -371,7 +411,7 @@ definitions:
         type: string
       input:
         type: string
-      output:
+      outout:
         type: string
       endpoint:
         type: string
@@ -386,7 +426,26 @@ definitions:
         type: string
       endpoint:
         type: string
-host: virtserver.swaggerhub.com
-basePath: /ReigenAraka/Omnisearch/1.0.0
+  Entity:
+    type: object
+    properties:
+      id:
+        type: string
+      app_name:
+        type: string
+      image_url:
+        type: string
+      fields:
+        $ref: '#/definitions/Fields'
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+      error:
+        type: string
 schemes:
  - http
+basePath: /v1
+# Added by API Auto Mocking Plugin
+host: local_addr:5000
