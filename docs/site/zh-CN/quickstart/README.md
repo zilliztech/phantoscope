@@ -18,6 +18,11 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 即表示 phantoscope 正在运行
 
 ## 准备环境
+准备环境会运行 scripts 文件夹下的 prepare.sh 脚本
+
+该脚本的主要步骤是注册一个 operator ,以注册的 operator 创建一个 pipeline
+
+最后创建一个仅拥有一条 pipeline 的 application
 ```bash
 $ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
