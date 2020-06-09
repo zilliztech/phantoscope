@@ -12,13 +12,11 @@
 
 Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
-**高性能搜索并可以处理十亿级别的图片**
+**十亿级别的图像的高性能搜索**
 
-**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等框架**
+**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等主流深度学习框架,可以在最短五分钟内创建自己的模型扩展**
 
-**提供了丰富的扩展，也可以在五分钟内使用自己的模型创造一个自己的扩展**
-
-**提供了 gui 快速的验证自己的扩展提供的效果并管理自己的数据**
+**提供 gui 验证搜索效果、管理 phantoscope 资源**
 
 **即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
 
@@ -63,8 +61,10 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 ### 安装环境说明
 1. docker >= 19.03
 2. docker-compose >= 1.25.0
+3. python3.5+
 ### 注意
-phantoscope 已经在 X86 架构下 ubuntu 16.04 centos 7.3 以上经过验证
+phantoscope 已经在 x86 架构下 ubuntu 16.04 centos 7.3 以上经过验证
+
 在 macOS 与 windows 下可能会存在未知问题
 ### 开始安装
 ```
@@ -92,15 +92,17 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 即表示 phantoscope 正在运行
 
 
-## 产品概述
+## 产品功能说明
 1. 上传与搜索图片
-2. 支持自定义图片处理流程
+2. 自定义图片处理流程
 3. 使用自定义模型处理图片数据
-
+4. 管理上传的图片数据
 
 ## 快速开始
 从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
 
+## 架构图
+![](./.github/ps-architecture.png)
 
 ## 教程
 
@@ -140,7 +142,7 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 您可以参考我们的[路线图](https://github.com/zilliztech/phantoscope/milestones)。
 
-包括 Roadmap 在内，我们希望更多的人可以一起参与到 Pantoscope 的开发当中。
+包括路线图在内，我们希望更多的人可以一起参与到 Pantoscope 的开发当中。
 
 如果您有任何问题请随时联系我们 phantoscope@zilliz.com。
 
