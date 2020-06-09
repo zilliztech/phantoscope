@@ -24,6 +24,9 @@ class DockerRuntime:
                                           tls=tls,
                                           user_agent=user_agent,
                                           credstore_env=credstore_env)
+    @property
+    def json(self):
+        return "docker_client"
 
     def create_instance(self, name, image, ports, args=None):
         try:

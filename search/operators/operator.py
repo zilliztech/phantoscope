@@ -64,6 +64,18 @@ class Operator:
     def runtime_client(self):
         return self._runtime_client
 
+    @property
+    def json(self):
+        return {
+            "name": self.name,
+            "addr": self.addr,
+            "author": self.author,
+            "version": self.version,
+            "type": self.type,
+            "description": self.description,
+            "runtime_client": self.runtime_client.json
+        }
+
     def list_instances(self):
         return self.runtime_client.list_instances(self.name)
 
@@ -106,11 +118,11 @@ def all_operators():
                                     addr=x.Operator.addr,
                                     author=x.Operator.author,
                                     version=x.Operator.version,
-                                    description=x.Operator.description))
+                                    description=x.Operator.description).json)
+        return res
     except Exception as e:
         logger.error(e)
         raise e
-    return res
 
 
 def delete_operators(name):
