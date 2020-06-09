@@ -20,10 +20,12 @@
 ```bash
 curl http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar -o /tmp/VOCtrainval_11-May-2012.tar
 ```
+
 > 注意: 该数据不是人脸数据集，包含很多没有人脸信息的无效图片，会在实际导入过程中引发上传失败警告。
 
 ## 开始
 1.使用 face-embedding 与 mtcnn-face-detector 的镜像创建对应的容器。如果是第一次运行需要从 Dockerhub 拉取镜像，需要等待一段时间。
+
 ```bash
 export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 docker run -d -p 50004:50004 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50004 psoperator/face-encoder:latest
@@ -56,6 +58,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 如下图所示，正确的运行结果会返回对应 Operator 的信息：
 ![result2](/.github/example/face-example2.png)
 
+
 3.创建一条包含 face-embedding 和 mtcnn-face-detector 的 Pipeline。关于 Pipeline 的详细描述请参考 [什么是Pipeline](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/pipeline.md)。
 
 ```bash
@@ -73,7 +76,8 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/face' \
 ![result3](/.github/example/face-example3.png)
 
 
-4.以步骤3创建的 Pipeline 构建完整的 Phantoscope Application。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)
+4.以步骤3创建的 Pipeline 构建完整的 Phantoscope Application。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)。
+
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
 --header 'Content-Type: application/json' \
@@ -87,7 +91,7 @@ curl --location --request POST '127.0.0.1:5000/v1/application/face-example' \
     "s3Buckets": "face"
 }'
 ```
-如下图所示，创建成功后会返回 Application 的详细信息：：
+如下图所示，创建成功后会返回 Application 的详细信息：
 ![result4](/.github/example/face-example4.png)
 
 如果一切顺利地运行到这里，一个完整的 Phantoscope 应用就创建完成了，接下来将演示如何使用该应用。
