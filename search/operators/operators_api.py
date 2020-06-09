@@ -76,3 +76,30 @@ def create_operator_instance_api(name):
     ins_name = args['instance_name']
     op = operator_detail(name)
     return op.new_instance(ins_name)
+
+
+@operator.route("/<name>/instances/<ins_name>", methods=['DELETE'])
+@json_response
+def delete_operator_instance_api(name, ins_name):
+    op = operator_detail(name)
+    return op.delete_instance(ins_name)
+
+@operator.route("/<name>/instances/<ins_name>/start", methods=['POST'])
+@json_response
+def start_operator_instance_api(name, ins_name):
+    op = operator_detail(name)
+    return op.start_instance(ins_name)
+
+
+@operator.route("/<name>/instances/<ins_name>/stop", methods=['POST'])
+@json_response
+def stop_operator_instance_api(name, ins_name):
+    op = operator_detail(name)
+    return op.stop_instance(ins_name)
+
+
+@operator.route("/<name>/instances/<ins_name>/restart", methods=['POST'])
+@json_response
+def restart_operator_instance_api(name, ins_name):
+    op = operator_detail(name)
+    return op.restart_instance(ins_name)

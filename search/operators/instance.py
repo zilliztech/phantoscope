@@ -11,11 +11,12 @@
 
 
 class OperatorInstance:
-    def __init__(self, id, name, status):
+    def __init__(self, id, name, status, ports):
         self.id = id
         self.name = name
         self.status = status
+        self.ports = ports
 
 
-def new_operator_instance(id, name, status):
-    return OperatorInstance(id, name, status)
+def new_operator_instance(id, name, status, ports):
+    return OperatorInstance(id, name, status, ports)

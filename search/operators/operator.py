@@ -67,8 +67,24 @@ class Operator:
         return self.runtime_client.list_instances(self.name)
 
     def new_instance(self, name):
-        ports = {"50001/tcp": None}
-        ins = self.runtime_client.start_instance(f"phantoscope_{self.name}_{name}", self.addr, ports)
+        ports = {"80/tcp": None}
+        ins = self.runtime_client.create_instance(f"phantoscope_{self.name}_{name}", self.addr, ports)
+        return ins
+
+    def delete_instance(self, name):
+        ins = self.runtime_client.delete_instance(f"phantoscope_{self.name}_{name}")
+        return ins
+
+    def stop_instance(self, name):
+        ins = self.runtime_client.stop_instance(f"phantoscope_{self.name}_{name}")
+        return ins
+
+    def start_instance(self, name):
+        ins = self.runtime_client.start_instance(f"phantoscope_{self.name}_{name}")
+        return ins
+
+    def restart_instance(self, name):
+        ins = self.runtime_client.restart_instance(f"phantoscope_{self.name}_{name}")
         return ins
 
 

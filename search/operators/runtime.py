@@ -23,28 +23,39 @@ class DockerRuntime:
                                           user_agent=user_agent,
                                           credstore_env=credstore_env)
 
-    def start_instance(self, name, image, ports, args=None):
+    def create_instance(self, name, image, ports, args=None):
         container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
-        return new_operator_instance(container.short_id, container.name, container.status)
+        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+
+    def start_instance(self, name):
+        container = self.client.container.get(name)
+        container.start()
+        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
 
     def stop_instance(self, name):
         container = self.client.containers.get(name)
         container.stop()
+        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
 
     def delete_instance(self, name):
-        container = self.client.containers.get(name)
-        containert.stop()
+        try:
+            container = self.client.containers.get(name)
+            container.remove(force=True)
+            return new_operator_instance(container.short_id, container.name, "deleted", container.ports)
+        except Exception as e:
+            print(e)
 
     def restart_instance(self, name):
         container = self.client.containers.get(name)
         container.restart()
+        return new_operator_instance(container.short_id, container.name, container.status, container.ports)
 
     def list_instances(self, name):
         try:
             res = []
-            containers = self.client.containers.list(filters={"name": f"phantoscope_{name}"})
+            containers = self.client.containers.list(all=True, filters={"name": f"phantoscope_{name}"})
             for container in containers:
-                res.append(new_operator_instance(container.short_id, container.name, container.status))
+                res.append(new_operator_instance(container.short_id, container.name, container.status, container.ports))
             return res
         except Exception as e:
             print(e)
