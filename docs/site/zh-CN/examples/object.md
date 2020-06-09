@@ -97,7 +97,8 @@ python3 load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
 ```
 等待运行结束后，脚本会列出上传过程的结果汇总，以下是一次正确上传的结果汇总图。如果没有在上传的图片中检测出符合的实体，会出现上传失败的报错。
 ![result5](/.github/example/object-example5.png)
-> 如果仅仅试用，可以选用自定义的数据集或者只上传一部分图片。
+
+> 如果仅仅试用，可以选用自定义的数据集或者只上传一部分图片，可以大幅提高减少等待时间。
 
 6.步骤5图片上传结束后，我们就可以开始使用该 Phantoscope 应用进行搜索啦。
 ```bash
@@ -119,6 +120,7 @@ curl --location --request POST '127.0.0.1:5000/v1/application/object-example/sea
 
 RESTful API 的结果展示并不直观，可以使用[Phantoscope Preview](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/preview.md)接入 Phantoscope 进行搜索。
 下图是演示的结果图：
+
 ![result7](/.github/example/object-example7.png)
 
 
