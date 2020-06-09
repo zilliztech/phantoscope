@@ -33,7 +33,8 @@ $ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategor
 $ tar xvf /tmp/vgg-example.tar -C /tmp
 $ python3 scripts/load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
 ```
-上传图片根据机器性能不同,时间会有差异
+上传图片根据机器性能不同,时间会有差异。
+> Phantoscope 因为传输协议限制，上传过大的图片会触发上传失败的报错。
 ## 使用 Preview 进行搜索
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest

@@ -6,11 +6,12 @@ import argparse
 import requests
 import multiprocessing
 import time
+import math
 from itertools import islice, takewhile, repeat
 
 logging.basicConfig(level=logging.INFO)
 
-accept_ends = ['jpg', 'jpeg', 'png']
+accept_ends = ['bmp', 'jpg', 'jpeg', 'png']
 
 
 def get_app_body_fields(address, app_name):
@@ -131,18 +132,23 @@ if __name__ == "__main__":
                         dest='data_dir')
     parser.add_argument("-s", "--server", type=str, help='assigned search api address',
                         dest='server_addr', default='127.0.0.1:5000')
+    parser.add_argument("--batch_size", type=int, help='batch size each process upload',
+                        dest='batch_size', default=500)
+    parser.add_argument("--pool_num", type=int, help='number of multiprocessing pool',
+                        dest='pool_num', default=4)
     args = parser.parse_args()
 
     upload_url = "http://%s/v1/application/%s/upload" % (args.server_addr, args.app_name)
     logging.info("upload url is %s", upload_url)
     logging.info("Now begin to load image data and upload to phantoscope: ...")
-    batch_size = 500
-    pool_num = 4
+    batch_size = args.batch_num
+    pool_num = args.pool_num
 
     image_field_name = get_app_field_name(args.server_addr, args.app_name, args.pipeline_name)
     file_num = get_file_num(args.data_dir)
-    # ensure all images can be allocated to processes evently [[for test speed]]
-    # file_num = file_num // (batch_size * pool_num) * (batch_size * pool_num)
     file_generator = get_file_generator(args.data_dir, file_num)
+    # ensure run in all processes in the pool
+    batch_size = min(math.ceil(file_num / pool_num), batch_size)
+
     sucess_cnt, failed_cnt = parallel_upload(file_num, file_generator, image_field_name, batch_size, pool_num)
-    logging.info("All images has been uploaded: success: {} fail: {}".format(sucess_cnt, failed_cnt))
+    logging.info("All images has been uploaded: success {}, fail {}".format(sucess_cnt, failed_cnt))

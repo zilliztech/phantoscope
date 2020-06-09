@@ -116,8 +116,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ## 示例
 从 [这里](./docs/site/zh-CN/examples) 你可以看到 Phantoscope 在不同场景下的应用:
 
- - 根据图片中的人脸进行搜索![](./docs/site/zh-CN/examples/face.md)
- - 根据图片中的物体进行搜索![](./docs/site/zh-CN/examples/object.md)
+ - 识别图片中的物体信息并进行搜索![](./docs/site/zh-CN/examples/object.md)
 ## API
 Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./docs/site/zh-CN/openapi/README.md) 获取详情。
 
