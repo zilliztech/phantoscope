@@ -37,6 +37,7 @@ def operator_refresh_api():
         add_argument("author", type=str, required=True). \
         add_argument("type", type=str, required=True). \
         add_argument("description", type=str, required=True). \
+        add_argument("version", type=str, required=True). \
         parse_args()
     args = from_view_dict(args)
     return register_operators(**args)
@@ -52,12 +53,6 @@ def delete_operator_api(name):
 @json_response
 def operator_detail_api(name):
     return operator_detail(name)
-
-
-@operator.route("/<name>/health")
-@json_response
-def operator_health_api(name):
-    return ""
 
 
 @operator.route("/<name>/instances")
