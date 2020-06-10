@@ -14,7 +14,7 @@ from flask import Blueprint
 from flask_restful import reqparse
 from common.common import json_response
 from operators.operator import all_operators
-from operators.operator import regist_operators
+from operators.operator import register_operators
 from operators.operator import delete_operators
 from operators.operator import operator_detail
 from common.common import from_view_dict
@@ -28,17 +28,18 @@ def operator_list_api():
     return all_operators()
 
 
-@operator.route("/regist", methods=['POST'])
+@operator.route("/register", methods=['POST'])
 @json_response
 def operator_refresh_api():
     args = reqparse.RequestParser(). \
-         add_argument("endpoint", type=str, required=True). \
-         add_argument("name", type=str, required=True). \
-         parse_args()
+        add_argument("name", type=str, required=True). \
+        add_argument("addr", type=str, required=True). \
+        add_argument("author", type=str, required=True). \
+        add_argument("type", type=str, required=True). \
+        add_argument("description", type=str, required=True). \
+        parse_args()
     args = from_view_dict(args)
-    ed = args['endpoint']
-    name = args['name']
-    return regist_operators(ed, name)
+    return register_operators(**args)
 
 
 @operator.route("/<name>", methods=['DELETE'])
@@ -83,6 +84,7 @@ def create_operator_instance_api(name):
 def delete_operator_instance_api(name, ins_name):
     op = operator_detail(name)
     return op.delete_instance(ins_name)
+
 
 @operator.route("/<name>/instances/<ins_name>/start", methods=['POST'])
 @json_response

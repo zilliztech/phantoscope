@@ -147,5 +147,15 @@ def operator_detail(name):
         logger.error(e)
         raise e
 
-def regist_operators(name):
-    pass
+
+def register_operators(args):
+    op = new_operator(name=args['name'],
+                      type=args['type'],
+                      addr=args['addr'],
+                      author=args['author'],
+                      version=args['version'],
+                      description=args['description'])
+    try:
+        DB.insert_operator(op)
+    except Exception as e:
+        raise e
