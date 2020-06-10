@@ -2,7 +2,6 @@
 ## 快速开始 (docker pull)
 
 ### CPU版本
-PS: 待 docker hub 确定后上传拉取 （需要修改相关参数）
 
 ```bash
 # 拉取对应版本的 docker 镜像, ${tag}应替换为可选的tag
