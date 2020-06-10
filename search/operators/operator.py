@@ -19,6 +19,7 @@ from common.error import NotExistError
 from common.error import OperatorRegistError
 from common.error import InstanceExistError
 from common.error import DockerRuntimeError
+from common.config import DEFAULT_RUNTIME
 from service import runtime_client
 from operators.instance import OperatorInstance
 
@@ -34,7 +35,7 @@ class Operator:
         self._version = version
         self._type = type
         self._description = description
-        self._runtime_client = runtime_client
+        self._runtime_client = DEFAULT_RUNTIME
 
     @property
     def type(self):
@@ -62,19 +63,8 @@ class Operator:
 
     @property
     def runtime_client(self):
+        self._runtime_client = runtime_client
         return self._runtime_client
-
-    @property
-    def json(self):
-        return {
-            "name": self.name,
-            "addr": self.addr,
-            "author": self.author,
-            "version": self.version,
-            "type": self.type,
-            "description": self.description,
-            "runtime_client": self.runtime_client.json
-        }
 
     def list_instances(self):
         return self.runtime_client.list_instances(self.name)
@@ -118,7 +108,7 @@ def all_operators():
                                     addr=x.Operator.addr,
                                     author=x.Operator.author,
                                     version=x.Operator.version,
-                                    description=x.Operator.description).json)
+                                    description=x.Operator.description))
         return res
     except Exception as e:
         logger.error(e)
