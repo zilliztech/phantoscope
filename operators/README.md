@@ -11,44 +11,44 @@ Phantoscope 当前内置了一些 Operator 可以完成最简单的使用。如�
 下面将会按 Processor 和 Encoder 的分类分别对内置 Operator 的详细介绍，
 
 ## Prcoessor
-- MTCNN-face-detector
+- ###### MTCNN-face-detector
     - 镜像名： face-detector
     - 功能： 识别输入图片中的人脸
     - 接受： image
     - 返回： 识别出的一组人脸图片
-    - 样例 pipeline：mtcnn_detect_face -> face_embedding
+    - 样例 Pipeline：mtcnn_detect_face -> face_embedding
 
-> 以 facenet 实现，使用 github 项目 https://github.com/davidsandberg/facenet.git
+> 以 facenet 实现， [facenet github](https://github.com/davidsandberg/facenet.git)
 
-- Mask-RCNN-object-detector
+- ###### Mask-RCNN-object-detector
     - 镜像名： mask-rcnn-detector
     - 功能： 识别输入图片中的物体
     - 接受： image
     - 返回： 识别出的一组物体图片
-    - 样例 pipeline：mask_rcnn -> vgg/xception
+    - 样例 Pipeline：mask_rcnn -> vgg/xception
 
-> 附上 mask-rcnn github 链接
+> [Mask_RCNN github](https://github.com/matterport/Mask_RCNN)
 
-- SSD-object-detector
+- ###### SSD-object-detector
     - 镜像名： ssd-detector
     - 功能： 识别输入图片中的物体
     - 接受： image
     - 返回： 识别出的一组物体图片
-    - 样例pipeline：ssd -> vgg/xception
+    - 样例 Pipeline：ssd -> vgg/xception
 
-> 
+> [SSD github]()
 
-- YOLOv3-object-detector
+- ###### YOLOv3-object-detector
     - 镜像名：yolov3-detector
     - 功能： 识别输入图片中的物体
     - 接受： image
     - 返回： 识别出的一组物体图片
-    - 样例 pipeline：yolo -> vgg/xception
+    - 样例 Pipeline：yolo -> vgg/xception
 
-> 以 paddlepaddle yolo v3 模型实现，附链接
+> 以 paddlepaddle yolo v3 模型实现。 [PaddleDetection github](https://github.com/PaddlePaddle/PaddleDetection)
 
 ## Encoder
-- Vgg16
+- ###### Vgg16
     - 镜像名： vgg16-encoder
     - 向量维度： 512
     - 计算方式： 需要测试
@@ -56,7 +56,7 @@ Phantoscope 当前内置了一些 Operator 可以完成最简单的使用。如�
     - 功能： 对输入的图片进行 embedding，得到表征图片的特征向量
 
 > 以 Keras Application 中 Vgg16 实现该 encoder。
-- Xception
+- ###### Xception
     - 镜像名：xception-encoder
     - 向量维度： 2048
     - 计算方式： 需要测试
@@ -65,36 +65,36 @@ Phantoscope 当前内置了一些 Operator 可以完成最简单的使用。如�
 
 > 以 Keras Application 中 Xception 实现该 encoder。
 
-- Face-encoder
+- ###### Face-encoder
     - 镜像名：face-encoder
     - 向量维度： 128
     - 计算方式： 需要测试
     - 使用场景：
     - 功能： 对识别出来的人脸图片进行 embedding，得到表征人脸特征的向量
 
-> Implemented by facenet model. 附上链接
+> 以 facenet 实现. [facenet github](https://github.com/davidsandberg/facenet.git)
 
-- SSD-encoder
+- ###### SSD-encoder
     - 镜像名： ssd-encoder
     - 标签：MSCOCO 的90种类别
     - 计算方式： 结构化数据
     - 使用场景：
     - 功能： 对输出的图片进行物体检测，得到表征图片中的物品信息的标签。
-> 附上 github 链接
+> [SSD github]()
 
 
 ## 快速开始
-PS: 待 docker hub 确定后上传拉取 （需要修改相关参数）
 
 ```bash
-# 拉取对应版本的 docker 镜像, ${tag}应替换为可选的tag
-docker pull psoperator/face-encoder:${tag}
+$ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+# 拉取对应版本的 docker 镜像
+$ docker pull psoperator/face-encoder:latest
 # 以该镜像快速启动一个容器,同时设置容器配置:
-# 1. 将容器的50004端口映射到本机，50004是 face-encoder 默认的映射端口
+# 1. 设置容器服务 endpoint 为 ${LOCAL_ADDRESS}:50004，并将容器的50004端口映射到本机
 # 2. 将容器的 /app/tmp 目录映射到本机,以方便查看/调试 encoder 内部图片缓存
-docker run -p 50004:50004 -v `pwd`/tmp:/app/tmp -d psoperator/face-encoder:${tag}
+$ docker run -p 50004:50004 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50004 -v `pwd`/tmp:/app/tmp -d psoperator/face-encoder:latest
 ```
-更多的,更详细的方式可参考[快速开始](./QuickStart.md)。
+更多的, 更详细的方式可参考[快速开始](./QuickStart.md)。
 
 ## 如何实现自定义的 Operator
 Phantoscope 支持最大灵活度地接入自定义的 Operator，核心只要实现预定义的 ```rpc/rpc.proto``` 中的 grpc 接口。

@@ -3,13 +3,15 @@ import json
 import logging
 import os
 import argparse
-import requests
 import multiprocessing
 import time
 import math
 from itertools import islice, takewhile, repeat
+from tqdm import tqdm
+import requests
 
-logging.basicConfig(level=logging.INFO)
+error_log = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'upload_error.log')
+logging.basicConfig(level=logging.WARNING, filename=error_log, filemode='w+')
 
 accept_ends = ['bmp', 'jpg', 'jpeg', 'png']
 
@@ -110,15 +112,19 @@ def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_n
         for tmp_list in splited_list:
             num = len(tmp_list)
             pool_list.append(pool.apply_async(upload_image, (num, tmp_list, field_name)))
-        result = [res.get() for res in pool_list]
-    # sum all result
-    success_cnt = 0
-    failed_cnt = 0
-    for item in result:
-        success_cnt += item[0]
-        failed_cnt += item[1]
+
+        # sum all result
+        success_cnt = 0
+        failed_cnt = 0
+        with tqdm(total=file_num) as pbar:
+            for res in pool_list:
+                tmp_sucess, tmp_failed = res.get()
+                pbar.update(tmp_sucess + tmp_failed)
+                success_cnt += tmp_sucess
+                failed_cnt += tmp_failed
+
     end = time.time()
-    logging.info('upload %d images cost: {:.3f}s'.format(end - start), file_num)
+    print('upload %d images cost: {:.3f}s'.format(end - start) % file_num)
     return success_cnt, failed_cnt
 
 
@@ -139,10 +145,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     upload_url = "http://%s/v1/application/%s/upload" % (args.server_addr, args.app_name)
-    logging.info("upload url is %s", upload_url)
-    logging.info("Now begin to load image data and upload to phantoscope: ...")
-    batch_size = args.batch_num
+    batch_size = args.batch_size
     pool_num = args.pool_num
+    print("upload url is %s" % upload_url)
 
     image_field_name = get_app_field_name(args.server_addr, args.app_name, args.pipeline_name)
     file_num = get_file_num(args.data_dir)
@@ -150,5 +155,11 @@ if __name__ == "__main__":
     # ensure run in all processes in the pool
     batch_size = min(math.ceil(file_num / pool_num), batch_size)
 
+    print("allocate %d processes to load data, ecah task including %d images" % (pool_num, batch_size))
+    print("Now begin to load image data and upload to phantoscope: ...")
+    time.sleep(0.1)
+
     sucess_cnt, failed_cnt = parallel_upload(file_num, file_generator, image_field_name, batch_size, pool_num)
-    logging.info("All images has been uploaded: success {}, fail {}".format(sucess_cnt, failed_cnt))
+
+    print("All images has been uploaded: success {}, fail {}".format(sucess_cnt, failed_cnt))
+    print("Please read file '%s' to check upload_error log." % error_log)
