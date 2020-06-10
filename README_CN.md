@@ -10,19 +10,19 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
-Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
+Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 
 **十亿级别的图像的高性能搜索**
 
 **完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等主流深度学习框架,可以在最短五分钟内创建自己的模型扩展**
 
-**提供 gui 验证搜索效果、管理 phantoscope 资源**
+**提供 GUI 验证搜索效果、管理 Phantoscope 资源**
 
 **即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
 
 **即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
 
-中文版 | [英文版](README.md)
+中文版 | [English](README.md)
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
 随着音频、视频的数据所占比重越来越大，在未来还会有更多更高维度的数据出现在我们的日常生活当中。
 
-人们需要搜索拥有更高密度信息的数据，目前的图片更复杂的数据。
+人们需要搜索拥有更高密度信息的数据，目前的图像更复杂的数据。
 
 搜索变成了一件复杂的事情。
 
@@ -51,7 +51,7 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
 然而多维度的搜索面临着问题---搜索的重心在哪里?
 
-一张图片中包含的几十个单词构成的信息，不同人在不同条件下搜索的重心各不相同，针对不同场景的多维度搜索成为了重要功能。
+一张图像中包含的几十个单词构成的信息，不同人在不同条件下搜索的重心各不相同，针对不同场景的多维度搜索成为了重要功能。
 
 人们无法覆盖到所有的使用场景，那么就需要根据不同的场景进行改动，
 
@@ -59,13 +59,12 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图片搜索引擎
 
 ## 安装
 ### 安装环境说明
-1. docker >= 19.03
-2. docker-compose >= 1.25.0
-3. python3.5+
-### 注意
-phantoscope 已经在 x86 架构下 ubuntu 16.04 centos 7.3 以上经过验证
+1. Docker >= 19.03
+2. Docker Compose >= 1.25.0
+3. Python >= 3.5
+>Phantoscope 已经在 x86 架构下 ubuntu 16.04 centos 7.3 以上经过验证
 
-在 macOS 与 windows 下可能会存在未知问题
+>在 macOS 与 windows 下可能会存在未知问题
 ### 开始安装
 ```
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
@@ -77,11 +76,9 @@ $ docker-compose up -d
 $ docker-compose ps
 ``` 
 
-确认所有的容器状态均为 Up
-
-看到如下输出
+预期看到如下输出,确认所有的容器状态均为 Up
 ```
-Name                      Command               State                        Ports
+Name                   Command                          State   Ports
 ----------------------------------------------------------------------------------------------------------------
 phantoscope_api_1      /usr/bin/gunicorn3 -w 4 -b ...   Up      0.0.0.0:5000->5000/tcp
 phantoscope_milvus_1   /var/lib/milvus/docker-ent ...   Up      0.0.0.0:19530->19530/tcp, 0.0.0.0:8080->8080/tcp
@@ -89,17 +86,9 @@ phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->90
 phantoscope_mysql_1    docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
 phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->50001/tcp
 ```
-即表示 phantoscope 正在运行
-
-
-## 产品功能说明
-1. 上传与搜索图片
-2. 自定义图片处理流程
-3. 使用自定义模型处理图片数据
-4. 管理上传的图片数据
 
 ## 快速开始
-从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图片。
+从[这里](./docs/site/zh-CN/quickstart)运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图像。
 
 ## 架构图
 ![](./.github/ps-architecture.png)
@@ -116,9 +105,9 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ## 示例
 从 [这里](./docs/site/zh-CN/examples/object.md) 你可以看到 Phantoscope 在不同场景下的应用:
 
- - 检测图片中的物体并进行搜索![](./docs/site/zh-CN/examples/object.md)
+ - 检测图像中的物体并进行搜索![](./docs/site/zh-CN/examples/object.md)
 ## API
-Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./docs/site/zh-CN/openapi/README.md) 获取详情。
+点击 [这里](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0) 阅读详细 API 文档。
 
 ## 贡献者指南
 我们由衷欢迎您推送贡献。关于贡献流程的详细信息，请参阅 [贡献者指南](CONTRIBUTING.md)。
@@ -133,19 +122,17 @@ Phantoscope 使用 swagger 来编写与管理 API 文档，阅读 [这里](./doc
 
 ## 加入社区
 
-- Slack [频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题
-- [公司主页](https://zilliz.com/) 这里可以了解到关于 zilliz 的更多资讯
+- [Slack 频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题。
 
 
 ## 路线图
 
 您可以参考我们的[路线图](https://github.com/zilliztech/phantoscope/milestones)。
 
-包括路线图在内，我们希望更多的人可以一起参与到 Pantoscope 的开发当中。
+包括路线图在内，我们希望更多的人可以一起参与到 Phantoscope 的开发当中。
 
-如果您有任何问题请随时联系我们 phantoscope@zilliz.com。
+如果您有任何问题请联系我们 phantoscope@zilliz.com。
 
 
-## 协议
-
+## 许可协议
 Apache License 2.0
