@@ -1,10 +1,10 @@
 swagger: '2.0'
 info:
   description: Phantoscope open api
-  version: 1.0.0
+  version: 0.1.0
   title: Phantoscope Open Api
   contact:
-    email: boyan.wang@zilliz.com
+    email: phantoscope@zilliz.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -175,7 +175,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Entity'
-  /application/{applicationName}/entity/{entityName}:
+  /application/{applicationName}/entity/{entityId}:
     delete:
       tags:
       - application
@@ -191,8 +191,8 @@ paths:
         type: string
         required: true
       - in: path
-        name: entityName
-        description: entity name
+        name: entityId
+        description: entity id
         type: string
         required: true
       responses:
@@ -350,6 +350,7 @@ definitions:
       s3Buckets:
         type: string
         description: the bucket name in s3 storage;the uploaded image will be saved here
+        example: example1
   Fields:
     type: object
     additionalProperties:
@@ -358,9 +359,11 @@ definitions:
         type:
           type: string
           description: the type of fields;only the "integer" "string" "pipeline" is valid
+          example: string
         value:
           type: string
           description: the value of fields; if the type is "pipeline",value is the pipeline name
+          example: tom
   UploadFields:
     type: object
     additionalProperties:
@@ -369,12 +372,15 @@ definitions:
         value:
           type: string
           description: is required only if the corresponding fileds type is not pipeline.
+          example: tom
         data:
           type: string
           description: image base64 encoded data;is required only if the corresponding fields type is pipeline.If both exist with url, data prevails.
+          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA.....7A8ga238GDhzwf/Z
         url:
           type: string
           description: image url;is required only if the corresponding fields type is pipeline.If both exist with data, data prevails.
+          example: 192.168.100.1:9000/test/vdacdd-oqca123.jpg
   SearchFields:
     type: object
     properties:
@@ -387,83 +393,105 @@ definitions:
         value:
           type: string
           description: is required only if the corresponding fileds type is not pipeline.
+          example: tom
         data:
           type: string
           description: image base64 encoded data;is required only if the corresponding fields type is pipeline.If both exist with url, data prevails.
+          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA.....7A8ga238GDhzwf/Z
         url:
           type: string
           description: image url;is required only if the corresponding fields type is pipeline.If both exist with data, data prevails.
+          example: 192.168.100.1:9000/test/vdacdd-oqca123.jpg
   Pipeline:
     type: object
     properties:
       name:
         type: string
         description: pipeline name
+        example: test-pipeline
       input:
         type: string
         description: the type of data processed by this pipeline
+        example: image
       description:
         type: string
         description: pipeline description
+        example:  this is a test pipeline
       processors:
         type: array
         items:
           type: string
           description: processor name
+          example: face-detector
       encoder:
         type: string
         description: encoder name
+        example: vgg16
       indexFileSize:
         type: integer
         description: number of documents automatically indexed
+        example: 1024
   Operator:
     type: object
     properties:
       name:
         type: string
         description: operator name
+        example: operator-test
       backend:
         type: string
         description: the name of the container in which the operator is provided
+        example: vgg16
       type:
         type: string
         description: the type of operator;"encoder" or "processor"
+        example: encoder
       input:
         type: string
         description: the type of input data
+        example: image
       outout:
         type: string
         description: the type of output data
+        example: vector
       endpoint:
         type: string
         description: the endpoint of the container
+        example: 192.168.100.1:35000
       metric_type:
         type: string
         description: the way to calculate vector distance;only in "encoder"
+        example: l2
       dimension:
         type: integer
         description: the dimension of the vector;only in "encoder"
+        example: 512
   OperatorPost:
     type: object
     properties:
       name:
         type: string
         description: the operator name
+        example: operator-test
       endpoint:
         type: string
         description: the endpoint of the container
+        example: 192.168.100.1:35000
   Entity:
     type: object
     properties:
       id:
         type: string
         description: unique identifier
+        example: 13055410131
       app_name:
         type: string
         description: application name
+        example: test
       image_url:
         type: string
         description: the image url in s3 storage
+        example: "http://test.com/dog.jpg"
       fields:
         $ref: '#/definitions/Fields'
   Error:
@@ -471,10 +499,12 @@ definitions:
     properties:
       message:
         type: string
+        example: application test is not exist
       error:
         type: string
+        example: NotExistError
 schemes:
  - http
 basePath: /v1
 # Added by API Auto Mocking Plugin
-host: local_addr:5000
+host: 127.0.0.1:5000
