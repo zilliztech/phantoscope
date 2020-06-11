@@ -2,7 +2,7 @@
 
 ## 什么是 Operator
 
-术语 Operator 是指在 Phantoscope 的一次查询中，对图片的一次操作。Operator 一般基于一个训练好的模型进行推理。Phantoscope 当前内置了使用 TensorFlow/Paddlepaddle 的 Operator 作为机器学习后端进行模型推理得到特征向量。
+Operator 是指在 Phantoscope 的一次查询中，对图片的一次操作。Operator 一般基于一个训练好的模型进行推理。Phantoscope 当前内置了使用 TensorFlow 和 Paddlepaddle 进行模型推理的 Operator。
 
 Phantoscope 当前内置的一些 Operator 可以完成最简单的使用。如果你想用 Phantoscope 完成目前 Operator 无法支持的功能，可以尝试自己编写一个 Operator，并且用来组合自己的 Phantoscope Application。
 
@@ -103,7 +103,7 @@ Phantoscope 支持最大灵活度地接入自定义的 Operator，核心只要�
 
 1. 准备模型。
 2. 实现 rpc 目录下的 grpc 接口。
-3. 编写必要的编译文件以便在多数环境下正常运行。（推荐编写 makefile、 dockerfile）
+3. 编写必要的编译文件以便在多数环境下正常运行。（推荐编写 Makefile、 Dockerfile）
 
-P.S. 更详细的定制化 Operator 以及 快速实现的样例可参考[如何添加自定义 Operator ](./HowToAddAOperator.md)
+更详细的定制化 Operator 以及 快速实现的样例可参考[如何添加自定义 Operator](./HowToAddAOperator.md)。
 

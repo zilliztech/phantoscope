@@ -14,23 +14,24 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 
 **十亿级别的图像的高性能搜索**
 
-**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等主流深度学习框架,可以在最短五分钟内创建自己的模型扩展**
+**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等主流深度学习框架**
 
-**提供 GUI 验证搜索效果、管理 Phantoscope 资源**
+**提供 GUI 展示搜索效果、管理 Phantoscope 资源**
 
-**即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
+**即将提供扩展仓库，在这里可以上传并与全世界的开发者分享你的扩展**
 
-**即将提供扩展运行模式，原生支持 Docker 与 Kubernetes**
+**原生支持 Docker 与 Kubernetes**
 
 中文版 | [English](README.md)
 
-## Table of Contents
+## 目录
 
 - [背景](#背景)
 - [安装](#安装)
 - [快速开始](#快速开始)
+- [架构图](#架构图)
+- [概念](#概念)
 - [教程](#教程)
-- [示例](#示例)
 - [API](#API)
 - [贡献者指南](#贡献者指南)
 - [加入社区](#加入社区)
@@ -43,7 +44,7 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 
 随着音频、视频的数据所占比重越来越大，在未来还会有更多更高维度的数据出现在我们的日常生活当中。
 
-人们需要搜索拥有更高密度信息的数据，目前的图像更复杂的数据。
+人们需要搜索拥有更高密度信息的数据，比目前的图像更复杂的数据。
 
 搜索变成了一件复杂的事情。
 
@@ -58,25 +59,24 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 经过简单组装后即可以提供强大功能与效率的搜索引擎，这就是 Phantoscope。
 
 ## 安装
-### 安装环境说明
+### 前置要求
 1. Docker >= 19.03
 2. Docker Compose >= 1.25.0
 3. Python >= 3.5
->Phantoscope 已经在 x86 架构下 ubuntu 16.04 centos 7.3 以上经过验证
+>Phantoscope 已经在 x86 平台下的 Ubuntu 16.04 和 CentOS 7.3 以上经过验证，在 macOS 与 Windows 下可能会存在未知问题
 
->在 macOS 与 windows 下可能会存在未知问题
 ### 开始安装
-```
+```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 $ docker-compose up -d
 ```
-执行 
+检查所有容器状态
 ``` bash
 $ docker-compose ps
 ``` 
 
-预期看到如下输出,确认所有的容器状态均为 Up
+预期得到如下输出
 ```
 Name                   Command                          State   Ports
 ----------------------------------------------------------------------------------------------------------------
@@ -93,19 +93,21 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ## 架构图
 ![](./.github/ps-architecture.png)
 
-## 教程
+## 概念
+| Basics                                                                                             <img width=700/> | level  |
+| ------------------------------------------------------------                                                            | ------ |
+| [什么是 Operators](./docs/site/zh-CN/tutorials/operator.md)                                                             | ⭐⭐   |
+| [什么是 Pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐⭐   |
+| [什么是 Application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐⭐   |
 
+## 教程
 | Tutorials                                                                                              <img width=700/> | level  |
 | ------------------------------------------------------------                                                            | ------ |
-| [如何使用 phantoscope preview](./docs/site/zh-CN/tutorials/preview.md)                                                  | ⭐     |
-| [什么是 operators](./docs/site/zh-CN/tutorials/operator.md)                                                             | ⭐⭐   |
-| [什么是 pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐⭐   |
-| [什么是 application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐⭐   |
-| [如何开发一个 operator](./operators/HowToAddAOperator.md)                                                               | ⭐⭐⭐ |
-## 示例
-从 [这里](./docs/site/zh-CN/examples/object.md) 你可以看到 Phantoscope 在不同场景下的应用:
+| [如何使用 Phantoscope Preview](./docs/site/zh-CN/tutorials/preview.md)                                                    | ⭐     |   
+| [如何创建一个 Application](./docs/site/zh-CN/examples/object.md)                                                          | ⭐⭐  |                                           
+| [如何开发一个 Operator](./operators/HowToAddAnOperator.md)                                                                | ⭐⭐⭐ |
 
- - 检测图像中的物体并进行搜索![](./docs/site/zh-CN/examples/object.md)
+ 
 ## API
 点击 [这里](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0) 阅读详细 API 文档。
 
@@ -119,7 +121,6 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 若您希望提出问题或进行讨论，请加入我们的社区。
 
 
-
 ## 加入社区
 
 - [Slack 频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew)这里可以进行沟通与咨询在使用过程中遇到的问题。
@@ -131,7 +132,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 包括路线图在内，我们希望更多的人可以一起参与到 Phantoscope 的开发当中。
 
-如果您有任何问题请联系我们 phantoscope@zilliz.com。
+如果您有任何问题请联系我们 support@zilliz.com。 
 
 
 ## 许可协议

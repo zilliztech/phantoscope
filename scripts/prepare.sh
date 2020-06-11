@@ -10,7 +10,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 
 
 # Create pipeline with registed operator vgg16
-curl --location --request POST '127.0.0.1:5000/v1/pipeline/example' \
+curl --location --request POST '127.0.0.1:5000/v1/pipeline/example_pipeline' \
 --header 'Content-Type: application/json' \
 --data "{
         \"input\": \"image\",
@@ -22,14 +22,14 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/example' \
 
 
 # Create application and use the pipeline which above created
-curl --location --request POST '127.0.0.1:5000/v1/application/example' \
+curl --location --request POST '127.0.0.1:5000/v1/application/example_app' \
 --header 'Content-Type: application/json' \
 --data "{
 \"fields\":{
-        \"example\": {
+        \"example_field\": {
                 \"type\": \"object\",
-                \"pipeline\": \"example\"
+                \"pipeline\": \"example_pipeline\"
         }
 },
-\"s3Buckets\": \"example\"
+\"s3Buckets\": \"example-s3\"
 }"
