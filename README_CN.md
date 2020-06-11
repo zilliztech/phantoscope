@@ -20,7 +20,7 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 
 **即将提供扩展仓库，在这里可以上传并与全世界的使用者分享你的扩展**
 
-**即将提供扩展运行模式(extension runtime)，原生支持 docker 与 kubernetes**
+**即将提供扩展运行模式，原生支持 Docker 与 Kubernetes**
 
 中文版 | [English](README.md)
 

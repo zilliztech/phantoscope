@@ -2,19 +2,28 @@
 
 本篇文章会使用 [ssd-object-detector](/operators/README.md#ssd-object-detector) 和 [xception-encoder](/operators/README.md#xception) 两个 Operator 搭建一个 Phantoscope Application，用于检测图片中的物体（支持 MSCOCO 数据集的 90 个分类）并对检测出的物体进行相似度搜索。
 
+## 目录
+- [样例场景](#样例场景)
+- [使用到的模块](#使用到的模块)
+- [依赖要求](#依赖要求)
+- [准备数据](#准备数据)
+- [创建 Phantoscope Application](#示例)
+- [使用 Phantoscope Application](#API)
+
+
 ## 样例场景
 本文着重以 MSCOCO 数据集中支持的几种动物为例演示该场景。
-
-## 依赖要求
-- 本文仅在 Ubuntu 18.04 进行过测试
-- 请先安装 Phantoscope
-- docker >= 19.03
-- docker-compose >= 1.25.0
 
 ## 使用到的模块
 - ssd-object-detector
 - xception-encoder
 > 可以在 [Phantoscope Operators](https://github.com/zilliztech/phantoscope/blob/master/operators/README.md) 中找到这两个 Operator 的描述。
+
+## 依赖要求
+- 请先安装 Phantoscope
+- Docker >= 19.03
+- DockerCompose >= 1.25.0
+> 本文仅在 Ubuntu 18.04 进行过测试
 
 ## 准备数据
 下载 MSCOCO 动物图片数据集并解压。该数据集约 174M, 下载耗时取决于网络环境。
@@ -46,7 +55,7 @@ f5e387c6016b        minio/minio:latest                         "/usr/bin/docker-
 bedc9420d6d5        phantoscope/preview:latest                 "/bin/bash -c '/usr/…"   40 minutes ago      Up 40 minutes       0.0.0.0:8000->80/tcp                               brave_ellis
 ```
 
-2.将 ssd-object-detector 与 xception-encoder 注册到 Phantoscope 中。此过程需要以 Operator 暴露的服务端口和自定义的 Operator 名称构造请求。下面所列命令中，500010 和 50011 分别是两个 Opertaor 暴露的端口， ssd_detector 和 xception 为自定义的 Opertaor 名称。关于 Operator 的详细描述请参考 [什么是 Operator](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/operator.md)。
+2.将 ssd-object-detector 与 xception-encoder 注册到 Phantoscope 中。此过程需要以 Operator 暴露的服务端口和自定义的 Operator 名称构造请求。下面所列命令中，50010 和 50011 分别是两个 Opertaor 暴露的端口， ssd_detector 和 xception 为自定义的 Opertaor 名称。关于 Operator 的详细描述请参考 [什么是 Operator](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/operator.md)。
 ```bash
 # register ssd-object-detector to phantoscope with exposed 50010 port and a self-defined name 'ssd_detector'
 $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/regist' \
@@ -70,7 +79,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/regist' \
 {"_name": "xception", "_backend": "xception", "_type": "encoder", "_input": "image", "_output": "vector", "_endpoint": "192.168.1.192:50011", "_metric_type": "L2", "_dimension": 2048}% 
 ```
 
-3.创建一条包含 ssd_detector 和 xception 的 Pipeline。下面所列命令中 object_pipeline 是自定义的 Pipeline 名称，ssd-detector 和 xception 是上述自定义的 Operator 的名称。关于 Pipeline 的详细描述请参考 [什么是Pipeline](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/pipeline.md)。
+3.创建一条包含 ssd_detector 和 xception 的 Pipeline。下面所列命令中 object_pipeline 是自定义的 Pipeline 名称，ssd-detector 和 xception 是组成 Pipeline 的 Operator 的名称。关于 Pipeline 的详细描述请参考 [什么是Pipeline](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/pipeline.md)。
 ```bash
 # create a pipeline with necessary information
 $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/object_pipeline' \
@@ -88,7 +97,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/object_pipel
 {"_pipeline_name": "object_pipeline", "_input": "image", "_output": "vector", "_dimension": 2048, "_index_file_size": 1024, "_metric_type": "L2", "_pipeline_description": "object detect and encode", "_processors": ["ssd_detector"], "_encoder": "xception", "_description": "object detect and encode"}%
 ```
 
-4.以 object_pipeline 构建完整的 Phantoscope Application。下面所列命令中 object-example 是自定义 Application 的名称，object_field 是自定义的字段名称，由 object_pipeline 经过处理获得，并将图片存储在名称为 object-s3 的 S3 桶中。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)。
+4.以 object_pipeline 构建完整的 Phantoscope Application。下面所列命令中 object-example 是自定义 Application 的名称，object_field 是自定义的字段名称，保存着 object_pipeline 处理后的结果，同时将图片存储在名为 object-s3 的 S3 桶中。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)。
 ```bash
 # create an application with a self-define field name assocatied with pipeline created in step3 
 $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-example' \
@@ -108,7 +117,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 {"_application_name": "object-example", "_fields": {"object_field": {"type": "object", "pipeline": "object_pipeline"}}, "_buckets": "object-s3"}%  
 ```
 
-如果运行到这里一切顺利，一个完整的 Phantoscope Application 就创建完成了，接下来将演示如何使用。
+如果运行到这里一切顺利，代表着已经成功创建了一个完整的 Phantoscope Application，接下来将演示如何使用。
 
 ## 使用 Phantoscope Application 
 
@@ -119,7 +128,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 $ pip3 install requests tqdm
 $ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object-example -p object_pipeline
 ```
-等待运行结束后，上传结果如下所示。如果没有在上传的图片中检测出符合的物体，会出现上传失败的报错。
+等待运行结束，上传结果如下所示。如果没有在上传的图片中检测出符合的物体，会触发上传失败的报错。
 ```bash
 upload url is http://127.0.0.1:5000/v1/application/object-example/upload
 allocate 4 processes to load data, ecah task including 200 images
@@ -131,7 +140,7 @@ Please read file 'path_to_error_log' to check upload_error log.
 ```
 
 ### 搜索图片
-图片上传结束后，开始使用 Phantoscope Application 进行搜索。
+图片上传结束，使用 Phantoscope Application 进行搜索。
 
 ```bash
 $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-example/search' \
