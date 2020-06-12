@@ -1,13 +1,15 @@
+
 # 创建 Appication
 
 本篇文章会使用 [ssd-object-detector](../tutorials/operator#ssd-object-detector) 和 [xception-encoder](../tutorials/operator#xception) 两个 Operator 创建一个 Phantoscope Application，用于检测图片中的物体（支持 MSCOCO 数据集的 90 个分类）并对检测出的物体进行相似度搜索。
+
 > 本文所有命令仅在 Ubuntu 18.04 系统进行测试
 ## 目录
 - [样例场景](#样例场景)
 - [使用到的模块](#使用到的模块)
 - [准备数据](#准备数据)
-- [创建 Phantoscope Application](#创建phantoscopeapplication)
-- [使用 Phantoscope Application](#使用phantoscopeapplication)
+- [创建 Phantoscope Application](#创建-phantoscope-application)
+- [使用 Phantoscope Application](#使用-phantoscope-application)
 
 
 ## 样例场景
@@ -94,7 +96,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/object_pipel
 {"_pipeline_name": "object_pipeline", "_input": "image", "_output": "vector", "_dimension": 2048, "_index_file_size": 1024, "_metric_type": "L2", "_pipeline_description": "object detect and encode", "_processors": ["ssd_detector"], "_encoder": "xception", "_description": "object detect and encode"}%
 ```
 
-4.以 object_pipeline 构建一个 Phantoscope Application。
+以 object_pipeline 构建一个 Phantoscope Application。
 
 下面所列命令中 object-example 是自定义 Application 的名称，object_field 是自定义的字段名称，保存着 object_pipeline 处理后的结果，同时将图片存储在名为 object-s3 的 S3 bucket 中。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)。
 ```bash

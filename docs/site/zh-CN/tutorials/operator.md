@@ -20,6 +20,7 @@ Processor 只要进行接收、处理、发送
 
 至于从哪里接收与发送到什么地方，Processor 都不需要关心
 
+目前 Phantoscope 内置的 Processor 有以下几种。
 - ###### MTCNN-face-detector
     - 镜像名： face-detector
     - 功能： 检测输入图片中的人脸
@@ -27,7 +28,7 @@ Processor 只要进行接收、处理、发送
     - 返回： 检测出的一组人脸图片
     - 样例 Pipeline：mtcnn_detect_face -> face_embedding
 
-> 以 [facenet](https://github.com/davidsandberg/facenet.git) 实现。 
+> 以 [Facenet](https://github.com/davidsandberg/facenet.git) 实现。 
 
 - ###### Mask-RCNN-object-detector
     - 镜像名： mask-rcnn-detector
@@ -65,6 +66,8 @@ Encoder 会将非结构化的数据转变成向量或者是标签
 
 所以 Encoder 是处理的最后一环
 
+目前 Phantoscope 内置的 Encoder 有以下几种。
+
 - ###### Vgg16
     - 镜像名： vgg16-encoder
     - 向量维度： 512
@@ -84,7 +87,7 @@ Encoder 会将非结构化的数据转变成向量或者是标签
     - 向量维度： 128
     - 功能： 对检测出来的人脸图片进行 embedding，得到表征人脸特征的向量
 
-> 以 [facenet](https://github.com/davidsandberg/facenet.git) 实现。
+> 以 [Facenet](https://github.com/davidsandberg/facenet.git) 实现。
 
 ## 运行一个 Operator
 
