@@ -1,5 +1,5 @@
 # Phantoscope 快速开始
-## 在开始之前
+## 开始之前
 确定 Phantoscope 所有组件正常
 ```bash 
 $ docker-compose ps
@@ -15,109 +15,108 @@ phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->90
 phantoscope_mysql_1    docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
 phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->50001/tcp
 ```
-即表示 phantoscope 正在运行
+即表示 Phantoscope 正在运行
 
 ## 准备环境
-准备环境会运行 scripts 文件夹下的 prepare.sh 脚本
+准备环境会运行 scripts 文件夹下的 prepare.sh 脚本。
 
-该脚本的主要步骤是注册一个 operator ,以注册的 operator 创建一个 pipeline
+该脚本注册了一个 Operator ，并以该 Operator 创建一个 Pipeline，
 
-最后创建一个仅拥有一条 pipeline 的 application
+最后根据该 Pipeline 创建了一个名为 example_app 的 Application。
 ```bash
 $ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
 ```
 
 ## 下载图片数据
+本文使用 [Caltech 256 数据集](https://www.kaggle.com/jessicali9530/caltech256)，是加利福尼亚理工学院收集整理的数据集，该数据集选自 Google Image 数据集，并手工去除了不符合其类别的图片。在该数据集中，图片被分为 256 类，每个类别的图片超过 80 张。
 ```bash
 $ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
 ```
 
-## 上传图片数据
+## 导入图片数据
 ```bash
 $ tar xvf /tmp/vgg-example.tar -C /tmp
 $ pip3 install requests tqdm
-$ python3 scripts/load_data.py -s 127.0.0.1:5000 -a example -p example -d /tmp/256_ObjectCategories
+$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/256_ObjectCategories
 ```
-上传图片根据机器性能不同,时间会有差异。
-> Phantoscope 因为传输协议限制，上传过大的图片会触发上传失败的报错。
+上传图片根据机器性能不同，时间会有差异。
 
 ## 使用 Preview 进行搜索
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
-![](../../../../.github/preview.gif)
+![preview 演示图](../../../../.github/preview.gif)
 
 
-## 使用 API 上传一张图片
+## 使用 curl 导入一张图片
+如果你想单独导入一张图片，可以使用如下命令
 ``` bash
-$ curl --location --request POST '127.0.0.1:5000/v1/application/example/upload' \
+$ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app/upload' \
 --header 'Content-Type: application/json' \
 --data "{
     \"fields\": {
-        \"example\": {
+        \"example_field\": {
             \"url\": \"https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7\"
         }
-    },
-    \"s3Buckets\": \"example\"
+    }
 }"
 
 ```
 
-在预期中会收到类似下方返回
+预期得到如下返回
 ```json
 [
     {
         "_id": 1591585583689787000,
-        "_app_name": "example",
+        "_app_name": "example_app",
         "_image_url": "http://host:9000/example/example-19ef9e9ba7f745dd90b2d9373c1aed56",
         "_fields": {
-        "example": {
-            "type": "object",
-            "pipeline": "example"
+            "example_field": {
+                "type": "object",
+                "pipeline": "example_pipeline"
             }
         }
     }
 ]
 ```
 
-## 使用 API 进行搜索
+## 使用 curl 进行搜索
 ```bash
-$ curl --location --request POST '127.0.0.1:5000/v1/application/example/search' \
+$ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app/search' \
 --header 'Content-Type: application/json' \
 --data "{
     \"fields\": {
-        \"example\": {
+        \"example_field\": {
             \"url\": \"https://tse2-mm.cn.bing.net/th/id/OIP.C3pWPyFPhBMiBeWoncc24QHaCq?w=300&h=108&c=7&o=5&dpr=2&pid=1.7\"
         }
     },
-    \"topk\": 10
+    \"topk\": 2
 }"
 ```
 
-在预期中会收到类似下方返回
+预期得到如下返回
 ```json
 [
     {
         "_id": "1591584893762549000",
-        "_app_name": "example",
+        "_app_name": "example_app",
         "_image_url": "http://host:9000/example/example-b26e52aa65df4c23bbd848e98df1f0a3",
         "_fields": {
-            "example": {
-            "type": "object",
-            "pipeline": "example"
+            "example_field": {
+                "type": "object",
+                "pipeline": "example_pipeline"
             }
         }
     },
-    ...
     {
         "_id": "1591584895837488000",
-        "_app_name": "example",
+        "_app_name": "example_app",
         "_image_url": "http://host:9000/example/example-e53e7a233c814b7f825f7b58c2647501",
         "_fields": {
-        "example": {
-            "type": "object",
-            "pipeline": "example"
+            "example_field": {
+                "type": "object",
+                "pipeline": "example_pipeline"
             }
         }
     }
