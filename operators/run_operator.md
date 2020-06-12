@@ -1,5 +1,5 @@
 
-## 快速开始 (docker pull)
+## 运行 Operator (Docker pull)
 
 ### CPU版本
 
@@ -27,7 +27,7 @@ $ docker run --gpus="device=0" -e device_id="/device:GPU:0" \
     -v `pwd`/tmp:/app/tmp -d psoperator/face-encoder-gpu:${tag}
 ```
 
-## 快速开始 (docker build)
+## 运行 Operator (Docker build)
 以 face embedding encoder 为例, 本节旨在3分钟之内以 docker build 的方式搭建一个最简单的 encoder 服务.
 
 ```bash

@@ -94,18 +94,17 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ![](./.github/ps-architecture.png)
 
 ## 概念
-| Basics                                                                                             <img width=700/> | level  |
 | ------------------------------------------------------------                                                            | ------ |
 | [什么是 Operators](./docs/site/zh-CN/tutorials/operator.md)                                                             | ⭐⭐   |
 | [什么是 Pipeline](./docs/site/zh-CN/tutorials/pipeline.md)                                                              | ⭐⭐   |
 | [什么是 Application](./docs/site/zh-CN/tutorials/application.md)                                                        | ⭐⭐   |
 
 ## 教程
-| Tutorials                                                                                              <img width=700/> | level  |
+
 | ------------------------------------------------------------                                                            | ------ |
-| [如何使用 Phantoscope Preview](./docs/site/zh-CN/tutorials/preview.md)                                                    | ⭐     |   
-| [如何创建一个 Application](./docs/site/zh-CN/examples/object.md)                                                          | ⭐⭐  |                                           
-| [如何开发一个 Operator](./operators/HowToAddAnOperator.md)                                                                | ⭐⭐⭐ |
+| [使用 Phantoscope Preview](./docs/site/zh-CN/tutorials/preview.md)                                                    | ⭐     |   
+| [创建 Application](./docs/site/zh-CN/examples/object.md)                                                          | ⭐⭐  |                                           
+| [自定义 Operator](./operators/HowToAddAnOperator.md)                                                                | ⭐⭐⭐ |
 
  
 ## API
@@ -114,7 +113,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ## 贡献者指南
 我们由衷欢迎您推送贡献。关于贡献流程的详细信息，请参阅 [贡献者指南](CONTRIBUTING.md)。
 
-本项目遵循 Phatoscope [行为准则](CODE_OF_CONDUCT.md)。如果您希望参与本项目，请遵守该准则的内容。
+本项目遵循 Phantoscope [行为准则](CODE_OF_CONDUCT.md)。如果您希望参与本项目，请遵守该准则的内容。
 
 我们使用 [GitHub issues](https://github.com/zilliztech/phantoscope/issues) 追踪问题和补丁。
 

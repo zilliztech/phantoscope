@@ -1,11 +1,10 @@
-# 创建一个 Appication
+# 创建 Appication
 
-本篇文章会使用 [ssd-object-detector](/operators/README.md#ssd-object-detector) 和 [xception-encoder](/operators/README.md#xception) 两个 Operator 创建一个 Phantoscope Application，用于检测图片中的物体（支持 MSCOCO 数据集的 90 个分类）并对检测出的物体进行相似度搜索。
+本篇文章会使用 [ssd-object-detector](../tutorials/operator#ssd-object-detector) 和 [xception-encoder](../tutorials/operator#xception) 两个 Operator 创建一个 Phantoscope Application，用于检测图片中的物体（支持 MSCOCO 数据集的 90 个分类）并对检测出的物体进行相似度搜索。
 > 本文所有命令仅在 Ubuntu 18.04 系统进行测试
 ## 目录
 - [样例场景](#样例场景)
 - [使用到的模块](#使用到的模块)
-- [依赖要求](#依赖要求)
 - [准备数据](#准备数据)
 - [创建 Phantoscope Application](#创建phantoscopeapplication)
 - [使用 Phantoscope Application](#使用phantoscopeapplication)
