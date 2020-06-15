@@ -11,8 +11,10 @@
 
 
 import logging
+import requests
 from models.operator import Operator as DB
 from models.operator import search_operator, insert_operator, del_operator
+from models.operator import insert_operators
 from operators.client import identity
 from operators.client import health
 from common.error import NotExistError
@@ -98,6 +100,7 @@ def new_operator(name, addr, author, version, type, description):
     return Operator(name=name, addr=addr, author=author, version=version,
                     type=type, description=description)
 
+
 def all_operators():
     res = []
     try:
@@ -165,3 +168,31 @@ def register_operators(**args):
                             description=args['description'])
     except Exception as e:
         raise e
+
+
+def fetch_operators(url, overwrite=True):
+    """fetch operators from origin market
+
+    url -- origin url
+    overwrite -- Whether to overwrite local information if the same name exists
+
+    """
+    origin = []
+    r = requests.get(url)
+    if r.status_code != 200:
+        pass
+    for op in r.json():
+        origin.append(new_operator(op['name'], op['type'], op['addr'], op['author'], op['version'], op['description']))
+    local_operators = all_operators()
+
+    local_operator_names = [x.name for x in local_operators]
+    for x in origin:
+        if x.name not in local_operator_names:
+            local_operators.append(x)
+        else:
+            if overwrite:
+                for lop in local_operators:
+                    if lop.name == x.name:
+                        local_operators.remove(lop)
+                        local_operators.append(x)
+    return local_operators
