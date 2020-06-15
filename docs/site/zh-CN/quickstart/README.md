@@ -1,11 +1,11 @@
 # Phantoscope 快速开始
 ## 开始之前
-确定 Phantoscope 所有组件正常
+确认 Phantoscope 所有组件正常：
 ```bash 
 $ docker-compose ps
 ```
 
-看到如下输出
+*看到如下输出即表示 Phantoscope 正在运行:*
 ```
 Name                      Command               State                        Ports
 ----------------------------------------------------------------------------------------------------------------
@@ -15,14 +15,11 @@ phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->90
 phantoscope_mysql_1    docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
 phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->50001/tcp
 ```
-即表示 Phantoscope 正在运行
+
 
 ## 准备环境
-准备环境会运行 scripts 文件夹下的 prepare.sh 脚本。
 
-该脚本注册了一个 Operator ，并以该 Operator 创建一个 Pipeline，
-
-最后根据该 Pipeline 创建了一个名为 example_app 的 Application。
+运行 scripts 文件夹下的 prepare.sh 脚本。该脚本注册了一个 Operator ，并以该 Operator 创建一个 Pipeline，并根据该 Pipeline 创建了一个名为 example_app 的 Application。
 ```bash
 $ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
@@ -46,7 +43,7 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
-![preview 演示图](../../../../.github/preview.gif)
+![Phantoscope Preview 演示图](../../../../.github/preview.gif)
 
 
 ## 使用 curl 导入一张图片
@@ -64,7 +61,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
 
 ```
 
-预期得到如下返回
+*预期得到如下响应：*
 ```json
 [
     {
@@ -95,7 +92,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
 }"
 ```
 
-预期得到如下返回
+*预期得到如下响应：*
 ```json
 [
     {
