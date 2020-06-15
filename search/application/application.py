@@ -76,7 +76,7 @@ def all_applications():
         return res
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def application_detail(name):
@@ -105,7 +105,7 @@ def new_application(name, fields, s3_buckets):
                     return RequestError("key 'value' not exist", "request error")
         return app.save()
     except Exception as e:
-        return e
+        raise e
 
 
 def delete_application(name):
@@ -126,7 +126,7 @@ def delete_application(name):
         raise e
 
 
-#def patch_application(name, fields, s3_buckets):
+# def patch_application(name, fields, s3_buckets):
 #    try:
 #        app_model = DB(name=name, fields=json.dumps(fields), s3_buckets=s3_buckets)
 #        x = update_application(name, app_model)
@@ -151,7 +151,7 @@ def entities_list(name, num, page):
         return res
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def delete_entity(app_name, entity_name):
@@ -170,4 +170,4 @@ def delete_entity(app_name, entity_name):
             fields=entity.fields)
     except Exception as e:
         logger.error(e)
-        return e
+        raise e

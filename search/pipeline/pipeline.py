@@ -111,7 +111,7 @@ def all_pipelines():
         return res
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def _all_pipelines():
@@ -166,9 +166,8 @@ def new_pipeline(name, input, index_file_size, processors, encoder, description=
         MilvusIns.new_milvus_collection(milvus_collection_name, encoder.dimension, index_file_size, encoder.metric_type)
         return pipe.save()
     except Exception as e:
-        print(e)
         logger.error(e)
-        return e
+        raise e
 
 
 def delete_pipeline(name):
@@ -189,7 +188,7 @@ def delete_pipeline(name):
         return pipe
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def run_pipeline(p, **kwargs):
