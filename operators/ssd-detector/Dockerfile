@@ -29,5 +29,5 @@ RUN apt-get update --fix-missing \
 ENV TF_XLA_FLAGS --tf_xla_cpu_global_jit
 RUN pip3 install -r /app/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
-EXPOSE 51002
+EXPOSE 80
 CMD ["python3", "server.py"]

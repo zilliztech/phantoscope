@@ -7,7 +7,7 @@ import rpc.rpc_pb2_grpc
 from paddle_yolo import run, YOLO_v3 as Detector
 
 
-ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:51004")
+ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:80")
 
 
 class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):
@@ -34,7 +34,7 @@ class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):
         logging.info("identity")
         detector = self.detector
         return rpc.rpc_pb2.IdentityReply(name=detector.name,
-                                         enpdpoint=ENDPOINT,
+                                         endpoint=ENDPOINT,
                                          type=detector.type,
                                          input=detector.input,
                                          output=detector.output,

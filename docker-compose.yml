@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: phantoscope/api-server:5f492c2
+    image: phantoscope/api-server:ec5fa47
     ports:
       - "5000:5000"
     environment:

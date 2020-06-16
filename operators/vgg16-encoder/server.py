@@ -8,7 +8,7 @@ import vggrpc.rpc_pb2
 import vggrpc.rpc_pb2_grpc
 from encoder import Vgg, run
 
-ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:50003")
+ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:80")
 
 
 def keras_config():
