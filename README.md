@@ -86,6 +86,7 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 ## Architecture diagram
 
 ![](./.github/ps-architecture.png)
+![](./.github/phantoscope.png)
 
 <a href="#basics"></a>
 ## Phantoscope basics

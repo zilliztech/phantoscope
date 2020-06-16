@@ -90,7 +90,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ## 架构图
 
 ![](./.github/ps-architecture.png)
-
+![](./.github/phantoscope.png)
 ## 基本概念
                                                   
 - [什么是 Operator？](./docs/site/zh-CN/tutorials/operator.md)                                                      
