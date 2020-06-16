@@ -10,7 +10,7 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
-Phantoscope is an image search suite developed on Milvus and neutral networks. 
+Phantoscope is an image search suite powered by Milvus and neutral networks. 
 
 **Extremely high speed in processing and searching billions of images.**
 
