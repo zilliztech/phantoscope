@@ -54,9 +54,17 @@ Phantoscope is the right tool for you. Equipped with miscellaneous deep-learning
 <a href="#install"></a>
 ## Install
 
-```
+Download Phantoscope
+```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
+```
+
+Set up environment
+```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+```
+Start Phantoscope containers
+```bash
 $ docker-compose up -d
 ```
 
@@ -85,7 +93,6 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 <a href="#architecture"></a>
 ## Architecture diagram
 
-![](./.github/ps-architecture.png)
 ![](./.github/phantoscope.png)
 
 <a href="#basics"></a>

@@ -56,14 +56,23 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 - Docker Compose >= 1.25.0
 - Python >= 3.5
 
-> Phantoscope 已经在 x86 平台下的 Ubuntu 16.04 和 CentOS 7.3 以上经过验证，在 macOS 与 Windows 下可能会存在未知问题。
+> Phantoscope 已经在 x86 平台下的 Ubuntu 16.04 和 CentOS 7.3 以上经过验证。
 
 ### 开始安装
 
 
+下在 Phantoscope
 ```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
+```
+
+设置环境变量
+```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+```
+
+启动 Phantoscope 容器
+```bash
 $ docker-compose up -d
 ```
 
@@ -89,7 +98,6 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 ## 架构图
 
-![](./.github/ps-architecture.png)
 ![](./.github/phantoscope.png)
 ## 基本概念
                                                   
