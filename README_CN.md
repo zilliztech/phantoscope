@@ -61,7 +61,7 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 ### 开始安装
 
 
-下在 Phantoscope
+下载 Phantoscope
 ```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 ```
