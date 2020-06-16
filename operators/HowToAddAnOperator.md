@@ -19,7 +19,7 @@
 3. 调试并打包为 Docker 镜像
 
 ### 示例：实现一个 Operator
-#### oeprator 的目录结构
+#### operator 的目录结构
 在 example-custom-operator 下可以看到一个最简单的 operator 结构
 1. 在 data 目录下通常存放用于下载模型文件的的脚本，在制作镜像时用于下载模型
 2. 在 rpc 目录下是 gRPC 生成的 python 文件
@@ -31,6 +31,6 @@ proto 文件可以在 [这里](./rpc/rpc.proto) 找到
 
 一共需要实现 3 个接口
 
-1. Execute 用于执行这个 operator 的操作
-2. Healthy 用于返回 operator 是否正在运行
-3. Identity 用于返回 operator 的相关信息(名称、类型、端点等等)
+1. Execute 用于执行这个 operator。
+2. Healthy 检查 operator 是否正在运行。
+3. Identity 返回 operator 的相关信息(名称、类型、端点等等)。

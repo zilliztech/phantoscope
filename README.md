@@ -10,7 +10,7 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
-Phantoscope is an image search engine developed on Milvus and neutral networks. 
+Phantoscope is an image search suite developed on Milvus and neutral networks. 
 
 **Extremely high speed in processing and searching billions of images.**
 
@@ -29,7 +29,7 @@ English | [中文版](README_CN.md)
 
 - [Background](#background)
 - [Install](#install)
-- [QuickStart](#quickStart)
+- [Quick Start](#quickStart)
 - [Architecture diagram](#architecture)
 - [Phantoscope Basics](#basics)
 - [Tutorial](#tutorial)
@@ -46,9 +46,9 @@ Your search should not be confined to key words and short sentences.
 
 With the explosion of images and video data in human society, the legacy text search can hardly serve people's needs. 
 
-For example, an image involves a myriad of information, and different people have different interpretation of the same image. The existing search engines, be it full-text search or searching image by image, can no longer meet such flexible multi-dimentional search requests. 
+For example, an image involves a myriad of information, and different people have different interpretation of the same image. The existing search engines, be it full-text search or searching image by image, can no longer meet such flexible multi-dimensional search requirements. 
 
-Phantoscope is the right tool for you. Equipped with miscellaneous deep-learning models, portable image processing techniques, and Milvus vector search engine, it can offer a unique set of high-performance image searching interfaces to address such needs.
+Phantoscope is the right tool for you. Empowered by miscellaneous deep-learning models, portable image processing techniques, and Milvus vector search engine, it can offer a unique set of high-performance image searching interfaces to address such needs.
 
 
 <a href="#install"></a>
@@ -86,7 +86,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ```
 
 <a href="#quickstart"></a>
-## QuickStart
+## Quick Start
 
 Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope application. You can use it to upload and search images.
 
@@ -107,7 +107,7 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 
 - [Use Phantoscope Preview](./docs/site/en/tutorials/preview.md)
 - [Create an application](./docs/site/en/examples/object.md)
-- [Develop an operator](./operators/HowToAddAnOperator.md)
+- [Develop an operator](./operators/HowToAddAnOperator_en.md)
 
 
 <a href="#api"></a>

@@ -16,7 +16,7 @@ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategorie
 ```
 
 ## Steps
-1. Run **ssd-object-detector** and **xception**. Set the environment variable `host_ip` as your local Intranet IP.  
+1. Run **ssd-object-detector** and **xception**. Set the environment variable `host_ip` as your local intranet IP.  
 
 ```bash
 export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
@@ -24,7 +24,7 @@ docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 psoperator/ss
 docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xception-encoder:latest
 ```
 
-2. Load **ssd-object-detector** and **xception** to Phantoscope. 
+2. Register **ssd-object-detector** and **xception** with Phantoscope. 
 
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
@@ -41,7 +41,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 }'
 ```
 
-3. Create a pipeline for extracting human face and converting it to vector. 
+3. Create a pipeline for extracting object and converting it to vector. 
 
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
