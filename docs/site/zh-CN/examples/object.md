@@ -43,7 +43,7 @@ CONTAINER ID        IMAGE                                      COMMAND          
 05e666f48f5f        psoperator/xception-encoder:latest         "python3 server.py"      9 seconds ago       Up 9 seconds        0.0.0.0:50011->50011/tcp, 50012/tcp                happy_ellis
 c4dd13b3fc5d        psoperator/ssd-detector:latest             "python3 server.py"      15 seconds ago      Up 14 seconds       0.0.0.0:50010->50010/tcp, 51002/tcp                keen_leavitt
 09bd2658493b        psoperator/vgg16:latest                    "python3 server.py"      23 seconds ago      Up 22 seconds       0.0.0.0:50001->50001/tcp                           omnisearch_vgg_1
-0ce974dc8891        phantoscope/api-server:ec5fa47             "/usr/bin/gunicorn3 …"   23 seconds ago      Up 22 seconds       0.0.0.0:5000->5000/tcp                             omnisearch_api_1
+0ce974dc8891        phantoscope/api-server:0.1.0               "/usr/bin/gunicorn3 …"   23 seconds ago      Up 22 seconds       0.0.0.0:5000->5000/tcp                             omnisearch_api_1
 3bf49c362d79        daocloud.io/library/mysql:5.6              "docker-entrypoint.s…"   26 seconds ago      Up 24 seconds       0.0.0.0:3306->3306/tcp                             omnisearch_mysql_1
 3f6f6750bc21        milvusdb/milvus:0.7.0-cpu-d031120-de409b   "/var/lib/milvus/doc…"   26 seconds ago      Up 23 seconds       0.0.0.0:8080->8080/tcp, 0.0.0.0:19530->19530/tcp   omnisearch_milvus_1
 f5e387c6016b        minio/minio:latest                         "/usr/bin/docker-ent…"   26 seconds ago      Up 24 seconds       0.0.0.0:9000->9000/tcp                             omnisearch_minio_1
