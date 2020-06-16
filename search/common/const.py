@@ -25,3 +25,5 @@ MINIO_BUCKET_PUBLIC_POLICY = {
         }
     ]
 }
+
+MARKET_IDENTITY_HEADER = "phantoscope_market_version"

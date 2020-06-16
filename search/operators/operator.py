@@ -21,7 +21,9 @@ from common.error import NotExistError
 from common.error import OperatorRegistError
 from common.error import InstanceExistError
 from common.error import DockerRuntimeError
+from common.error import RequestError
 from common.config import DEFAULT_RUNTIME
+from common.const import MARKET_IDENTITY_HEADER
 from service import runtime_client
 from operators.instance import OperatorInstance
 
@@ -178,13 +180,18 @@ def fetch_operators(url, overwrite=True):
 
     """
     origin = []
-    r = requests.get(url)
-    if r.status_code != 200:
-        pass
+    try:
+        r = requests.get(url)
+        if r.headers.get(MARKET_IDENTITY_HEADER) != "0.1.0":
+            raise RequestError("Uncertified market", "")
+        if r.status_code != 200:
+            raise RequestError(r.text, r.status_code)
+    except Exception as e:
+        raise RequestError(e.args[0], e)
     for op in r.json():
-        origin.append(new_operator(op['name'], op['type'], op['addr'], op['author'], op['version'], op['description']))
+        origin.append(new_operator(op['name'], op['type'], op['addr'],
+                                   op['author'], op['version'], op['description']))
     local_operators = all_operators()
-
     local_operator_names = [x.name for x in local_operators]
     for x in origin:
         if x.name not in local_operator_names:

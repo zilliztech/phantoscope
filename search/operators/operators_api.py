@@ -17,6 +17,7 @@ from operators.operator import all_operators
 from operators.operator import register_operators
 from operators.operator import delete_operators
 from operators.operator import operator_detail
+from operators.operator import fetch_operators
 from common.common import from_view_dict
 
 operator = Blueprint('operator', __name__)
@@ -41,6 +42,19 @@ def operator_refresh_api():
         parse_args()
     args = from_view_dict(args)
     return register_operators(**args)
+
+
+@operator.route("/fetch", methods=['POST'])
+@json_response
+def operator_fetch_api():
+    args = reqparse.RequestParser(). \
+        add_argument("url", type=str, required=True). \
+        add_argument("overwrite", type=bool, default=True). \
+        parse_args()
+    args = from_view_dict(args)
+    url = args['url']
+    overwrite = args['overwrite']
+    return fetch_operators(url, overwrite)
 
 
 @operator.route("/<name>", methods=['DELETE'])
