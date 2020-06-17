@@ -42,6 +42,8 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
+Open $LOCAL_ADDRESS:5000 with browser
+
 ![Phantoscope Preview Demonstration](../../../../.github/preview.gif)
 
 
