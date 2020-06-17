@@ -44,11 +44,15 @@ def upload(name, **kwargs):
         for k, _ in kwargs.get('fields').items():
             if k not in accept_fields and k not in pipeline_fields:
                 raise RequestError(f"fields {k} not in application", "")
+        valid_field_flag = False
         for n, p in pipeline_fields.items():
             pipe = pipeline_detail(p)
             if not pipe:
                 raise NotExistError("pipeline not exist", "pipeline %s not exist" % p)
             value = kwargs['fields'].get(n)
+            if not value:
+                continue
+            valid_field_flag = True
             file_data = value.get('data')
             url = value.get('url')
             if not file_data and not url:
@@ -69,6 +73,8 @@ def upload(name, **kwargs):
                 res.append(new_mapping_ins(id=vid, app_name=name,
                                            image_url=gen_url(bucket_name, file_name),
                                            fields=new_fields))
+        if not valid_field_flag:
+            raise RequestError("none valid field exist", "")
         return res
     except Exception as e:
         print(e)

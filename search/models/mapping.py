@@ -45,8 +45,14 @@ def search_ids_from_mapping(ids):
     try:
         ids = [str(x) for x in ids]
         res = db.session.query(Mapping).filter(Mapping.id.in_(ids)).all()
-        res.sort(key=lambda x: ids.index(x.id))
-        return res
+        image_set = set()
+        unique_res = []
+        for i in res:
+            if i.image_url not in image_set:
+                image_set.add(i.image_url)
+                unique_res.append(i)
+        unique_res.sort(key=lambda x: ids.index(x.id))
+        return unique_res
     except Exception as e:
         raise QueryFromSQLError("query from sql error", e.orig.args[-1])
 

@@ -18,13 +18,10 @@ MINIO_SECRET_KEY = os.getenv("MINIO_SECRECT_KEY", "minioadmin")
 MINIO_1ST_BUCKET = os.getenv("1ST_BUCKET", "alpha")
 MINIO_BUCKET_NUM = os.getenv("MINIO_OBJ_LIMIT", 20)
 
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "tmp/video")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "/tmp/")
 ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", {"gif", "jpg", "jpeg", "png"})
 
 ALLOWED_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png"}
-
-LOCAL_CACHE_PATH = "./tmp"
-LOCAL_TMP_PATH = "/tmp"
 
 STAGE_EXTRACT = "extract"
 STAGE_PREDICT = "predict"
