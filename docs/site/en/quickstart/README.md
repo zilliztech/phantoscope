@@ -42,7 +42,7 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
-Open 127.0.0.1:5000 with browser
+Open 127.0.0.1:8000 with browser
 
 ![Phantoscope Preview Demonstration](../../../../.github/preview.gif)
 
@@ -70,7 +70,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": 1591585583689787000,
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-19ef9e9ba7f745dd90b2d9373c1aed56",
+        "_image_url": "http://host:9000/example/example_app-19ef9e9ba7f745dd90b2d9373c1aed56",
         "_fields": {
             "example_field": {
                 "type": "object",
@@ -101,7 +101,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": "1591584893762549000",
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-b26e52aa65df4c23bbd848e98df1f0a3",
+        "_image_url": "http://host:9000/example/example_app-b26e52aa65df4c23bbd848e98df1f0a3",
         "_fields": {
             "example_field": {
                 "type": "object",
@@ -112,7 +112,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": "1591584895837488000",
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-e53e7a233c814b7f825f7b58c2647501",
+        "_image_url": "http://host:9000/example/example_app-e53e7a233c814b7f825f7b58c2647501",
         "_fields": {
             "example_field": {
                 "type": "object",
