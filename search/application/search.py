@@ -10,10 +10,10 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-from enum import Enum
 import random
 import logging
 import math
+from enum import Enum
 from itertools import chain
 from application.application import application_detail
 from application.mapping import new_mapping_ins
@@ -30,7 +30,15 @@ logger = logging.getLogger(__name__)
 
 
 # fields
-class FunctionScoreMode(Enum):
+class FunctionScore(Enum):
+    WEIGHT = 'weight'
+
+
+class FieldDecayFunction:
+    LINEAR = 'linear'
+
+
+class ScoreMode(Enum):
     FIRST = 'first'
     SUM = 'sum'
     MAX = 'max'
@@ -39,18 +47,76 @@ class FunctionScoreMode(Enum):
     AVG = 'avg'
 
 
+def score_helper(score_mode: ScoreMode):
+    def sum_score(scores: list):
+        res = 0
+        for score in scores:
+            res += score
+        return res
+
+    def multiple_score(scores: list):
+        res = 1
+        for score in scores:
+            res *= score
+        return res
+
+    def max_score(scores: list):
+        res = scores[0]
+        for score in scores:
+            res = max(res, score)
+        return res
+
+    def min_score(scores: list):
+        res = scores[0]
+        for score in scores:
+            res = max(res, score)
+        return res
+
+    def avg_score(scores: list):
+        return sum(scores) / len(scores)
+
+    helper = {ScoreMode.SUM: sum_score,
+              ScoreMode.MULTIPLE: multiple_score,
+              ScoreMode.MAX: max_score,
+              ScoreMode.MIN: min_score,
+              ScoreMode.AVG: avg_score}
+    return helper[score_mode]
+
+
+def decay_helper(decay_function_mode: FieldDecayFunction):
+    def linear(number, max, min):
+        return list(range(max, min, (max - min) / number))
+
+    helper = {FieldDecayFunction.LINEAR: linear}
+    return helper[decay_function_mode]
+
+
+def get_decay_score(ids, decay_function_mode):
+    decay_function = decay_helper(decay_function_mode)
+    return decay_function(len(ids), 1, 0.5)
+
+
+def calc_result_score_list(fields_result, score_config):
+    res = {}
+    for field, value in fields_result:
+        weight = score_config[field]['weight']
+        decay_function = score_config[field]['decay_function']
+        scores = get_decay_score(value, decay_function)
+        for id, score in zip(value, scores):
+            res.get(id, []).append(weight * score)
+    return res
+
+
 class InnerFieldScoreMode(Enum):
     FIRST = 'first'
+    # return result of a random entity
     RANDOM = 'random'
     DISTANCE_FIRST = 'distance_first'
-    # random equals avg, and avgerage may be confusing
     AVG = 'avg'
 
 
 def get_unique_list(norm_list):
-    res = []
-    [res.append(i) for i in norm_list if not i in res]
-    return res
+    return sorted(set(norm_list), key=norm_list.index)
 
 
 def get_inner_field_score_result(vids, topk, inner_field_score_mode: InnerFieldScoreMode):
@@ -88,26 +154,26 @@ def get_inner_field_score_result(vids, topk, inner_field_score_mode: InnerFieldS
     raise WrongInnerFieldModeError("Unsupported inner field mode", Exception())
 
 
-def get_score_result(fields_result, score_mode: str):
+def get_score_result(fields_result, topk, score_config, score_mode: str):
     try:
-        score_mode = FunctionScoreMode(score_mode)
+        score_mode = ScoreMode(score_mode)
     except Exception as e:
         raise WrongFieldModeError("Unsupported function score mode", e)
+
     if len(fields_result) == 1:
         return list(fields_result.values())[0]
-    if score_mode == FunctionScoreMode.FIRST:
+    if score_mode == ScoreMode.FIRST:
         return list(fields_result.values())[0]
-    if score_mode == FunctionScoreMode.SUM:
-        pass
-    if score_mode == FunctionScoreMode.MULTIPLE:
-        pass
-    if score_mode == FunctionScoreMode.MAX:
-        pass
-    if score_mode == FunctionScoreMode.MIN:
-        pass
-    if score_mode == FunctionScoreMode.AVG:
-        pass
-    raise WrongFieldModeError("Unimplemented function score mode", Exception())
+
+    uncombined_scores = calc_result_score_list(fields_result, score_config)
+    score_combine_function = score_helper(score_mode)
+    res = []
+    for id, score_list in uncombined_scores.items():
+        final_score = score_combine_function(score_list)
+        res.append((id, final_score))
+        res.sort(key=lambda x: x[1])
+    result_ids = [i[0] for i in res]
+    return result_ids[:topk]
 
 
 def search_and_score(milvus_collection_name, vectors, topk, nprobe, inner_score_mode: str):
@@ -158,6 +224,7 @@ def search_and_score(milvus_collection_name, vectors, topk, nprobe, inner_score_
 
 def search(name, fields={}, topk=10, nprobe=16):
     fields_res = {}
+    score_config = {}
     try:
         app = application_detail(name)
         accept_fields = [x for x, y in app.fields.items() if y.get('type') != "object"]
@@ -171,7 +238,6 @@ def search(name, fields={}, topk=10, nprobe=16):
         for n, p in pipeline_fields.items():
             pipe = pipeline_detail(p)
 
-            # value may not exist ???
             value = fields.get(n)
             if not value:
                 continue
@@ -180,7 +246,8 @@ def search(name, fields={}, topk=10, nprobe=16):
             file_data = value.get('data')
             url = value.get('url')
             inner_score_mode = value.get('inner_field_score_mode', 'distance_first')
-
+            score_config[n]['wight'] = value.get('weight', 1)
+            score_config[n]['decay_function'] = value.get('decay_function', 'linear')
             if not file_data and not url:
                 raise RequestError("can't find data or url from request", "")
             vectors = run_pipeline(pipe, data=file_data, url=url)
@@ -198,7 +265,7 @@ def search(name, fields={}, topk=10, nprobe=16):
         if not valid_field_flag:
             raise NoneValidFieldError("There is none valid field in search request boby", Exception())
         score_mode = fields.get('score_mode', 'first')
-        res = get_score_result(fields_res, score_mode)
+        res = get_score_result(fields_res, topk, score_config, score_mode)
         return res
     except Exception as e:
         logger.error("Unexpected error happen when search, %s",
