@@ -4,9 +4,8 @@
 ![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
 ![GitHub top language](https://img.shields.io/github/languages/top/zilliztech/phantoscope)
 ![GitHub All Releases](https://img.shields.io/github/downloads/zilliztech/phantoscope/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
-![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
+![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/zilliztech/phantoscope)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
