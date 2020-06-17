@@ -28,21 +28,21 @@ $ ./prepare.sh
 
 ## Download Image Package
 ```bash
-$ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
+$ curl http://cs231n.stanford.edu/coco-animals.zip -o /tmp/coco-animals.zip
 ``` 
 
 ## Upload Image Package
 ```bash
-$ tar xvf /tmp/vgg-example.tar -C /tmp
+$ unzip /tmp/coco-animals.zip -d /tmp/
 $ pip3 install requests tqdm
-$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/256_ObjectCategories
+$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/coco-animals
 ```
 
 ## Use Phantoscope Preview for an image search
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
-Open $LOCAL_ADDRESS:5000 with browser
+Open 127.0.0.1:5000 with browser
 
 ![Phantoscope Preview Demonstration](../../../../.github/preview.gif)
 
