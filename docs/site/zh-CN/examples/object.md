@@ -132,7 +132,7 @@ $ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object-example -p o
 等待运行结束，上传结果如下所示。
 ```bash
 upload url is http://127.0.0.1:5000/v1/application/object-example/upload
-allocate 4 processes to load data, ecah task including 200 images
+allocate 4 processes to load data, each task including 200 images
 Now begin to load image data and upload to phantoscope: ...
 100%|████████████████████████████████████████████████████████████████████████████████| 800/800 [03:16<00:00,  4.07it/s]
 upload 800 images cost: 196.832s 
