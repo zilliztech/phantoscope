@@ -18,7 +18,7 @@ services:
       - minio
       - mysql
   mysql:
-    image: daocloud.io/library/mysql:5.6
+    image: mysql:5.6
     environment:
       - MYSQL_ROOT_PASSWORD=passwd
     ports:
