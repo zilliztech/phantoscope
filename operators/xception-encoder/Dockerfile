@@ -23,8 +23,6 @@ RUN apt-get update --fix-missing \
     && rm -rf /var/lib/apt/lists/* \
     && cd /app/data \
     && ./prepare_model.sh \
-    && cd - \
-    && mkdir tmp \
     && mkdir -p /root/.keras/models && mv /app/data/*.h5 /root/.keras/models
 
 ENV TF_XLA_FLAGS --tf_xla_cpu_global_jit
