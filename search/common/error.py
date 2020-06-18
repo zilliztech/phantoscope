@@ -56,6 +56,12 @@ class UpdateFromSQLError(Error):
     pass
 
 
+class ExistError(Error):
+    @property
+    def code(self):
+        return 400
+
+
 class NotExistError(Error):
     @property
     def code(self):

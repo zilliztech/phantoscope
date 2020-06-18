@@ -20,6 +20,7 @@ from operators.client import health
 from common.error import NotExistError
 from common.error import OperatorRegistError
 from common.error import InstanceExistError
+from common.error import ExistError
 from common.error import DockerRuntimeError
 from common.error import RequestError
 from common.config import DEFAULT_RUNTIME
@@ -161,6 +162,8 @@ def register_operators(**args):
             version=args['version'],
             description=args['description'])
     try:
+        if search_operator(args['name']):
+            raise ExistError(f"operator {args['name']} had exist", "")
         insert_operator(op)
         return new_operator(name=args['name'],
                             type=args['type'],
