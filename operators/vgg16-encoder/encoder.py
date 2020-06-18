@@ -64,7 +64,7 @@ class Vgg:
         return norm_feat
 
 
-LOCAL_TMP_PATH = "./tmp/"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 def save_from_url(path, name, url):

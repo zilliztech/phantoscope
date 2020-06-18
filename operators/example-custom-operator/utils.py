@@ -3,7 +3,7 @@ import os
 import logging
 import urllib.request
 import base64
-LOCAL_TMP_PATH = "./tmp/"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 def save_tmp_file(name, file_data=None, url=None):
