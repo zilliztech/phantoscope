@@ -23,7 +23,7 @@ Run **prepare.sh** under the **script** folder. This script register an operator
 
 ```bash
 $ chmod +x prepare.sh
-$ ./prepare.sh
+$ ./scripts/prepare.sh
 ```
 
 ## Download Image Package
