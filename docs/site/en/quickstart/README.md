@@ -22,14 +22,14 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 Run **prepare.sh** under the **script** folder. This script register an operator, use it to create a pipeline, and then use the pipeline to create an application called **example_app**. 
 
 ```bash
-$ chmod +x prepare.sh
+$ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
 ```
 
 ## Download Image Package
 ```bash
 $ curl http://cs231n.stanford.edu/coco-animals.zip -o /tmp/coco-animals.zip
-``` 
+```
 
 ## Upload Image Package
 ```bash
@@ -40,7 +40,7 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 
 ## Use Phantoscope Preview for an image search
 ```bash
-docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
+$ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
 Open 127.0.0.1:8000 with browser
 
