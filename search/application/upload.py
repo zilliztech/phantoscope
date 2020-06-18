@@ -78,7 +78,7 @@ def upload(name, **kwargs):
         return res
     except Exception as e:
         print(e)
-        return e
+        raise e
 
 
 def gen_url(bucket, name):

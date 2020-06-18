@@ -10,11 +10,8 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-import random
 import logging
 import math
-from enum import Enum
-from itertools import chain
 from application.application import application_detail
 from application.mapping import new_mapping_ins
 from pipeline.pipeline import pipeline_detail, run_pipeline
@@ -25,70 +22,12 @@ from common.error import WrongFieldModeError
 from common.error import WrongInnerFieldModeError
 from storage.storage import MilvusIns
 from models.mapping import search_ids_from_mapping
+from application.score.function_score import ScoreMode, score_helper
+from application.score.inner_fields_score import InnerFieldScoreMode
+from application.score.field_decay import decay_helper
+from application.score.inner_fields_score import inner_field_score_helper
 
 logger = logging.getLogger(__name__)
-
-
-# fields
-class FunctionScore(Enum):
-    WEIGHT = 'weight'
-
-
-class FieldDecayFunction:
-    LINEAR = 'linear'
-
-
-class ScoreMode(Enum):
-    FIRST = 'first'
-    SUM = 'sum'
-    MAX = 'max'
-    MIN = 'min'
-    MULTIPLE = 'multiple'
-    AVG = 'avg'
-
-
-def score_helper(score_mode: ScoreMode):
-    def sum_score(scores: list):
-        res = 0
-        for score in scores:
-            res += score
-        return res
-
-    def multiple_score(scores: list):
-        res = 1
-        for score in scores:
-            res *= score
-        return res
-
-    def max_score(scores: list):
-        res = scores[0]
-        for score in scores:
-            res = max(res, score)
-        return res
-
-    def min_score(scores: list):
-        res = scores[0]
-        for score in scores:
-            res = max(res, score)
-        return res
-
-    def avg_score(scores: list):
-        return sum(scores) / len(scores)
-
-    helper = {ScoreMode.SUM: sum_score,
-              ScoreMode.MULTIPLE: multiple_score,
-              ScoreMode.MAX: max_score,
-              ScoreMode.MIN: min_score,
-              ScoreMode.AVG: avg_score}
-    return helper[score_mode]
-
-
-def decay_helper(decay_function_mode: FieldDecayFunction):
-    def linear(number, max, min):
-        return list(range(max, min, (max - min) / number))
-
-    helper = {FieldDecayFunction.LINEAR: linear}
-    return helper[decay_function_mode]
 
 
 def get_decay_score(ids, decay_function_mode):
@@ -107,51 +46,14 @@ def calc_result_score_list(fields_result, score_config):
     return res
 
 
-class InnerFieldScoreMode(Enum):
-    FIRST = 'first'
-    # return result of a random entity
-    RANDOM = 'random'
-    DISTANCE_FIRST = 'distance_first'
-    AVG = 'avg'
-
-
-def get_unique_list(norm_list):
-    return sorted(set(norm_list), key=norm_list.index)
-
-
 def get_inner_field_score_result(vids, topk, inner_field_score_mode: InnerFieldScoreMode):
-    res = []
     num_entity = len(vids)
     if num_entity == 1:
-        return get_unique_list([x.id for x in vids[0]])
-
+        inner_field_score_mode = InnerFieldScoreMode.FIRST
     # fix topk number dut to milvus result
     topk = min(topk, len(vids[0]))
-    # begin to score
-    if inner_field_score_mode == InnerFieldScoreMode.FIRST:
-        return get_unique_list([x.id for x in vids[0]])
-    if inner_field_score_mode == InnerFieldScoreMode.RANDOM:
-        tmp_random = random.randint(0, num_entity - 1)
-        return get_unique_list([x.id for x in vids[tmp_random]])
-    if inner_field_score_mode == InnerFieldScoreMode.DISTANCE_FIRST:
-        tmp = list(chain(*vids))
-        tmp.sort(key=lambda s: (s.distance))
-        for i in tmp:
-            tmp_id = i.id
-            if tmp_id not in res: res.append(tmp_id)
-            if len(res) >= topk: break
-        return res
-    if inner_field_score_mode == InnerFieldScoreMode.AVG:
-        for i in range(num_entity):
-            num = math.ceil(topk / (num_entity - i))
-            tmp_idx = 0
-            for vid in vids[i]:
-                if vid.id in res: continue
-                res.append(vid.id)
-                tmp_idx += 1
-                if tmp_idx >= num: break
-        return res
-    raise WrongInnerFieldModeError("Unsupported inner field mode", Exception())
+    inner_field_score_function = inner_field_score_helper(inner_field_score_mode)
+    return inner_field_score_function(vids, topk)
 
 
 def get_score_result(fields_result, topk, score_config, score_mode: str):
@@ -160,9 +62,7 @@ def get_score_result(fields_result, topk, score_config, score_mode: str):
     except Exception as e:
         raise WrongFieldModeError("Unsupported function score mode", e)
 
-    if len(fields_result) == 1:
-        return list(fields_result.values())[0]
-    if score_mode == ScoreMode.FIRST:
+    if (len(fields_result) == 1) or (score_mode == ScoreMode.FIRST):
         return list(fields_result.values())[0]
 
     uncombined_scores = calc_result_score_list(fields_result, score_config)
@@ -200,6 +100,8 @@ def search_and_score(milvus_collection_name, vectors, topk, nprobe, inner_score_
         # check query topk max value
         query_topk = min(query_topk, MAX_TOPK)
         vids = MilvusIns.search_vectors(milvus_collection_name, vectors, topk=query_topk, nprobe=nprobe)
+        if len(vids) == 0:
+            raise NoneVectorError("milvus search result is None", "")
         # filter -1 and if exist -1 or len(vids) < topk
         if (-1 in vids.id_array[0]) or len(vids[0]) < query_topk:
             end_flag = True
@@ -246,7 +148,8 @@ def search(name, fields={}, topk=10, nprobe=16):
             file_data = value.get('data')
             url = value.get('url')
             inner_score_mode = value.get('inner_field_score_mode', 'distance_first')
-            score_config[n]['wight'] = value.get('weight', 1)
+            score_config[n] = {}
+            score_config[n]['weight'] = value.get('weight', 1)
             score_config[n]['decay_function'] = value.get('decay_function', 'linear')
             if not file_data and not url:
                 raise RequestError("can't find data or url from request", "")

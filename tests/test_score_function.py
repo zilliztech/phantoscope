@@ -63,10 +63,6 @@ class TestScoreFunctionApi:
         json_data = rv.get_json()
         assert rv.status_code == 200
         assert json_data['_application_name'] == self.name
-        try:
-            os.mkdir('./tmp')
-        except Exception as e:
-            pass
 
     def test_upload_api(self, client):
         for image_url in self.test_url:
@@ -118,7 +114,25 @@ class TestScoreFunctionApi:
             assert len(json_data) < topk
 
     def test_multi_field_score_function(self, client):
-        pass
+        topk = len(self.test_url) * 10
+        for inner_field_score_mode in self.inner_fields:
+            data = {
+                'fields': {
+                    self.field_name1: {
+                        'url': self.test_search_url[0],
+                        'inner_field_score_mode': inner_field_score_mode,
+                        'weight': 6
+                    },
+                    self.field_name2: {
+                        'url': self.test_search_url[1],
+                        'inner_field_score_mode': inner_field_score_mode,
+                        'weight': 2
+                    }
+                },
+                'topk': topk,
+                'nprobe': 10
+            }
+            pass
 
     def test_entities_api(self, client):
         rv = client.get(f"/v1/application/{self.name}/entity?num=100")
@@ -138,4 +152,3 @@ class TestScoreFunctionApi:
         PreOperator().delete({'name': self.encoder_name})
         rv = client.delete(f"/v1/application/{self.name}")
         assert rv.status_code == 200
-        shutil.rmtree('./tmp', ignore_errors=True)
