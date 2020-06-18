@@ -17,18 +17,23 @@ from operators.instance import new_operator_instance
 
 
 class DockerRuntime:
-    def __init__(self, base_url, version, timeout, tls, user_agent, credstore_env):
+    def __init__(self, base_url, version, timeout, tls, user_agent,
+                 credstore_env):
         self.client = docker.DockerClient(base_url=base_url,
                                           version=version,
                                           timeout=timeout,
                                           tls=tls,
                                           user_agent=user_agent,
                                           credstore_env=credstore_env)
+        self.labels = ["phantoscope"]
 
     def create_instance(self, name, image, ports, args=None):
         try:
-            container = self.client.containers.run(image=image, name=name, detach=True, ports=ports)
-            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+            container = self.client.containers.run(image=image, name=name,
+                                                   detach=True, ports=ports,
+                                                   labels=self.labels)
+            return new_operator_instance(container.short_id, container.name,
+                                         container.status, container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -36,7 +41,8 @@ class DockerRuntime:
         try:
             container = self.client.container.get(name)
             container.start()
-            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+            return new_operator_instance(container.short_id, container.name,
+                                         container.status, container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -44,7 +50,8 @@ class DockerRuntime:
         try:
             container = self.client.containers.get(name)
             container.stop()
-            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+            return new_operator_instance(container.short_id, container.name,
+                                         container.status, container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -52,7 +59,8 @@ class DockerRuntime:
         try:
             container = self.client.containers.get(name)
             container.remove(force=True)
-            return new_operator_instance(container.short_id, container.name, "deleted", container.ports)
+            return new_operator_instance(container.short_id, container.name,
+                                         "deleted", container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -60,16 +68,21 @@ class DockerRuntime:
         try:
             container = self.client.containers.get(name)
             container.restart()
-            return new_operator_instance(container.short_id, container.name, container.status, container.ports)
+            return new_operator_instance(container.short_id, container.name,
+                                         container.status, container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
     def list_instances(self, name):
         try:
             res = []
-            containers = self.client.containers.list(all=True, filters={"name": f"phantoscope_{name}"})
+            containers = self.client.containers.list(
+                all=True, filters={"name": f"phantoscope_{name}", "label": self.labels})
             for container in containers:
-                res.append(new_operator_instance(container.short_id, container.name, container.status, container.ports))
+                res.append(new_operator_instance(container.short_id,
+                                                 container.name,
+                                                 container.status,
+                                                 container.ports))
             return res
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
