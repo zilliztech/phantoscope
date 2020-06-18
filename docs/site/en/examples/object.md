@@ -29,13 +29,13 @@ docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xc
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "endpoint": "${LOCAL_ADDRESS}:50010",
     "name": "ssd_detector"
 }'
 curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "endpoint": "${LOCAL_ADDRESS}:50011",
     "name": "xception"
 }'
@@ -46,7 +46,7 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
 	"input": "image",
 	"description": "object detect and encode",
 	"processors": "ssd_detector",
@@ -59,7 +59,7 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/application/object-example' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "fields":{
         "object": {
             "type": "object",
@@ -73,7 +73,7 @@ curl --location --request POST '127.0.0.1:5000/v1/application/object-example' \
 
 ```bash
 tar xvf /tmp/256-object.tar -C /tmp
-python3 load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
+python3 scripts/load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
 ```
 
 6. Conduct an object search. 
@@ -81,7 +81,7 @@ python3 load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
 ```bash
 curl --location --request POST '127.0.0.1:5000/v1/application/object-example/search' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
 	"fields": {
         "object": {
             "url": "https://tse4-mm.cn.bing.net/th/id/OIP.RTFEnp5e4zb-CkbYvO1KfwHaHT?pid=Api&rs=1"
