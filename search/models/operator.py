@@ -62,3 +62,14 @@ def del_operator(name):
         return res
     except Exception as e:
         raise DeleteFromSQLError("delete from sql error", e.orig.args[-1])
+
+
+def replace_all_operators(operators):
+    try:
+        db.session.query(Operator).delete()
+        for op in operators:
+            db.session.add(op)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        raise Insert2SQLError("Insert operator to sql error", e.orig.args[-1])

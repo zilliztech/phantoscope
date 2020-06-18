@@ -14,7 +14,7 @@ import logging
 import requests
 from models.operator import Operator as DB
 from models.operator import search_operator, insert_operator, del_operator
-from models.operator import insert_operators
+from models.operator import insert_operators, replace_all_operators
 from operators.client import identity
 from operators.client import health
 from common.error import NotExistError
@@ -205,4 +205,7 @@ def fetch_operators(url, overwrite=True):
                     if lop.name == x.name:
                         local_operators.remove(lop)
                         local_operators.append(x)
+    replace_all_operators([DB(name=x.name, type=x.type, addr=x.addr,
+                              author=x.author, version=x.version,
+                              description=x.description) for x in local_operators])
     return local_operators
