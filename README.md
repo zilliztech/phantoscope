@@ -4,13 +4,12 @@
 ![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
 ![GitHub top language](https://img.shields.io/github/languages/top/zilliztech/phantoscope)
 ![GitHub All Releases](https://img.shields.io/github/downloads/zilliztech/phantoscope/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
-![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/zilliztech/phantoscope)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/zilliztech/phantoscope?include_prereleases)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
-Phantoscope is an image search engine developed on Milvus and neutral networks. 
+Phantoscope is an image search suite powered by Milvus and neutral networks. 
 
 **Extremely high speed in processing and searching billions of images.**
 
@@ -29,7 +28,7 @@ English | [中文版](README_CN.md)
 
 - [Background](#background)
 - [Install](#install)
-- [QuickStart](#quickStart)
+- [Quick Start](#quickStart)
 - [Architecture diagram](#architecture)
 - [Phantoscope Basics](#basics)
 - [Tutorial](#tutorial)
@@ -46,17 +45,26 @@ Your search should not be confined to key words and short sentences.
 
 With the explosion of images and video data in human society, the legacy text search can hardly serve people's needs. 
 
-For example, an image involves a myriad of information, and different people have different interpretation of the same image. The existing search engines, be it full-text search or searching image by image, can no longer meet such flexible multi-dimentional search requests. 
 
-Phantoscope is the right tool for you. Equipped with miscellaneous deep-learning models, portable image processing techniques, and Milvus vector search engine, it can offer a unique set of high-performance image searching interfaces to address such needs.
+For example, an image involves a myriad of information, and different people have different interpretation of the same image. The existing search engines, be it full-text search or searching image by image, can no longer meet such flexible multi-dimensional search requirements. 
+
+Phantoscope is the right tool for you. Empowered by miscellaneous deep-learning models, portable image processing techniques, and Milvus vector search engine, it can offer a unique set of high-performance image searching interfaces to address such needs.
 
 
 <a href="#install"></a>
 ## Install
 
-```
+Download Phantoscope
+```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
+```
+
+Set up environment
+```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+```
+Start Phantoscope containers
+```bash
 $ docker-compose up -d
 ```
 
@@ -78,14 +86,14 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 ```
 
 <a href="#quickstart"></a>
-## QuickStart
+## Quick Start
 
 Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope application. You can use it to upload and search images.
 
 <a href="#architecture"></a>
 ## Architecture diagram
 
-![](./.github/ps-architecture.png)
+![](./.github/phantoscope.png)
 
 <a href="#basics"></a>
 ## Phantoscope basics
@@ -99,8 +107,10 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 
 - [Use Phantoscope Preview](./docs/site/en/tutorials/preview.md)
 - [Create an application](./docs/site/en/examples/object.md)
-- [Develop an operator](./operators/HowToAddAnOperator.md)
+- [Develop an operator](./operators/HowToAddAnOperator_en.md)
 
+<a href="#tutorial"></a>
+## Tutorial 
 
 <a href="#api"></a>
 ## API reference

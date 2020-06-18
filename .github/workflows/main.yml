@@ -12,6 +12,8 @@ on:
     branches:
       - master
       - 0.1.0
+    tags:
+      - v*
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,7 +31,7 @@ jobs:
         sudo apt install python3-pip python3-setuptools
         pip3 install wheel pylint
     - name: make api
-      run: make api
+      run: make release
     - name: push to dockerhub
       env:
         DOCKERHUB_TOKEN: ${{ secrets.dockerhub }}

@@ -60,7 +60,9 @@ class OperatorServicer(vggrpc.rpc_pb2_grpc.OperatorServicer):
 
 
 def serve(port):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    options = [('grpc.max_send_message_length', 100 * 1024 * 1024),
+               ('grpc.max_receive_message_length', 100 * 1024 * 1024)]
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=options)
     vggrpc.rpc_pb2_grpc.add_OperatorServicer_to_server(OperatorServicer(), server)
     server.add_insecure_port('[::]:%s' % port)
     server.start()

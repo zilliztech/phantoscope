@@ -5,8 +5,8 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/zilliztech/phantoscope)
 ![GitHub All Releases](https://img.shields.io/github/downloads/zilliztech/phantoscope/total)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
-![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/zilliztech/phantoscope)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/zilliztech/phantoscope?include_prereleases)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/zilliztech/phantoscope.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zilliztech/phantoscope/context:python)
 [![codecov](https://codecov.io/gh/zilliztech/phantoscope/branch/master/graph/badge.svg)](https://codecov.io/gh/zilliztech/phantoscope)
 
@@ -56,14 +56,23 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 - Docker Compose >= 1.25.0
 - Python >= 3.5
 
-> Phantoscope 已经在 x86 平台下的 Ubuntu 16.04 和 CentOS 7.3 以上经过验证，在 macOS 与 Windows 下可能会存在未知问题。
+> Phantoscope 已经在 x86 平台下的 Ubuntu 16.04 和 CentOS 7.3 以上经过验证。
 
 ### 开始安装
 
 
+下载 Phantoscope
 ```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
+```
+
+设置环境变量
+```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+```
+
+启动 Phantoscope 容器
+```bash
 $ docker-compose up -d
 ```
 
@@ -89,8 +98,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 ## 架构图
 
-![](./.github/ps-architecture.png)
-
+![](./.github/phantoscope.png)
 ## 基本概念
                                                   
 - [什么是 Operator？](./docs/site/zh-CN/tutorials/operator.md)                                                      
