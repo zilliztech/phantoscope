@@ -101,7 +101,8 @@ def all_pipelines():
         pipelines = search_pipeline()
         for p in pipelines:
             pipe = Pipeline(name=p.Pipeline.name, input=p.Pipeline.input,
-                            output=p.Pipeline.output, dimension=p.Pipeline.dimension,
+                            output=p.Pipeline.output,
+                            dimension=p.Pipeline.dimension,
                             index_file_size=p.Pipeline.index_file_size,
                             metric_type=p.Pipeline.metric_type,
                             description=p.Pipeline.description,
@@ -120,7 +121,8 @@ def _all_pipelines():
         pipelines = search_pipeline()
         for p in pipelines:
             pipe = Pipeline(name=p.Pipeline.name, input=p.Pipeline.input,
-                            output=p.Pipeline.output, dimension=p.Pipeline.dimension,
+                            output=p.Pipeline.output,
+                            dimension=p.Pipeline.dimension,
                             index_file_size=p.Pipeline.index_file_size,
                             metric_type=p.Pipeline.metric_type,
                             description=p.Pipeline.description,
@@ -153,17 +155,22 @@ def pipeline_detail(name):
         raise e
 
 
-def new_pipeline(name, input, index_file_size, processors, encoder, description=None):
+def new_pipeline(name, input, index_file_size, processors, encoder,
+                 description=None):
     try:
         encoder = operator_detail(encoder)
-        pipe = Pipeline(name=name, input=input, output=encoder.output, dimension=encoder.dimension,
-                        index_file_size=index_file_size, metric_type=encoder.metric_type,
+        pipe = Pipeline(name=name, input=input, output=encoder.output,
+                        dimension=encoder.dimension,
+                        index_file_size=index_file_size,
+                        metric_type=encoder.metric_type,
                         description=description,
                         processors=processors.split(","), encoder=encoder.name)
         if pipeline_ilegal(pipe):
             return PipelineIlegalError("Pipeline ilegal check error", "")
         milvus_collection_name = f"{name}_{encoder.name}"
-        MilvusIns.new_milvus_collection(milvus_collection_name, encoder.dimension, index_file_size, encoder.metric_type)
+        MilvusIns.new_milvus_collection(milvus_collection_name,
+                                        encoder.dimension, index_file_size,
+                                        encoder.metric_type)
         return pipe.save()
     except Exception as e:
         logger.error(e)
