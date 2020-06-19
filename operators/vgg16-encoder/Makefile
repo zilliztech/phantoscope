@@ -6,7 +6,7 @@ ifeq ($(GIT_TAG), )
 else
   TAG=$(GIT_TAG)
 endif
-TAG='latest'
+TAG=$(shell cat version)
 
 cpu:
 	docker build  \

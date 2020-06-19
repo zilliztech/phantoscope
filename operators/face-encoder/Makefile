@@ -7,7 +7,8 @@ ifeq ($(GIT_TAG), )
 else
   TAG=$(GIT_TAG)
 endif
-TAG='latest'
+TAG=$(shell cat version)
+
 cpu:
 	docker build  \
  	--build-arg base_tag=ubuntu:bionic-20200219 \
