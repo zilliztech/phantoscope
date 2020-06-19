@@ -13,34 +13,26 @@ endif
 # todo: read tag from dir
 
 
-cpu:
-	for i in face-encoder vgg16-encoder; \
+build:
+	for op in $(REBUILD_OPERATORS); \
 	do \
-		cd $$i; \
+		cd $${op}; \
 		echo `pwd` ; \
-		make cpu; \
-		cd -; \
-	done
-
-gpu:
-	for i in face-encoder vgg16-encoder; \
-	do \
-		cd $$i; \
-		echo `pwd` ; \
-		make gpu; \
+		make cpu gpu; \
 		cd -; \
 	done
 
 login:
-	docker login -u psoperator -p $(DOCKERHUB_TOKEN)
+	docker login -u psoperator -p $(PS_DOCKERHUB_TOKEN)
 
 push: login
-	for i in face-encoder vgg16-encoder; \
+	for op in $(REBUILD_OPERATORS); \
 	do \
-		cd $$i; \
+		cd $$op; \
 		echo `pwd` ; \
 		tag=`cat version`; \
-		docker push psoperator/$$i:$$tag; \
+		docker push psoperator/$${op}:$${tag}; \
+		docker push psoperator/$${op}-gpu:$${tag}; \
 		cd -; \
 	done
 

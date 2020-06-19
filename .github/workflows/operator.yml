@@ -19,18 +19,25 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    outputs:
+      rebuild_op_list: ${{ steps.rebuild_operator.outputs.test }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - uses: lots0logs/gh-action-get-changed-files@2.1.4
       with:
-        token: GITHUB_TOKEN
-
-    - name: define building operator
-      run: make release
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: find all rebuild operator
+        id: rebuild_operator
+        run: cat ${HOME}/files.json | echo '::set-output name=test::face-encoder vgg16-encoder'
+    - name: build operator image
+      env:
+        REBUILD_OPERATORS=${{outputs.output1}}
+      run: |
+        echo ${{REBUILD_OPERATORS}}
+        make build
     - name: push to dockerhub
       env:
-        DOCKERHUB_TOKEN: ${{ secrets.dockerhub }}
+        PS_DOCKERHUB_TOKEN: ${{ secrets.HUB_OPERATOR }}
       run: make push
