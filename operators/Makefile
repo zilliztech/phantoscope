@@ -18,11 +18,12 @@ build:
 	do \
 		cd $${op}; \
 		echo `pwd` ; \
-		make cpu gpu; \
+		make cpu; \
 		cd -; \
 	done
 
 login:
+	echo $(PS_DOCKERHUB_TOKEN)
 	docker login -u psoperator -p $(PS_DOCKERHUB_TOKEN)
 
 push: login

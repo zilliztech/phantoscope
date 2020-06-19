@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  prepare:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     outputs:
@@ -29,15 +29,19 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - name: find all rebuild operator
-        id: rebuild_operator
-        run: cat ${HOME}/files.json | echo '::set-output name=test::face-encoder vgg16-encoder'
+      id: rebuild_operator
+      run: |
+        cat ${HOME}/files.json | grep operators
+        cat ${HOME}/files.json | echo '::set-output name=test::face-encoder vgg16-encoder'
     - name: build operator image
       env:
-        REBUILD_OPERATORS=${{outputs.output1}}
+        REBUILD_OPERATORS: ${{ steps.rebuild_operator.outputs.test }}
       run: |
-        echo ${{REBUILD_OPERATORS}}
+        cd operators
         make build
     - name: push to dockerhub
       env:
         PS_DOCKERHUB_TOKEN: ${{ secrets.HUB_OPERATOR }}
-      run: make push
+      run: |
+        cd operators
+        make push
