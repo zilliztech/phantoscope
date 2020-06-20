@@ -5,11 +5,12 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  pull_request:
+  push:
     paths:
     - 'operators/**'
     branches:
       - master
+      - operator_action
     tags:
       - v*
 
@@ -31,7 +32,8 @@ jobs:
     - name: find all rebuild operator
       id: rebuild_operator
       run: |
-        cat ${HOME}/files.json | grep operators
+        cat ${HOME}/files.json
+        cat ${HOME}/files.json | grep operators | sed 's/operators\/\([^\/]*\)\/.*/\1/g'
         cat ${HOME}/files.json | echo '::set-output name=test::face-encoder vgg16-encoder'
     - name: build operator image
       env:
@@ -42,6 +44,7 @@ jobs:
     - name: push to dockerhub
       env:
         PS_DOCKERHUB_TOKEN: ${{ secrets.HUB_OPERATOR }}
+        REBUILD_OPERATORS: ${{ steps.rebuild_operator.outputs.test }}
       run: |
         cd operators
         make push

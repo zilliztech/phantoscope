@@ -17,7 +17,6 @@ build:
 	for op in $(REBUILD_OPERATORS); \
 	do \
 		cd $${op}; \
-		echo `pwd` ; \
 		make cpu; \
 		cd -; \
 	done
