@@ -5,12 +5,11 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
+  pull_request:
     paths:
     - 'operators/**'
     branches:
       - master
-      - operator_action
     tags:
       - v*
 
@@ -32,9 +31,9 @@ jobs:
     - name: find all rebuild operator
       id: rebuild_operator
       run: |
-        cat ${HOME}/files.json
-        cat ${HOME}/files.json | grep operators | sed 's/operators\/\([^\/]*\)\/.*/\1/g'
-        cat ${HOME}/files.json | echo '::set-output name=test::face-encoder vgg16-encoder'
+        tmp=`cat ${HOME}/files.json | grep operators | sed 's/.*operators\/\([^\/]*\)\/.*/\1/g' | sed -e 's/example-custom-operator//g' | sed -e 's/rpc//g' | sed -e 's/^[ ]*//g' | sed -e 's/[ ]*$//g'`
+        echo $tmp
+        echo '::set-output name=test::'${tmp}
     - name: build operator image
       env:
         REBUILD_OPERATORS: ${{ steps.rebuild_operator.outputs.test }}

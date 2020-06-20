@@ -7,7 +7,13 @@ ifeq ($(GIT_TAG), )
 else
   TAG=$(GIT_TAG)
 endif
+
 TAG=$(shell cat version)
+
+data:
+	cd data
+	./prepare_model.sh
+	cd -
 
 cpu:
 	docker build  \

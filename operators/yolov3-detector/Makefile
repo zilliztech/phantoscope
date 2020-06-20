@@ -8,6 +8,12 @@ else
   TAG=$(GIT_TAG)
 endif
 TAG=$(shell cat version)
+
+data:
+	cd data
+	./prepare_model.sh
+	cd -
+
 cpu:
 	docker build  \
  	--build-arg base_tag=ubuntu:bionic-20200219 \

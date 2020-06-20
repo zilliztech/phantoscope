@@ -17,7 +17,8 @@ build:
 	for op in $(REBUILD_OPERATORS); \
 	do \
 		cd $${op}; \
-		make cpu; \
+		make data; \
+		make cpu gpu; \
 		cd -; \
 	done
 
