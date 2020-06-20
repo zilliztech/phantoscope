@@ -9,34 +9,37 @@ This article describe how to extract object from an image and use it to conduct 
 
 ##  Prerequisite
 
-Ensure that you have downloaded the following **.tar** package.
+Ensure that you have downloaded the following **.zip** package.
 
 ```bash
-curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/256-object.tar
+$ curl http://cs231n.stanford.edu/coco-animals.zip -o /tmp/coco-animals.zip
+$ unzip /tmp/coco-animals.zip -d /tmp/
 ```
 
 ## Steps
-1. Run **ssd-object-detector** and **xception**. Set the environment variable `host_ip` as your local intranet IP.  
+1. Run **ssd-object-detector** and **xception**. 
 
 ```bash
-export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 psoperator/ssd-detector:latest
-docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xception-encoder:latest
+$ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
+$ docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 psoperator/ssd-detector:latest
+$ docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xception-encoder:latest
 ```
 
 2. Register **ssd-object-detector** and **xception** with Phantoscope. 
 
 ```bash
-curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
+# register ssd-object-detector to phantoscope with exposed 50010 port and a self-defined name 'ssd_detector'
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
---data-raw '{
-    "endpoint": "${LOCAL_ADDRESS}:50010",
+--data '{
+    "endpoint": "'${LOCAL_ADDRESS}':50010",
     "name": "ssd_detector"
 }'
-curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
+# register xception-encoder to phantoscope with exposed 50011 port and a self-defined name 'xception'
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/regist' \
 --header 'Content-Type: application/json' \
---data-raw '{
-    "endpoint": "${LOCAL_ADDRESS}:50011",
+--data '{
+    "endpoint": "'${LOCAL_ADDRESS}':50011",
     "name": "xception"
 }'
 ```
@@ -44,9 +47,10 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/regist' \
 3. Create a pipeline for extracting object and converting it to vector. 
 
 ```bash
-curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
+# create a pipeline with necessary information
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/object_pipeline' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
 	"input": "image",
 	"description": "object detect and encode",
 	"processors": "ssd_detector",
@@ -57,37 +61,37 @@ curl --location --request POST '127.0.0.1:5000/v1/pipeline/object' \
 4. Create an application for running the pipeline.
 
 ```bash
-curl --location --request POST '127.0.0.1:5000/v1/application/object-example' \
+# create an application with a self-define field name assocatied with pipeline created in step3 
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-example' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "fields":{
-        "object": {
+        "object_field": {
             "type": "object",
-            "pipeline": "object"
+            "pipeline": "object_pipeline"
         }
     },
-    "s3Buckets": "object"
+    "s3Buckets": "object-s3"
 }'
 ```
 5. Upload the package you have downloaded. 
 
 ```bash
-tar xvf /tmp/256-object.tar -C /tmp
-python3 load_data.py -d /tmp/256_ObjectCategories -a object-example -p object
+$ pip3 install requests tqdm
+$ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object-example -p object_pipeline
 ```
 
 6. Conduct an object search. 
 
 ```bash
-curl --location --request POST '127.0.0.1:5000/v1/application/object-example/search' \
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-example/search' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
 	"fields": {
-        "object": {
-            "url": "https://tse4-mm.cn.bing.net/th/id/OIP.RTFEnp5e4zb-CkbYvO1KfwHaHT?pid=Api&rs=1"
+        "object_field": {
+            "url": "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3506601383,2488554559&fm=26&gp=0.jpg"
         }
     },
-    "topk": 10,
-    "nprobe": 20
+    "topk": 5
 }'
 ```

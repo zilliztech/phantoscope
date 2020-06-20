@@ -155,7 +155,7 @@ if __name__ == "__main__":
     # ensure run in all processes in the pool
     batch_size = min(math.ceil(file_num / pool_num), batch_size)
 
-    print("allocate %d processes to load data, ecah task including %d images" % (pool_num, batch_size))
+    print("allocate %d processes to load data, each task including %d images" % (pool_num, batch_size))
     print("Now begin to load image data and upload to phantoscope: ...")
     time.sleep(0.1)
 

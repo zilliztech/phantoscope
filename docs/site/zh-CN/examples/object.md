@@ -132,7 +132,7 @@ $ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object-example -p o
 等待运行结束，上传结果如下所示。
 ```bash
 upload url is http://127.0.0.1:5000/v1/application/object-example/upload
-allocate 4 processes to load data, ecah task including 200 images
+allocate 4 processes to load data, each task including 200 images
 Now begin to load image data and upload to phantoscope: ...
 100%|████████████████████████████████████████████████████████████████████████████████| 800/800 [03:16<00:00,  4.07it/s]
 upload 800 images cost: 196.832s 
@@ -218,7 +218,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 ```
 
 3.使用 [Phantoscope Preview](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/preview.md) 更直观地进行搜索。演示效果如下图所示：
-
+>  注意切换为 object-example 的 application。
 ![result](/.github/example/object-example.gif)
 
 > 本文所使用 API 详见 [API 文档](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0)。
