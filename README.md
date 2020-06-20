@@ -3,7 +3,6 @@
 ![CI](https://github.com/zilliztech/phantoscope/workflows/CI/badge.svg?branch=master)
 ![GitHub](https://img.shields.io/github/license/zilliztech/phantoscope)
 ![GitHub top language](https://img.shields.io/github/languages/top/zilliztech/phantoscope)
-![GitHub All Releases](https://img.shields.io/github/downloads/zilliztech/phantoscope/total)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/zilliztech/phantoscope)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/zilliztech/phantoscope)
 ![Github realease data](https://img.shields.io/github/release-date/zilliztech/phantoscope)
