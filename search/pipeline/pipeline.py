@@ -24,7 +24,7 @@ from common.const import OPERATOR_TYPE_ENCODER
 from common.const import OPERATOR_TYPE_PROCESSOR
 from operators.operator import all_operators
 from operators.operator import operator_detail
-from operators.client import execute
+from operators.client import execute, identity
 from storage.storage import MilvusIns
 
 logger = logging.getLogger(__name__)
@@ -115,25 +115,6 @@ def all_pipelines():
         raise e
 
 
-def _all_pipelines():
-    res = []
-    try:
-        pipelines = search_pipeline()
-        for p in pipelines:
-            pipe = Pipeline(name=p.Pipeline.name, input=p.Pipeline.input,
-                            output=p.Pipeline.output,
-                            dimension=p.Pipeline.dimension,
-                            index_file_size=p.Pipeline.index_file_size,
-                            metric_type=p.Pipeline.metric_type,
-                            description=p.Pipeline.description,
-                            processors=p.Pipeline.processors.split(","),
-                            encoder=p.Pipeline.encoder)
-            res.append(pipe)
-        return res
-    except Exception as e:
-        raise e
-
-
 def pipeline_detail(name):
     try:
         p = search_pipeline(name)
@@ -158,19 +139,23 @@ def pipeline_detail(name):
 def new_pipeline(name, input, index_file_size, processors, encoder,
                  description=None):
     try:
-        encoder = operator_detail(encoder)
-        pipe = Pipeline(name=name, input=input, output=encoder.output,
-                        dimension=encoder.dimension,
+        # add encoder args check
+        encoder_name = encoder.get("name")
+        encoder_instance_name = encoder.get("instance")
+        # check operator and instance exist
+        encoder = operator_detail(encoder_name)
+        # get port and addr from runtime client
+        encoder_instance = encoder.inspect_instance(encoder_instance_name)
+        encoder_identity = identity(encoder_instance.endpoint)
+        # create pipeline
+        pipe = Pipeline(name=name, input=input, output=encoder_identity.output,
+                        dimension=encoder_identity.dimension,
                         index_file_size=index_file_size,
-                        metric_type=encoder.metric_type,
+                        metric_type=encoder_identity.metric_type,
                         description=description,
-                        processors=processors.split(","), encoder=encoder.name)
+                        processors=processors.split(","), encoder=encoder_identity.name)
         if pipeline_ilegal(pipe):
             return PipelineIlegalError("Pipeline ilegal check error", "")
-        milvus_collection_name = f"{name}_{encoder.name}"
-        MilvusIns.new_milvus_collection(milvus_collection_name,
-                                        encoder.dimension, index_file_size,
-                                        encoder.metric_type)
         return pipe.save()
     except Exception as e:
         logger.error(e)
@@ -183,8 +168,6 @@ def delete_pipeline(name):
         if not p:
             raise NotExistError("pipeline %s is not exist" % name, "")
         p = p[0]
-        milvus_collection_name = f"{name}_{p.encoder}"
-        MilvusIns.del_milvus_collection(milvus_collection_name)
         pipe = Pipeline(name=p.name, input=p.input,
                         output=p.output, dimension=p.dimension,
                         index_file_size=p.index_file_size,

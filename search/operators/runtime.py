@@ -87,6 +87,14 @@ class DockerRuntime:
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
+    def inspect_instance(self, name):
+        try:
+            container = self.client.containers.get(name)
+            return new_operator_instance(container.short_id, container.name,
+                                         container.status, container.ip,
+                                         container.ports)
+        except APIError as e:
+            raise DockerRuntimeError(e.explanation, e)
 
 def runtime_client_getter(name):
     if name == "docker":

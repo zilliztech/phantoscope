@@ -41,7 +41,7 @@ def new_pipeline_api(name):
         add_argument("input", type=str, required=True). \
         add_argument("description", type=str, required=True). \
         add_argument("processors", type=str, required=True). \
-        add_argument("encoder", type=str, required=True). \
+        add_argument("encoder", type=dict, required=True). \
         add_argument("indexFileSize", type=int, required=True). \
         parse_args()
     args = from_view_dict(args)
