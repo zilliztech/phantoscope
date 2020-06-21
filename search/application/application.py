@@ -18,8 +18,14 @@ from models.mapping import search_by_application, search_from_mapping, del_mappi
 from pipeline.pipeline import _all_pipelines
 from common.error import NotExistError
 from common.error import RequestError
+from common.error import ArgsCheckError
+from common.error import ExistError
 from storage.storage import S3Ins, MilvusIns
+from storage.storage import MongoIns
 from application.mapping import new_mapping_ins
+from application.utils import fields_check
+from models.fields import insert_fields
+from models.fields import Fields as FieldsDB
 
 
 logger = logging.getLogger(__name__)
@@ -92,21 +98,28 @@ def application_detail(name):
         raise e
 
 
-def new_application(name, fields, s3_buckets):
-    app = Application(name=name, fields=fields, buckets=s3_buckets)
+def new_application(app_name, fields, s3_buckets):
+    ok, message = fields_check(fields)
+    if not ok:
+        raise ArgsCheckError(message, "")
     try:
-        all_pipelines_names = [x.name for x in _all_pipelines()]
-        for _, v in fields.items():
-            if v.get("type") == "object":
-                if v.get("pipeline") not in all_pipelines_names:
-                    return NotExistError("pipeline not exist", "pipeline %s not exist" % v.get("value"))
-            if v.get("type") != "object":
-                if "value" not in v:
-                    return RequestError("key 'value' not exist", "request error")
-        return app.save()
+        # check application exist
+        if search_application(app_name):
+            raise ExistError(f"application <{app_name}> had exist", "")
+        # insert fields to metadata
+        fieldsdb = []
+        for name, field in fields.items():
+            fieldsdb.append(FieldsDB(name=name, type=field.get('type'),
+                                     value=field.get('value'), app=app_name))
+        ids = insert_fields(fieldsdb)
+        # create a application entity collection
+        MongoIns.new_mongo_collection(app_name+"_entity")
+        # insert application to metadata
+        app = Application(name=app_name, fields=",".join([str(x) for x in ids]), buckets=s3_buckets)
+        app.save()
+        return app
     except Exception as e:
         raise e
-
 
 def delete_application(name):
     try:

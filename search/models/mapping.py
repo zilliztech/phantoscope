@@ -16,9 +16,8 @@ from common.error import Insert2SQLError, QueryFromSQLError, DeleteFromSQLError
 
 class Mapping(db.Model):
     id = db.Column(db.String(120), unique=True, nullable=False, primary_key=True)
-    app_name = db.Column(db.String(120), db.ForeignKey('application.name'), nullable=False)
-    app = db.relationship('Application', foreign_keys=app_name)
-    image_url = db.Column(db.String(500), nullable=True)
+    app = db.Column(db.String(128), nullable=False)
+    image_url = db.Column(db.String(256), nullable=True)
     fields = db.Column(db.String(500), nullable=True)
 
     def __repr__(self):

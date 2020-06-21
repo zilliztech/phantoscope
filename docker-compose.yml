@@ -18,13 +18,22 @@ services:
       - minio
       - mysql
   mysql:
-    image: daocloud.io/library/mysql:5.6
+    image: mysql:5.6
     environment:
       - MYSQL_ROOT_PASSWORD=passwd
     ports:
       - "3306:3306"
     volumes:
       - /mnt/om/mysql:/var/lib/mysql
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=passwd
+    ports:
+      - "27017:27017"
+    volumes:
+      - /mnt/om/mongo:/data/db
   milvus:
     image: milvusdb/milvus:0.7.0-cpu-d031120-de409b
     ports:

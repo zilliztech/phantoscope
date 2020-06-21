@@ -128,3 +128,8 @@ class RequestError(Error):
     @property
     def code(self):
         return 400
+
+class ArgsCheckError(Error):
+    @property
+    def code(self):
+        return 400

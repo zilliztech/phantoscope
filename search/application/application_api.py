@@ -46,7 +46,7 @@ def new_application_api(name):
         add_argument("s3Buckets", type=str, required=True). \
         parse_args()
     args = from_view_dict(args)
-    args['name'] = name
+    args['app_name'] = name
     return new_application(**args)
 
 

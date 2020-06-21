@@ -12,12 +12,14 @@
 import os
 import json
 import logging
+import pymongo
 from milvus import Milvus, MetricType
 from minio import Minio
 from common.config import MILVUS_ADDR, MILVUS_PORT
 from common.error import MilvusError, S3Error
 from common.const import MINIO_BUCKET_PUBLIC_POLICY
 from common.config import MINIO_ADDR, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+from common.config import MONGO_ADDR, MONGO_PORT
 logger = logging.getLogger(__name__)
 
 
@@ -31,6 +33,16 @@ type_mapping = {
     "l2": MetricType.L2
 }
 
+
+class MongoIns:
+    @staticmethod
+    def new_mongo_collection(name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT, username="root", password="passwd")
+            db = client.phantoscope
+            db.create_collection(name)
+        except Exception as e:
+            raise e
 
 class MilvusIns:
     @staticmethod
