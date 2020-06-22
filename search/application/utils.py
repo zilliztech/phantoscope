@@ -41,3 +41,10 @@ def fields_check(fields):
                 return False, f"pipeline {field.get('value')} not exist"
             return False, f"field {name} destination type {field.get('type')}, actual type {type(field.get('value'))}"
     return True, ""
+
+
+def fields2dict(fields):
+    res = {}
+    for field in fields:
+        res[field.name] = {"type": field.type, "value": field.value}
+    return res

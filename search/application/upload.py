@@ -33,8 +33,8 @@ def upload(name, **kwargs):
         if not app:
             raise NotExistError("application not exist", "application %s not exist" % name)
         bucket_name = app.buckets.split(",")[0]
-        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "object"]
-        pipeline_fields = {x: y['pipeline'] for x, y in app.fields.items() if y.get('type') == "object"}
+        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "pipeline"]
+        pipeline_fields = {x: y['value'] for x, y in app.fields.items() if y.get('type') == "pipeline"}
         new_fields = app.fields.copy()
         for k, v in kwargs.items():
             if k in accept_fields:
@@ -71,6 +71,7 @@ def upload(name, **kwargs):
                                            fields=new_fields))
         return res
     except Exception as e:
+        print(e)
         raise e
 
 

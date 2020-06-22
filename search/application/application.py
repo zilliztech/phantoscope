@@ -22,8 +22,8 @@ from common.error import ExistError
 from storage.storage import S3Ins, MilvusIns
 from storage.storage import MongoIns
 from application.mapping import new_mapping_ins
-from application.utils import fields_check
-from models.fields import insert_fields
+from application.utils import fields_check, fields2dict
+from models.fields import insert_fields, search_fields, delete_fields
 from models.fields import Fields as FieldsDB
 
 
@@ -64,6 +64,7 @@ class Application():
             #TODO create s3 bucket if bucket not exist
             S3Ins.new_s3_buckets(self.buckets.split(","))
             #TODO create milvus collections
+            all_encoder_instance_name = []
             insert_application(app)
             logger.info("create new application %s", self.name)
         except Exception as e:
@@ -78,8 +79,8 @@ def all_applications():
     try:
         apps = search_application()
         for x in apps:
-            fields = json.loads(x.Application.fields)
-            app = Application(name=x.Application.name, fields=fields, buckets=x.Application.s3_buckets)
+            fields = search_fields(json.loads(x.Application.fields))
+            app = Application(name=x.Application.name, fields=fields2dict(fields), buckets=x.Application.s3_buckets)
             res.append(app)
         logger.info("get all application")
         return res
@@ -93,8 +94,8 @@ def application_detail(name):
         x = search_application(name)
         if not x:
             raise NotExistError(f"application {name} not exist", "")
-        fields = json.loads(x.fields)
-        app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
+        fields = search_fields(json.loads(x.fields))
+        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
         return app
     except Exception as e:
         logger.error(e)
@@ -117,24 +118,31 @@ def new_application(app_name, fields, s3_buckets):
         ids = insert_fields(fieldsdb)
         # create a application entity collection
         MongoIns.new_mongo_collection(app_name+"_entity")
+        app = Application(name=app_name, fields=ids, buckets=s3_buckets)
+        # create milvus collections
+
         # insert application to metadata
-        app = Application(name=app_name, fields=",".join([str(x) for x in ids]), buckets=s3_buckets)
         app.save()
+        app.fields = fields2dict(search_fields(ids))
         return app
     except Exception as e:
         raise e
+
 
 def delete_application(name):
     try:
         if len(entities_list(name, 100, 0)):
             raise RequestError("There still have entity in this application", "")
+        #TODO rewrite clean all resource before change metadata
         x = del_application(name)
         if not x:
             raise NotExistError("application %s not exist" % name, "")
         x = x[0]
-        fields = json.loads(x.fields)
-        app = Application(name=x.name, fields=fields, buckets=x.s3_buckets)
         S3Ins.del_s3_buckets(x.s3_buckets.split(","))
+        MongoIns.delete_mongo_collection(name+"_entity")
+        fields = search_fields(json.loads(x.fields))
+        delete_fields(json.loads(x.fields))
+        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
         logger.info("delete application %s", name)
         return app
     except Exception as e:
@@ -142,29 +150,15 @@ def delete_application(name):
         raise e
 
 
-# def patch_application(name, fields, s3_buckets):
-#    try:
-#        app_model = DB(name=name, fields=json.dumps(fields), s3_buckets=s3_buckets)
-#        x = update_application(name, app_model)
-#        if not x:
-#            raise NotExistError(f"application {name} not exist", "")
-#        app = Application(name=x.name, fields=fields, buckets=s3_buckets)
-#        logger.info("change appication %s config", name)
-#        return app
-#    except Exception as e:
-#        logger.error(e)
-#        return e
-
-
 def entities_list(name, num, page):
     res = []
     try:
-        for i in search_by_application(name, num, num*page):
-            res.append(new_mapping_ins(id=i.id, app_name=i.app_name,
-                                       image_url=i.image_url,
-                                       fields=i.fields))
+        # for i in search_by_application(name, num, num*page):
+        #     res.append(new_mapping_ins(id=i.id, app_name=i.app_name,
+        #                                image_url=i.image_url,
+        #                                fields=i.fields))
         logger.info("get application %s entity list", name)
-        return res
+        return []
     except Exception as e:
         logger.error(e)
         raise e

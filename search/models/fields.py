@@ -11,7 +11,7 @@
 
 
 from service import db
-from common.error import Insert2SQLError, ExistError
+from common.error import Insert2SQLError, ExistError, QueryFromSQLError, DeleteFromSQLError
 
 
 class Fields(db.Model):
@@ -48,3 +48,22 @@ def fields_exist_check(fields):
         if field.name in all_name:
             return True, field.name
     return False, ""
+
+
+def search_fields(fields=[]):
+    try:
+        res = db.session.query(Fields).filter(Fields.id.in_(fields)).all()
+        res.sort(key=lambda x: fields.index(x.id))
+        return res
+    except Exception as e:
+        raise QueryFromSQLError("query from sql error", e.orig.args[-1])
+
+
+def delete_fields(fields=[]):
+    try:
+        for field in fields:
+            db.session.query(Fields).filter(Fields.id == field).delete()
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        raise DeleteFromSQLError("delete from sql error", e)

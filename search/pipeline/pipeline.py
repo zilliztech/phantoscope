@@ -192,7 +192,7 @@ def test_pipeline(name, data=None, url=None):
     except Exception as e:
         raise e
 
-def pipeline_ilegal(pipe):
+def pipelinei_legal(pipe):
     # TODO Rewrite
     # encoder_name = encoder.get("name")
     # encoder_instance_name = encoder.get("instance")
