@@ -102,6 +102,7 @@ class Operator:
         ins = self.runtime_client.inspect_instance(f"phantoscope_{self.name}_{name}")
         return ins
 
+
 def new_operator(name, addr, author, version, type, description):
     return Operator(name=name, addr=addr, author=author, version=version,
                     type=type, description=description)

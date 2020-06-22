@@ -55,20 +55,12 @@ def upload(name, **kwargs):
             file_name = "{}-{}".format(name, uuid.uuid4().hex)
             file_path = save_tmp_file(file_name, file_data, url)
 
-            # begin to timing
-            start = time.time()
             S3Ins.upload2bucket(bucket_name, file_path, file_name)
-            upload_time = time.time()
-            logger.debug("[timing] upload image to bucket costs: {:.3f}s".format(upload_time - start))
 
             vectors = run_pipeline(pipe, data=file_data, url=url)
-            pipeline_time = time.time()
-            logger.debug("[timing] run pipeline costs: {:.3f}s".format(pipeline_time - upload_time))
 
             milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
-            insert_time = time.time()
-            logger.debug("[timing] insert to milvus costs: {:.3f}s".format(insert_time - pipeline_time))
             for vid in vids:
                 m = DB(id=vid, app_name=name,
                        image_url=gen_url(bucket_name, file_name),
@@ -77,9 +69,6 @@ def upload(name, **kwargs):
                 res.append(new_mapping_ins(id=vid, app_name=name,
                                            image_url=gen_url(bucket_name, file_name),
                                            fields=new_fields))
-            final_time = time.time()
-            logger.debug("[timing] prepare result costs: {:.3f}s".format(final_time - insert_time))
-
         return res
     except Exception as e:
         raise e

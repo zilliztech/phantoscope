@@ -9,14 +9,13 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
-from service import runtime_client
 
 class OperatorInstance:
     def __init__(self, id, name, status, ip, ports, endpoint=None):
         self.id = id
         self.name = name
         self.status = status
-        self.ports = ports[]
+        self.ports = ports
         self.ip = ip
         self.endpoint = endpoint
 

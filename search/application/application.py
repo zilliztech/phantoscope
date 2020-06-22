@@ -15,7 +15,6 @@ import logging
 from models.application import Application as DB
 from models.application import insert_application, search_application, del_application, update_application
 from models.mapping import search_by_application, search_from_mapping, del_mapping
-from pipeline.pipeline import _all_pipelines
 from common.error import NotExistError
 from common.error import RequestError
 from common.error import ArgsCheckError
@@ -61,11 +60,15 @@ class Application():
         fields = json.dumps(self._fields)
         app = DB(name=self._application_name, fields=fields, s3_buckets=self._buckets)
         try:
+            # Record created resource
+            #TODO create s3 bucket if bucket not exist
             S3Ins.new_s3_buckets(self.buckets.split(","))
+            #TODO create milvus collections
             insert_application(app)
             logger.info("create new application %s", self.name)
         except Exception as e:
             logger.error(e)
+            #TODO collection created resource
             raise e
         return self
 

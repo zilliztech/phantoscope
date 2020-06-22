@@ -45,7 +45,7 @@ def health(operator):
 
 def execute(operator, datas=[], urls=[]):
     try:
-        with grpc.insecure_channel(operator.endpoint) as channel:
+        with grpc.insecure_channel("192.168.1.10:50001") as channel:
             stub = rpc_pb2_grpc.OperatorStub(channel)
             res = stub.Execute(pb.ExecuteRequest(urls=urls, datas=datas))
             return [list(x.element) for x in res.vectors], res.metadata

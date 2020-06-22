@@ -10,11 +10,11 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 # Copyright (C) 2019-2020 Zilliz. All rights reserved.
 
-from pipeline.pipeline import _all_pipelines
+from pipeline.pipeline import all_pipelines
 
 
 def pipeline_exist(name):
-    all_pipelines_names = [x.name for x in _all_pipelines()]
+    all_pipelines_names = [x.name for x in all_pipelines()]
     if name not in all_pipelines_names:
         return False
     return True

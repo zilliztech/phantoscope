@@ -21,11 +21,8 @@ class Pipeline(db.Model):
     description = db.Column(db.String(240), unique=False, nullable=True)
     processors = db.Column(db.String(240), unique=False, nullable=False)
     encoder = db.Column(db.String(240), unique=False, nullable=False)
-    input = db.Column(db.String(120), unique=False, nullable=False)
-    output = db.Column(db.String(120), unique=False, nullable=False)
-    dimension = db.Column(db.Integer, unique=False, nullable=False)
-    index_file_size = db.Column(db.Integer, unique=False, nullable=False)
-    metric_type = db.Column(db.String(120), unique=False, nullable=False)
+    input = db.Column(db.String(240), unique=False, nullable=True)
+    output = db.Column(db.String(240), unique=False, nullable=True)
 
     def __repr__(self):
         return '<Pipeline %r>' % self.name
@@ -58,19 +55,3 @@ def del_pipeline(name):
         return res
     except Exception as e:
         raise DeleteFromSQLError("delete from sql error", e.orig.args[-1])
-
-
-def update_pipeline(name, p):
-    try:
-        old = db.session.query(Pipeline).filter(Pipeline.name==name).first()
-        if not old:
-            raise NotExistError("update target not exist", "pipeline with %s not exist" % name)
-        for k, v in p.__dict__.items():
-            if v and k != "_sa_instance_state":
-                setattr(old, k, v)
-        db.session.commit()
-        return old
-    except Exception as e:
-        if isinstance(e, NotExistError):
-            raise e
-        raise UpdateFromSQLError("update from sql error", e.orig.args[-1])

@@ -33,7 +33,8 @@ class DockerRuntime:
                                                    detach=True, ports=ports,
                                                    labels=self.labels)
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.ports)
+                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -42,7 +43,8 @@ class DockerRuntime:
             container = self.client.container.get(name)
             container.start()
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.ports)
+                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -51,7 +53,8 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.stop()
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.ports)
+                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -60,7 +63,8 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.remove(force=True)
             return new_operator_instance(container.short_id, container.name,
-                                         "deleted", container.ports)
+                                         "deleted", container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -69,7 +73,8 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.restart()
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.ports)
+                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
 
@@ -82,6 +87,7 @@ class DockerRuntime:
                 res.append(new_operator_instance(container.short_id,
                                                  container.name,
                                                  container.status,
+                                                 container.attrs["NetworkSettings"]["IPAddress"],
                                                  container.ports))
             return res
         except APIError as e:
@@ -91,7 +97,7 @@ class DockerRuntime:
         try:
             container = self.client.containers.get(name)
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.ip,
+                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
