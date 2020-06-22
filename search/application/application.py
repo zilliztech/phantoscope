@@ -25,7 +25,9 @@ from application.mapping import new_mapping_ins
 from application.utils import fields_check, fields2dict
 from models.fields import insert_fields, search_fields, delete_fields
 from models.fields import Fields as FieldsDB
-
+from pipeline.pipeline import pipeline_detail
+from operators.client import identity
+from operators.operator import operator_detail
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +103,18 @@ def application_detail(name):
         raise e
 
 
+def create_milvus_collections_by_fields(app):
+    for field in search_fields(app.fields):
+        if field.type == "pipeline":
+            pipe = pipeline_detail(field.value)
+            name = pipe.encoder.get("name")
+            instance_name = pipe.encoder.get("instance")
+            encoder = operator_detail(name)
+            instance = encoder.inspect_instance(instance_name)
+            ei = identity(instance.endpoint)
+            MilvusIns.new_milvus_collection(f"{app.name}_{name}_{instance_name}", int(ei["dimension"]), 1024, "l2")
+
+
 def new_application(app_name, fields, s3_buckets):
     ok, message = fields_check(fields)
     if not ok:
@@ -119,6 +133,7 @@ def new_application(app_name, fields, s3_buckets):
         MongoIns.new_mongo_collection(app_name+"_entity")
         app = Application(name=app_name, fields=ids, buckets=s3_buckets)
         # create milvus collections
+        create_milvus_collections_by_fields(app)
         # insert application to metadata
         app.save()
         app.fields = fields2dict(search_fields(ids))
@@ -126,6 +141,14 @@ def new_application(app_name, fields, s3_buckets):
     except Exception as e:
         raise e
 
+
+def delete_milvus_collections_by_fields(app):
+    for _, field in app.fields.items():
+        if field["type"] == "pipeline":
+            pipe = pipeline_detail(field["value"])
+            name = pipe.encoder.get("name")
+            instance_name = pipe.encoder.get("instance")
+            MilvusIns.del_milvus_collection(f"{app.name}_{name}_{instance_name}")
 
 def delete_application(name):
     try:
@@ -136,11 +159,12 @@ def delete_application(name):
         if not x:
             raise NotExistError("application %s not exist" % name, "")
         x = x[0]
+        fields = search_fields(json.loads(x.fields))
+        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
+        delete_milvus_collections_by_fields(app)
+        delete_fields(json.loads(x.fields))
         S3Ins.del_s3_buckets(x.s3_buckets.split(","))
         MongoIns.delete_mongo_collection(name+"_entity")
-        fields = search_fields(json.loads(x.fields))
-        delete_fields(json.loads(x.fields))
-        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
         logger.info("delete application %s", name)
         return app
     except Exception as e:

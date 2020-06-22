@@ -59,7 +59,7 @@ def upload(name, **kwargs):
 
             vectors = run_pipeline(pipe, data=file_data, url=url)
 
-            milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
+            milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
             for vid in vids:
                 m = DB(id=vid, app_name=name,
