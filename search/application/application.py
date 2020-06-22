@@ -64,7 +64,6 @@ class Application():
             #TODO create s3 bucket if bucket not exist
             S3Ins.new_s3_buckets(self.buckets.split(","))
             #TODO create milvus collections
-            all_encoder_instance_name = []
             insert_application(app)
             logger.info("create new application %s", self.name)
         except Exception as e:
@@ -120,7 +119,6 @@ def new_application(app_name, fields, s3_buckets):
         MongoIns.new_mongo_collection(app_name+"_entity")
         app = Application(name=app_name, fields=ids, buckets=s3_buckets)
         # create milvus collections
-
         # insert application to metadata
         app.save()
         app.fields = fields2dict(search_fields(ids))
