@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: phantoscope/api-server:0.1.0
+    image: phantoscope/api-server:v0.1.0
     ports:
       - "5000:5000"
     environment:
@@ -18,7 +18,7 @@ services:
       - minio
       - mysql
   mysql:
-    image: daocloud.io/library/mysql:5.6
+    image: mysql:5.6
     environment:
       - MYSQL_ROOT_PASSWORD=passwd
     ports:

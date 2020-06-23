@@ -27,25 +27,26 @@ $ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
 ```
 
-## 下载图片数据集
-本文使用 [Caltech 256 数据集](https://www.kaggle.com/jessicali9530/caltech256)，是加利福尼亚理工学院收集整理的数据集，该数据集选自 Google Image 数据集，并手工去除了不符合其类别的图片。在该数据集中，图片被分为 256 类，每个类别的图片超过 80 张。
+## 下载图片数据
+本文使用的 MSCOCO 动物图片数据集是 COCO 数据集的一小部分，由斯坦福大学的研究人员提供。包含熊，鸟，猫，狗等 8 类的 800 个训练图像和 200 个测试图像：。
 ```bash
-$ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
+$ curl http://cs231n.stanford.edu/coco-animals.zip -o /tmp/coco-animals.zip
 ```
 
 ## 导入图片数据集
 ```bash
-$ tar xvf /tmp/vgg-example.tar -C /tmp
+$ unzip /tmp/coco-animals.zip -d /tmp/
 $ pip3 install requests tqdm
-$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/256_ObjectCategories
+$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/coco-animals
 ```
 上传图片根据机器性能不同，时间会有差异。
 
 ## 使用 Phantoscope Preview 进行搜索
 
 ```bash
-docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
+$ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
+浏览器打开 127.0.0.1:8000 
 ![Phantoscope Preview 演示图](../../../../.github/preview.gif)
 
 
@@ -71,7 +72,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": 1591585583689787000,
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-19ef9e9ba7f745dd90b2d9373c1aed56",
+        "_image_url": "http://host:9000/example/example_app-19ef9e9ba7f745dd90b2d9373c1aed56",
         "_fields": {
             "example_field": {
                 "type": "object",
@@ -102,7 +103,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": "1591584893762549000",
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-b26e52aa65df4c23bbd848e98df1f0a3",
+        "_image_url": "http://host:9000/example/example_app-b26e52aa65df4c23bbd848e98df1f0a3",
         "_fields": {
             "example_field": {
                 "type": "object",
@@ -113,7 +114,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": "1591584895837488000",
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-e53e7a233c814b7f825f7b58c2647501",
+        "_image_url": "http://host:9000/example/example_app-e53e7a233c814b7f825f7b58c2647501",
         "_fields": {
             "example_field": {
                 "type": "object",

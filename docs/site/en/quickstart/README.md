@@ -22,26 +22,28 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 Run **prepare.sh** under the **script** folder. This script register an operator, use it to create a pipeline, and then use the pipeline to create an application called **example_app**. 
 
 ```bash
-$ chmod +x prepare.sh
-$ ./prepare.sh
+$ chmod +x scripts/prepare.sh
+$ ./scripts/prepare.sh
 ```
 
 ## Download Image Package
 ```bash
-$ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
-``` 
+$ curl http://cs231n.stanford.edu/coco-animals.zip -o /tmp/coco-animals.zip
+```
 
 ## Upload Image Package
 ```bash
-$ tar xvf /tmp/vgg-example.tar -C /tmp
+$ unzip /tmp/coco-animals.zip -d /tmp/
 $ pip3 install requests tqdm
-$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/256_ObjectCategories
+$ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_pipeline -d /tmp/coco-animals
 ```
 
 ## Use Phantoscope Preview for an image search
 ```bash
-docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
+$ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
+Open 127.0.0.1:8000 with browser
+
 ![Phantoscope Preview Demonstration](../../../../.github/preview.gif)
 
 
@@ -68,7 +70,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": 1591585583689787000,
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-19ef9e9ba7f745dd90b2d9373c1aed56",
+        "_image_url": "http://host:9000/example/example_app-19ef9e9ba7f745dd90b2d9373c1aed56",
         "_fields": {
             "example_field": {
                 "type": "object",
@@ -99,7 +101,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": "1591584893762549000",
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-b26e52aa65df4c23bbd848e98df1f0a3",
+        "_image_url": "http://host:9000/example/example_app-b26e52aa65df4c23bbd848e98df1f0a3",
         "_fields": {
             "example_field": {
                 "type": "object",
@@ -110,7 +112,7 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
     {
         "_id": "1591584895837488000",
         "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example-e53e7a233c814b7f825f7b58c2647501",
+        "_image_url": "http://host:9000/example/example_app-e53e7a233c814b7f825f7b58c2647501",
         "_fields": {
             "example_field": {
                 "type": "object",
