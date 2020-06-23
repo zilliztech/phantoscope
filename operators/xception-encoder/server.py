@@ -6,7 +6,7 @@ import rpc.rpc_pb2
 import rpc.rpc_pb2_grpc
 from xception import run, Xception as Encoder
 
-ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:50012")
+ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:80")
 
 
 class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):
@@ -41,7 +41,9 @@ class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):
 
 
 def serve(port):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    options = [('grpc.max_send_message_length', 100 * 1024 * 1024),
+               ('grpc.max_receive_message_length', 100 * 1024 * 1024)]
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=options)
     rpc.rpc_pb2_grpc.add_OperatorServicer_to_server(OperatorServicer(), server)
     server.add_insecure_port('[::]:%s' % port)
     server.start()

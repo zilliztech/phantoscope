@@ -23,7 +23,7 @@ else
 endif
 
 release:
-	docker build -t phantoscope/api-server:$(TAG)
+	docker build -t phantoscope/api-server:$(TAG) .
 
 login:
 	docker login -u phantoscope -p $(DOCKERHUB_TOKEN)
