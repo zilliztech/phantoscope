@@ -17,7 +17,7 @@ from application.application import application_detail
 from pipeline.pipeline import pipeline_detail, run_pipeline
 from common.error import NotExistError
 from common.error import RequestError
-from storage.storage import MilvusIns, S3Ins
+from storage.storage import MilvusIns, S3Ins, MongoIns
 from models.mapping import Mapping as DB
 from models.mapping import add_mapping_data
 from application.mapping import new_mapping_ins
@@ -43,6 +43,7 @@ def upload(name, **kwargs):
         for k, _ in kwargs.get('fields').items():
             if k not in accept_fields and k not in pipeline_fields:
                 raise RequestError(f"fields {k} not in application", "")
+        docs = {}
         for n, p in pipeline_fields.items():
             pipe = pipeline_detail(p)
             if not pipe:
@@ -61,17 +62,11 @@ def upload(name, **kwargs):
 
             milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
-            for vid in vids:
-                m = DB(id=vid, app_name=name,
-                       image_url=gen_url(bucket_name, file_name),
-                       fields=new_fields)
-                add_mapping_data(m)
-                res.append(new_mapping_ins(id=vid, app_name=name,
-                                           image_url=gen_url(bucket_name, file_name),
-                                           fields=new_fields))
+            docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}
+            doc_id = MongoIns.insert_documents(f"{app.name}_entity", docs)
+            res.append(new_mapping_ins(str(doc_id), docs))
         return res
     except Exception as e:
-        print(e)
         raise e
 
 

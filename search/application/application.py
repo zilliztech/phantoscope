@@ -63,14 +63,14 @@ class Application():
         app = DB(name=self._application_name, fields=fields, s3_buckets=self._buckets)
         try:
             # Record created resource
-            #TODO create s3 bucket if bucket not exist
+            # TODO create s3 bucket if bucket not exist
             S3Ins.new_s3_buckets(self.buckets.split(","))
-            #TODO create milvus collections
+            # TODO create milvus collections
             insert_application(app)
             logger.info("create new application %s", self.name)
         except Exception as e:
             logger.error(e)
-            #TODO collection created resource
+            # TODO collection created resource
             raise e
         return self
 
@@ -150,11 +150,12 @@ def delete_milvus_collections_by_fields(app):
             instance_name = pipe.encoder.get("instance")
             MilvusIns.del_milvus_collection(f"{app.name}_{name}_{instance_name}")
 
+
 def delete_application(name):
     try:
         if len(entities_list(name, 100, 0)):
             raise RequestError("There still have entity in this application", "")
-        #TODO rewrite clean all resource before change metadata
+        # TODO rewrite clean all resource before change metadata
         x = del_application(name)
         if not x:
             raise NotExistError("application %s not exist" % name, "")
@@ -172,15 +173,15 @@ def delete_application(name):
         raise e
 
 
-def entities_list(name, num, page):
+def entities_list(name, num):
     res = []
     try:
-        # for i in search_by_application(name, num, num*page):
-        #     res.append(new_mapping_ins(id=i.id, app_name=i.app_name,
-        #                                image_url=i.image_url,
-        #                                fields=i.fields))
+        docs = MongoIns.list_documents(f"{name}_entity", num)
+        for doc in docs:
+            doc_id = str(doc["_id"])
+            res.append(new_mapping_ins(id=doc_id, docs=doc))
         logger.info("get application %s entity list", name)
-        return []
+        return res
     except Exception as e:
         logger.error(e)
         raise e

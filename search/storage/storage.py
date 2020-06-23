@@ -57,6 +57,29 @@ class MongoIns:
         except Exception as e:
             raise e
 
+    @staticmethod
+    def insert_documents(name, docs):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            id = getattr(db, name).insert_one(docs).inserted_id
+            return id
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def list_documents(name, num):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).find().limit(num)
+        except Exception as e:
+            raise e
+
 
 class MilvusIns:
     @staticmethod

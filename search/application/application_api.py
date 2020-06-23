@@ -83,12 +83,10 @@ def application_do_upload_api(name):
 def entities_list_api(app_name):
     args = reqparse.RequestParser(). \
         add_argument("num", type=int, default=10). \
-        add_argument("page", type=int, default=0). \
         parse_args()
     args = from_view_dict(args)
     num = args['num']
-    page = args['page']
-    return entities_list(app_name, num, page)
+    return entities_list(app_name, num)
 
 
 @application.route("/<app_name>/entity/<entity_name>", methods=["DELETE"])
