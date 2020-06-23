@@ -13,6 +13,7 @@ import os
 import json
 import logging
 import pymongo
+from bson.objectid import ObjectId
 from milvus import Milvus, MetricType
 from minio import Minio
 from common.config import MILVUS_ADDR, MILVUS_PORT
@@ -77,6 +78,28 @@ class MongoIns:
                                          password=MONGO_PASSWORD)
             db = client.phantoscope
             return getattr(db, name).find().limit(num)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def search_by_id(name, id):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).find({"_id": ObjectId(id)})
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def delete_by_id(name, id):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).delete_many({"_id": ObjectId(id)})
         except Exception as e:
             raise e
 

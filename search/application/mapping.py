@@ -22,6 +22,7 @@ class Mapping:
 #                    fields=fields)
 
 
-def new_mapping_ins(id, docs):
+def new_mapping_ins(docs):
+    id = str(docs["_id"])
     del docs['_id']
     return Mapping(id, docs)

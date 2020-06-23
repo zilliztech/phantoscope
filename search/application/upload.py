@@ -18,8 +18,6 @@ from pipeline.pipeline import pipeline_detail, run_pipeline
 from common.error import NotExistError
 from common.error import RequestError
 from storage.storage import MilvusIns, S3Ins, MongoIns
-from models.mapping import Mapping as DB
-from models.mapping import add_mapping_data
 from application.mapping import new_mapping_ins
 from common.config import MINIO_ADDR
 from common.utils import save_tmp_file
@@ -64,7 +62,7 @@ def upload(name, **kwargs):
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
             docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}
             doc_id = MongoIns.insert_documents(f"{app.name}_entity", docs)
-            res.append(new_mapping_ins(str(doc_id), docs))
+            res.append(new_mapping_ins(docs))
         return res
     except Exception as e:
         raise e

@@ -13,7 +13,6 @@ import argparse
 from service import db
 from models.pipeline import Pipeline
 from models.application import Application
-from models.mapping import Mapping
 from models.operator import Operator
 from models.fields import Fields
 try:
