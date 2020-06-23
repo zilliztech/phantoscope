@@ -53,21 +53,24 @@ Phantoscope is the right tool for you. Empowered by miscellaneous deep-learning 
 <a href="#install"></a>
 ## Install
 
-Download Phantoscope
+1. Download Phantoscope:
+
 ```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 ```
 
-Set up environment
+2. Set up the environment:
+
 ```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 ```
-Start Phantoscope containers
+3. Start up Phantoscope containers:
+
 ```bash
 $ docker-compose up -d
 ```
 
-Check the status of all containers:
+4. Check the status of all containers:
 
 ``` bash
 $ docker-compose ps
@@ -97,14 +100,14 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 <a href="#basics"></a>
 ## Phantoscope basics
 
-- [What is operator](./docs/site/en/tutorials/operator.md)
-- [What is pipeline](./docs/site/en/tutorials/pipeline.md)
-- [What is application](./docs/site/en/tutorials/application.md)
+- [What is operator?](./docs/site/en/tutorials/operator.md)
+- [What is pipeline?](./docs/site/en/tutorials/pipeline.md)
+- [What is application?](./docs/site/en/tutorials/application.md)
 
 <a href="#tutorial"></a>
 ## Tutorial 
 
-- [Use Phantoscope Preview](./docs/site/en/tutorials/preview.md)
+- [Try out Phantoscope Preview](./docs/site/en/tutorials/preview.md)
 - [Create an application](./docs/site/en/examples/object.md)
 - [Develop an operator](./operators/HowToAddAnOperator_en.md)
 
@@ -130,7 +133,7 @@ For general questions and public discussions, please join our community.
 <a href="#community"></a>
 ## Community
 
-- Go to [our Slack Channel](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew), if you run into issues and want to consult our experts.
+- Try [our Slack Channel](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew), if you run into issues and want to consult our experts.
 
 <a href="#roadmap"></a>
 ## Roadmap

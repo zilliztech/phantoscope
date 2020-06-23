@@ -1,5 +1,7 @@
 # Phantoscope 快速开始
 ## 开始之前
+开始之前[安装](..\..\..\..\README_CN.md#安装)
+
 确认 Phantoscope 所有组件正常：
 ```bash 
 $ docker-compose ps
@@ -19,7 +21,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 ## 准备环境
 
-运行 scripts 文件夹下的 prepare.sh 脚本。该脚本注册了一个 Operator ，并以该 Operator 创建一个 Pipeline，并根据该 Pipeline 创建了一个名为 example_app 的 Application。
+运行 scripts 文件夹下的 prepare.sh 脚本。该脚本注册了一个 operator，并以该 operator 创建一个 pipeline，并根据该 pipeline 创建了一个名为 example_app 的 application。
 ```bash
 $ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
@@ -31,7 +33,7 @@ $ ./scripts/prepare.sh
 $ curl http://cs231n.stanford.edu/coco-animals.zip -o /tmp/coco-animals.zip
 ```
 
-## 导入图片数据
+## 导入图片数据集
 ```bash
 $ unzip /tmp/coco-animals.zip -d /tmp/
 $ pip3 install requests tqdm
@@ -39,12 +41,14 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 ```
 上传图片根据机器性能不同，时间会有差异。
 
-## 使用 Preview 进行搜索
+## 使用 Phantoscope Preview 进行搜索
+
 ```bash
 $ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
 浏览器打开 127.0.0.1:8000 
 ![Phantoscope Preview 演示图](../../../../.github/preview.gif)
+
 
 
 ## 使用 curl 导入一张图片
