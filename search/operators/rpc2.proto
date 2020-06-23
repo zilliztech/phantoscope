@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package phantoscope;
+
+service Operator {
+  rpc Execute(ExecuteRequest) returns (ExecuteReply) {}
+  rpc Healthy(HealthyRequest) returns (HealthyReply) {}
+  rpc Identity(IdentityRequest) returns (IdentityReply) {}
+}
+
+
+message Status {
+    enum StatusCode {
+        SUCCESS = 0; // success
+        PENDING = 1; // there are pending messages, more messages are followed
+        ERROR = 3; // error
+        UNEXCEPTED = 4;
+    }
+
+    // status code
+    StatusCode code = 1;
+
+    string description = 2;
+
+    // operator name
+    string operator= 3;
+
+    // operator instance id
+    string operator_id = 4;
+}
+
+
+message ExecuteRequest {
+   int request_id = 1;
+   repeated MetaData blob = 2;
+}
+
+message Vector {
+  repeated float element = 1;
+}
+
+message MetaData { // is meta data name suitable
+    oneof content {
+      string url = 1;
+      bytes data = 2;
+    }
+}
+
+// todo: Route and envelope how to use it in this version design
+message Route {
+    string operator = 1; // the name of the operator
+    string operator_id = 2; // the id of the operator instance
+    string operator_addr = 3; // the address of the operator instance
+    google.protobuf.Timestamp start_time = 4; // receiving time
+    google.protobuf.Timestamp end_time = 5; // sending (out) time
+}
+
+
+message Envelope {
+    string sender_id = 1;
+    string recevicer_id = 2;
+    uint32 request_id = 3;
+    uint32 timeout = 4;
+
+    repeated Route routes = 5; // a list of routes this message goes through
+    Status status = 6;
+}
+
+
+
+message ExecuteReply {
+  int64 request_id = 1
+  int64 nums = 2;
+  repeated Vector vectors = 3;
+  repeated MetaData metadata = 4;
+  bool is_encoder = 5; ; // True means result_field is valid
+  Status status = 6;
+}
+
+
+message HealthyRequest {
+}
+
+message HealthyReply {
+  string healthy = 1;
+}
+
+message IdentityRequest {
+}
+
+message IdentityReply {
+  string name = 1;
+  string endpoint = 2;
+  string type = 3;
+  string input = 4;
+  string output = 5;
+  string dimension = 6;
+  string metricType = 7;
+}
