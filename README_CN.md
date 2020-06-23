@@ -12,15 +12,15 @@
 
 Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 
-**十亿级别的图像的高性能搜索**
+**十亿级别的图像的高性能搜索。**
 
-**完全兼容 Tensorflow Pytorch TensorRT ONNX XGBoost 等主流深度学习框架**
+**完全兼容 Tensorflow、Pytorch、TensorRT、ONNX，XGBoost 等主流深度学习框架。**
 
-**提供 GUI 展示搜索效果、管理 Phantoscope 资源**
+**提供 GUI 展示搜索效果、管理 Phantoscope 资源。**
 
-**即将提供扩展仓库，在这里可以上传并与全世界的开发者分享你的扩展**
+**即将提供扩展仓库，在这里可以上传并与全世界的开发者分享你的扩展。**
 
-**原生支持 Docker 与 Kubernetes**
+**原生支持 Docker 与 Kubernetes。**
 
 中文版 | [English](README.md)
 
@@ -61,22 +61,25 @@ Phantoscope 是一个基于 Milvus 与深度学习的云原生图像搜索引擎
 ### 开始安装
 
 
-下载 Phantoscope
+1. 下载 Phantoscope：
 ```bash
 $ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
 ```
 
-设置环境变量
+2. 设置环境变量：
+
 ```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
 ```
 
-启动 Phantoscope 容器
+3. 启动 Phantoscope 容器：
+
 ```bash
 $ docker-compose up -d
 ```
 
-检查所有容器状态：
+4. 检查所有容器状态：
+
 ``` bash
 $ docker-compose ps
 ``` 
@@ -94,7 +97,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 ## 快速开始
 
-从[这里](./docs/site/zh-CN/quickstart) 运行一个最小的 Phantoscope 应用,你可以使用它来上传与搜索图像。
+从[这里](./docs/site/zh-CN/quickstart) 运行一个最基本的 Phantoscope 应用,你可以使用它来上传与搜索图像。
 
 ## 架构图
 
@@ -130,7 +133,7 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 ## 加入社区
 
-- [Slack 频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew) 这里可以进行沟通与咨询在使用过程中遇到的问题。
+- 你可以通过 [Slack 频道](https://join.slack.com/t/zillizworkplace/shared_invite/zt-enpvlmud-6gnqhPqQryhQLfj3BQhbew) 沟通或咨询在使用过程中遇到的问题。
 
 
 ## 路线图

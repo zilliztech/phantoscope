@@ -1,5 +1,7 @@
 # Phantoscope 快速开始
 ## 开始之前
+开始之前[安装](..\..\..\..\README_CN.md#安装)
+
 确认 Phantoscope 所有组件正常：
 ```bash 
 $ docker-compose ps
@@ -19,19 +21,19 @@ phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->5
 
 ## 准备环境
 
-运行 scripts 文件夹下的 prepare.sh 脚本。该脚本注册了一个 Operator ，并以该 Operator 创建一个 Pipeline，并根据该 Pipeline 创建了一个名为 example_app 的 Application。
+运行 scripts 文件夹下的 prepare.sh 脚本。该脚本注册了一个 operator，并以该 operator 创建一个 pipeline，并根据该 pipeline 创建了一个名为 example_app 的 application。
 ```bash
 $ chmod +x scripts/prepare.sh
 $ ./scripts/prepare.sh
 ```
 
-## 下载图片数据
+## 下载图片数据集
 本文使用 [Caltech 256 数据集](https://www.kaggle.com/jessicali9530/caltech256)，是加利福尼亚理工学院收集整理的数据集，该数据集选自 Google Image 数据集，并手工去除了不符合其类别的图片。在该数据集中，图片被分为 256 类，每个类别的图片超过 80 张。
 ```bash
 $ curl http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar -o /tmp/vgg-example.tar
 ```
 
-## 导入图片数据
+## 导入图片数据集
 ```bash
 $ tar xvf /tmp/vgg-example.tar -C /tmp
 $ pip3 install requests tqdm
@@ -39,11 +41,13 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 ```
 上传图片根据机器性能不同，时间会有差异。
 
-## 使用 Preview 进行搜索
+## 使用 Phantoscope Preview 进行搜索
+
 ```bash
 docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
 ```
 ![Phantoscope Preview 演示图](../../../../.github/preview.gif)
+
 
 
 ## 使用 curl 导入一张图片
