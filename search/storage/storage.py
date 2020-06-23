@@ -12,12 +12,15 @@
 import os
 import json
 import logging
+import pymongo
+from bson.objectid import ObjectId
 from milvus import Milvus, MetricType
 from minio import Minio
 from common.config import MILVUS_ADDR, MILVUS_PORT
 from common.error import MilvusError, S3Error
 from common.const import MINIO_BUCKET_PUBLIC_POLICY
 from common.config import MINIO_ADDR, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+from common.config import MONGO_ADDR, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD
 logger = logging.getLogger(__name__)
 
 
@@ -30,6 +33,75 @@ class Storage:
 type_mapping = {
     "l2": MetricType.L2
 }
+
+
+class MongoIns:
+    @staticmethod
+    def new_mongo_collection(name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            db.create_collection(name)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def delete_mongo_collection(name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            db.drop_collection(name)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def insert_documents(name, docs):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            id = getattr(db, name).insert_one(docs).inserted_id
+            return id
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def list_documents(name, num):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).find().limit(num)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def search_by_id(name, id):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).find({"_id": ObjectId(id)})
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def delete_by_id(name, id):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).delete_many({"_id": ObjectId(id)})
+        except Exception as e:
+            raise e
 
 
 class MilvusIns:

@@ -17,9 +17,7 @@ from application.application import application_detail
 from pipeline.pipeline import pipeline_detail, run_pipeline
 from common.error import NotExistError
 from common.error import RequestError
-from storage.storage import MilvusIns, S3Ins
-from models.mapping import Mapping as DB
-from models.mapping import add_mapping_data
+from storage.storage import MilvusIns, S3Ins, MongoIns
 from application.mapping import new_mapping_ins
 from common.config import MINIO_ADDR
 from common.utils import save_tmp_file
@@ -34,8 +32,8 @@ def upload(name, **kwargs):
         if not app:
             raise NotExistError("application not exist", "application %s not exist" % name)
         bucket_name = app.buckets.split(",")[0]
-        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "object"]
-        pipeline_fields = {x: y['pipeline'] for x, y in app.fields.items() if y.get('type') == "object"}
+        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "pipeline"]
+        pipeline_fields = {x: y['value'] for x, y in app.fields.items() if y.get('type') == "pipeline"}
         new_fields = app.fields.copy()
         for k, v in kwargs.items():
             if k in accept_fields:
@@ -44,6 +42,7 @@ def upload(name, **kwargs):
         for k, _ in kwargs.get('fields').items():
             if k not in accept_fields and k not in pipeline_fields:
                 raise RequestError(f"fields {k} not in application", "")
+        docs = {}
         for n, p in pipeline_fields.items():
             pipe = pipeline_detail(p)
             if not pipe:
@@ -55,24 +54,20 @@ def upload(name, **kwargs):
                 raise RequestError("can't find data or url from request", "")
             file_name = "{}-{}".format(name, uuid.uuid4().hex)
             file_path = save_tmp_file(file_name, file_data, url)
+
             S3Ins.upload2bucket(bucket_name, file_path, file_name)
+
             vectors = run_pipeline(pipe, data=file_data, url=url)
-            if not vectors:
-                raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
-            milvus_collection_name = f"{pipe.name}_{pipe.encoder}"
+
+            milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
-            for vid in vids:
-                m = DB(id=vid, app_name=name,
-                       image_url=gen_url(bucket_name, file_name),
-                       fields=new_fields)
-                add_mapping_data(m)
-                res.append(new_mapping_ins(id=vid, app_name=name,
-                                           image_url=gen_url(bucket_name, file_name),
-                                           fields=new_fields))
+            docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}
+            doc_id = MongoIns.insert_documents(f"{app.name}_entity", docs)
+            res.append(new_mapping_ins(docs))
+                         fields=new_fields))
         return res
     except Exception as e:
-        print(e)
-        return e
+        raise e
 
 
 def gen_url(bucket, name):

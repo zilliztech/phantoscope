@@ -46,7 +46,7 @@ def new_application_api(name):
         add_argument("s3Buckets", type=str, required=True). \
         parse_args()
     args = from_view_dict(args)
-    args['name'] = name
+    args['app_name'] = name
     return new_application(**args)
 
 
@@ -83,12 +83,10 @@ def application_do_upload_api(name):
 def entities_list_api(app_name):
     args = reqparse.RequestParser(). \
         add_argument("num", type=int, default=10). \
-        add_argument("page", type=int, default=0). \
         parse_args()
     args = from_view_dict(args)
     num = args['num']
-    page = args['page']
-    return entities_list(app_name, num, page)
+    return entities_list(app_name, num)
 
 
 @application.route("/<app_name>/entity/<entity_name>", methods=["DELETE"])

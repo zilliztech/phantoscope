@@ -11,27 +11,36 @@
 
 
 import logging
+import requests
 from models.operator import Operator as DB
 from models.operator import search_operator, insert_operator, del_operator
+from models.operator import insert_operators, replace_all_operators
 from operators.client import identity
 from operators.client import health
 from common.error import NotExistError
 from common.error import OperatorRegistError
+from common.error import InstanceExistError
+from common.error import ExistError
+from common.error import DockerRuntimeError
+from common.error import RequestError
+from common.config import DEFAULT_RUNTIME
+from common.const import MARKET_IDENTITY_HEADER
+from service import runtime_client
+from operators.instance import OperatorInstance
 
 
 logger = logging.getLogger(__name__)
 
 
 class Operator:
-    def __init__(self, name, backend, type, input, output, endpoint="", dimension=0, metric_type=""):
+    def __init__(self, name, addr, author, version, type, description):
         self._name = name
-        self._backend = backend
+        self._addr = addr
+        self._author = author
+        self._version = version
         self._type = type
-        self._input = input
-        self._output = output
-        self._endpoint = endpoint
-        self._metric_type = metric_type
-        self._dimension = dimension
+        self._description = description
+        self._runtime_client = DEFAULT_RUNTIME
 
     @property
     def type(self):
@@ -42,29 +51,62 @@ class Operator:
         return self._name
 
     @property
-    def endpoint(self):
-        return self._endpoint
+    def addr(self):
+        return self._addr
 
     @property
-    def metric_type(self):
-        return self._metric_type
+    def author(self):
+        return self._author
 
     @property
-    def dimension(self):
-        return self._dimension
+    def version(self):
+        return self._version
 
     @property
-    def output(self):
-        return self._output
+    def description(self):
+        return self._description
 
     @property
-    def input(self):
-        return self._input
+    def runtime_client(self):
+        self._runtime_client = runtime_client
+        return self._runtime_client
+
+    def list_instances(self):
+        return self.runtime_client.list_instances(self.name)
+
+    def new_instance(self, name):
+        ports = {"80/tcp": None}
+        ins = self.runtime_client.create_instance(f"phantoscope_{self.name}_{name}", self.addr, ports)
+        return ins
+
+    def delete_instance(self, name):
+        try:
+            ins = self.runtime_client.delete_instance(f"phantoscope_{self.name}_{name}")
+            return ins
+        except DockerRuntimeError as e:
+            raise e
+
+    def stop_instance(self, name):
+        ins = self.runtime_client.stop_instance(f"phantoscope_{self.name}_{name}")
+        return ins
+
+    def start_instance(self, name):
+        ins = self.runtime_client.start_instance(f"phantoscope_{self.name}_{name}")
+        return ins
+
+    def restart_instance(self, name):
+        ins = self.runtime_client.restart_instance(f"phantoscope_{self.name}_{name}")
+        return ins
+
+    def inspect_instance(self, name):
+        ins = self.runtime_client.inspect_instance(f"phantoscope_{self.name}_{name}")
+        return ins
 
 
-def new_operator(name, backend, type, input, output, endpoint, dimension, metric_type):
-    return Operator(name=name, backend=backend, type=type, input=input, output=output,
-                    endpoint=endpoint, dimension=dimension, metric_type=metric_type)
+def new_operator(name, addr, author, version, type, description):
+    return Operator(name=name, addr=addr, author=author, version=version,
+                    type=type, description=description)
+
 
 def all_operators():
     res = []
@@ -72,36 +114,15 @@ def all_operators():
         operators = search_operator()
         for x in operators:
             res.append(new_operator(name=x.Operator.name,
-                                    backend=x.Operator.backend,
                                     type=x.Operator.type,
-                                    input=x.Operator.input,
-                                    output=x.Operator.output,
-                                    endpoint=x.Operator.endpoint,
-                                    dimension=x.Operator.dimension,
-                                    metric_type=x.Operator.metric_type))
+                                    addr=x.Operator.addr,
+                                    author=x.Operator.author,
+                                    version=x.Operator.version,
+                                    description=x.Operator.description))
+        return res
     except Exception as e:
         logger.error(e)
-        return e
-    return res
-
-
-def regist_operators(endpoint, name):
-    try:
-        res = identity(endpoint)
-        op = DB(name=name, backend=res['name'], type=res['type'], input=res['input'],
-                output=res['output'], dimension=res['dimension'],
-                metric_type=res['metric_type'], endpoint=res['endpoint'])
-        insert_operator(op)
-        logger.info("regist operator %s" % res['name'])
-        return new_operator(name=op.name, backend=op.backend, type=op.type,
-                            input=op.input,
-                            output=op.output,
-                            endpoint=op.endpoint,
-                            dimension=op.dimension,
-                            metric_type=op.metric_type)
-    except Exception as e:
-        logger.error(e)
-        return OperatorRegistError("opeartor %s regist error" % name, e)
+        raise e
 
 
 def delete_operators(name):
@@ -109,16 +130,15 @@ def delete_operators(name):
         op = del_operator(name)
         if not op:
             raise NotExistError("operator %s not exist" % name, "")
-        return new_operator(name=op.name, backend=op.backend,
+        return new_operator(name=op.name,
                             type=op.type,
-                            input=op.input,
-                            output=op.output,
-                            endpoint=op.endpoint,
-                            dimension=op.dimension,
-                            metric_type=op.metric_type)
+                            addr=op.addr,
+                            author=op.author,
+                            version=op.version,
+                            description=op.description)
     except Exception as e:
         logger.error(e)
-        return e
+        raise e
 
 
 def operator_detail(name):
@@ -126,23 +146,70 @@ def operator_detail(name):
         op = search_operator(name)
         if not op:
             raise NotExistError("operator %s not exist" % name, "")
-        return new_operator(name=op.name, backend=op.backend,
+        return new_operator(name=op.name,
                             type=op.type,
-                            input=op.input,
-                            output=op.output,
-                            endpoint=op.endpoint,
-                            dimension=op.dimension,
-                            metric_type=op.metric_type)
+                            addr=op.addr,
+                            author=op.author,
+                            version=op.version,
+                            description=op.description)
+
     except Exception as e:
         logger.error(e)
         raise e
 
-def operator_health(name):
+
+def register_operators(**args):
+    op = DB(name=args['name'],
+            type=args['type'],
+            addr=args['addr'],
+            author=args['author'],
+            version=args['version'],
+            description=args['description'])
     try:
-        op = search_operator(name)
-        if not op:
-            raise NotExistError("operator %s not exist" % name, "")
-        return health(op)
+        if search_operator(args['name']):
+            raise ExistError(f"operator {args['name']} had exist", "")
+        insert_operator(op)
+        return new_operator(name=args['name'],
+                            type=args['type'],
+                            addr=args['addr'],
+                            author=args['author'],
+                            version=args['version'],
+                            description=args['description'])
     except Exception as e:
-        logger.error(e)
-        return e
+        raise e
+
+
+def fetch_operators(url, overwrite=True):
+    """fetch operators from origin market
+
+    url -- origin url
+    overwrite -- Whether to overwrite local information if the same name exists
+
+    """
+    origin = []
+    try:
+        r = requests.get(url)
+        if r.headers.get(MARKET_IDENTITY_HEADER) != "0.1.0":
+            raise RequestError("Uncertified market", "")
+        if r.status_code != 200:
+            raise RequestError(r.text, r.status_code)
+    except Exception as e:
+        raise RequestError(e.args[0], e)
+    for op in r.json():
+        origin.append(new_operator(op['name'], op['type'], op['addr'],
+                                   op['author'], op['version'], op['description']))
+    local_operators = all_operators()
+    local_operator_names = [x.name for x in local_operators]
+    for x in origin:
+        if x.name not in local_operator_names:
+            local_operators.append(x)
+        else:
+            if overwrite:
+                for lop in local_operators:
+                    if lop.name == x.name:
+                        local_operators.remove(lop)
+                        local_operators.append(x)
+    replace_all_operators([DB(name=x.name, type=x.type, addr=x.addr,
+                              author=x.author, version=x.version,
+                              description=x.description) for x in local_operators])
+    return local_operators

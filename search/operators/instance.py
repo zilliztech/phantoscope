@@ -10,20 +10,16 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-OPERATOR_TYPE_ENCODER = "encoder"
-OPERATOR_TYPE_PROCESSOR = "processor"
+class OperatorInstance:
+    def __init__(self, id, name, status, ip, ports, endpoint=None):
+        self.id = id
+        self.name = name
+        self.status = status
+        self.ports = ports
+        self.ip = ip
+        self.endpoint = endpoint
 
-MINIO_BUCKET_PUBLIC_POLICY = {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": ["s3:GetObject", "s3:GetBucketLocation"],
-            "Effect": "Allow",
-            "Resource": ["arn:aws:s3:::ad/*", "arn:aws:s3:::adaaa111"],
-            "Principal": {"AWS": "*"},
-            "Sid": "Public"
-        }
-    ]
-}
 
-MARKET_IDENTITY_HEADER = "phantoscope_market_version"
+def new_operator_instance(id, name, status, ip, ports):
+    endpoint = f"{ip}:{ports['80/tcp'][0]['HostPort']}"
+    return OperatorInstance(id, name, status, ip, ports, endpoint)

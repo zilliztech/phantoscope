@@ -16,7 +16,7 @@ from common.error import Insert2SQLError, QueryFromSQLError, DeleteFromSQLError,
 
 class Application(db.Model):
     name = db.Column(db.String(120), unique=True, nullable=False, primary_key=True)
-    fields = db.Column(db.String(60000), unique=False, nullable=True)
+    fields = db.Column(db.String(255), unique=False, nullable=True, default='[]', server_default='[]')
     s3_buckets = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
@@ -56,7 +56,7 @@ def update_application(name, app):
     try:
         old = db.session.query(Application).filter(Application.name == name).first()
         if not old:
-            raise NotExistError("update target not exist", "application %s not exist"%name)
+            raise NotExistError("update target not exist", "application %s not exist" % name)
         for k, v in app.__dict__.items():
             if v and k != "_sa_instance_state":
                 setattr(old, k, v)

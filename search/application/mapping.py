@@ -10,19 +10,19 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-import ast
-
-
 class Mapping:
-    def __init__(self, id, app_name, image_url, fields):
+    def __init__(self, id, docs):
         self._id = id
-        self._app_name = app_name
-        self._image_url = image_url
-        self._fields = fields
+        self._docs = docs
+
+# def new_mapping_ins(id, app_name, image_url, fields):
+#     if isinstance(fields, str):
+#         fields = ast.literal_eval(fields)
+#     return Mapping(id=id, app_name=app_name, image_url=image_url,
+#                    fields=fields)
 
 
-def new_mapping_ins(id, app_name, image_url, fields):
-    if isinstance(fields, str):
-        fields = ast.literal_eval(fields)
-    return Mapping(id=id, app_name=app_name, image_url=image_url,
-                   fields=fields)
+def new_mapping_ins(docs):
+    id = str(docs["_id"])
+    del docs['_id']
+    return Mapping(id, docs)

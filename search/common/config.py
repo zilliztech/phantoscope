@@ -18,6 +18,11 @@ MINIO_SECRET_KEY = os.getenv("MINIO_SECRECT_KEY", "minioadmin")
 MINIO_1ST_BUCKET = os.getenv("1ST_BUCKET", "alpha")
 MINIO_BUCKET_NUM = os.getenv("MINIO_OBJ_LIMIT", 20)
 
+MONGO_ADDR = os.getenv("MONGO_ADDR", "127.0.0.1")
+MONGO_PORT = os.getenv("MONGO_PORT", 27017)
+MONGO_USERNAME = os.getenv("MONGO_USERNAME", "root")
+MONGO_PASSWORD = os.getenv("MONGO_PASSWD", "passwd")
+
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "tmp/video")
 ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", {"gif", "jpg", "jpeg", "png"})
 
@@ -42,3 +47,5 @@ META_DATABASE_ENDPOINT = os.getenv("SEARCH_IMAGES_DATABASE_EP", "mysql://root:pa
 META_DATABASE_USERNAME = os.getenv("SEARCH_IMAGES_DATABASE_USERNAME", "root")
 META_DATABASE_PASSWD = os.getenv("SEARCH_IMAGES_DATABASE_PASSWD", "passwd")
 META_DATABASE_NAME = os.getenv("SEARCH_IMAGES_DATABASE_NAME", "search")
+
+DEFAULT_RUNTIME = "docker"

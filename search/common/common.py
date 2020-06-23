@@ -42,7 +42,7 @@ def json_response(func):
             res = e
         res_code = 200
         if isinstance(res, list):
-            res_body = json.dumps([r.__dict__ for r in res])
+            res_body = json.dumps([r.__dict__ if not isinstance(r, dict) else r for r in res])
         elif isinstance(res, str):
             res_body = res
         elif isinstance(res, tuple):

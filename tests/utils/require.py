@@ -1,4 +1,4 @@
-from operators.operator import regist_operators, delete_operators
+from operators.operator import register_operators, delete_operators
 from pipeline.pipeline import new_pipeline, delete_pipeline
 from application.application import new_application, delete_application
 
@@ -13,7 +13,7 @@ class PreResource:
 
 class PreOperator(PreResource):
     def create(self, data):
-        regist_operators(data['endpoint'], data['name'])
+        register_operators(data['endpoint'], data['name'])
 
     def delete(self, data):
         delete_operators(data['name'])

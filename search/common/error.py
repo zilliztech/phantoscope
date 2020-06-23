@@ -31,31 +31,46 @@ class Error(Exception):
 class OperatorImportError(Error):
     pass
 
+
 class OperatorRegistError(Error):
     pass
+
 
 class PipelineCheckError(Error):
     pass
 
+
 class Insert2SQLError(Error):
     pass
+
 
 class QueryFromSQLError(Error):
     pass
 
+
 class DeleteFromSQLError(Error):
     pass
 
+
 class UpdateFromSQLError(Error):
     pass
+
+
+class ExistError(Error):
+    @property
+    def code(self):
+        return 400
+
 
 class NotExistError(Error):
     @property
     def code(self):
         return 404
 
+
 class MilvusError(Error):
     pass
+
 
 class S3Error(Error):
     pass
@@ -92,6 +107,29 @@ class RequestError(Error):
 
 
 class NoneVectorError(Error):
+    @property
+    def code(self):
+        return 400
+
+
+class InstanceExistError(Error):
+    @property
+    def code(self):
+        return 409
+
+
+class DockerRuntimeError(Error):
+    @property
+    def code(self):
+        return 400
+
+
+class RequestError(Error):
+    @property
+    def code(self):
+        return 400
+
+class ArgsCheckError(Error):
     @property
     def code(self):
         return 400
