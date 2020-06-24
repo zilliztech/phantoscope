@@ -4,6 +4,7 @@ import grpc
 from concurrent import futures
 import tensorflow as tf
 from tensorflow import keras
+from grpc_reflection.v1alpha import reflection
 import vggrpc.rpc_pb2
 import vggrpc.rpc_pb2_grpc
 from encoder import Vgg, run
@@ -58,12 +59,16 @@ class OperatorServicer(vggrpc.rpc_pb2_grpc.OperatorServicer):
                                             dimension=vgg.dimension,
                                             metricType=vgg.metric_type)
 
-
 def serve(port):
     options = [('grpc.max_send_message_length', 100 * 1024 * 1024),
                ('grpc.max_receive_message_length', 100 * 1024 * 1024)]
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=options)
     vggrpc.rpc_pb2_grpc.add_OperatorServicer_to_server(OperatorServicer(), server)
+    SERVICE_NAMES = (
+        vggrpc.rpc_pb2.DESCRIPTOR.services_by_name['Operator'].full_name,
+        reflection.SERVICE_NAME,
+    )
+    reflection.enable_server_reflection(SERVICE_NAMES, server)
     server.add_insecure_port('[::]:%s' % port)
     server.start()
     server.wait_for_termination()
