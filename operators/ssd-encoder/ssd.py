@@ -16,7 +16,7 @@ def temp_directory():
 MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
 GRAPH_PATH = os.path.join(temp_directory(), MODEL_NAME,
                           'frozen_inference_graph.pb')
-LOCAL_TMP_PATH = "./tmp/"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 def get_mscoco_label_dict():

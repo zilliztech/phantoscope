@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 from facenet import prewhiten, get_model_filenames
 
-LOCAL_TMP_PATH = "./tmp/"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 def temp_directory():

@@ -91,7 +91,6 @@ class TestApplicationApi:
         json_data = rv.get_json()
         assert rv.status_code != 200
 
-
     def test_application_detail_api(self, client):
         rv = client.get(f"/v1/application/{self.name}")
         assert rv.status_code == 200
@@ -133,6 +132,20 @@ class TestApplicationApi:
         rv = client.post(f"/v1/application/{self.name}/search", json=data)
         assert rv.status_code == 200
 
+    def test_search_score_function(self, client):
+        data = {
+            'fields': {
+                self.field_name: {
+                    'url': self.test_url,
+                    'inner_field_score_mode': 'first'
+                }
+            },
+            'topk': 5,
+            'nprobe': 10
+        }
+        rv = client.post(f"/v1/application/{self.name}/search", json=data)
+        assert rv.status_code == 200
+
     def test_entities_api(self, client):
         rv = client.get(f"/v1/application/{self.name}/entity")
         assert rv.status_code == 200
@@ -157,5 +170,3 @@ class TestApplicationApi:
         rv = client.delete(f"/v1/application/{self.name}")
         assert rv.status_code != 200
         shutil.rmtree('./tmp', ignore_errors=True)
-
-

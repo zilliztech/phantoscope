@@ -10,17 +10,16 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-class OperatorInstance:
-    def __init__(self, id, name, status, ip, ports, endpoint=None):
-        self.id = id
-        self.name = name
-        self.status = status
-        self.ports = ports
-        self.ip = ip
-        self.endpoint = endpoint
+from enum import Enum
 
 
-def new_operator_instance(id, name, status, ip, ports):
-    # endpoint = f"{ip}:{ports['80/tcp'][0]['HostPort']}"
-    endpoint = f"{ip}:80"
-    return OperatorInstance(id, name, status, ip, ports, endpoint)
+class FieldDecayFunction(Enum):
+    LINEAR = 'linear'
+
+
+def decay_helper(decay_function_mode: FieldDecayFunction):
+    def linear(number, max, min):
+        return list(range(max, min, (max - min) / number))
+
+    helper = {FieldDecayFunction.LINEAR: linear}
+    return helper[decay_function_mode]

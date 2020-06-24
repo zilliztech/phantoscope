@@ -18,7 +18,7 @@ def temp_directory():
 
 MODEL_DIR = os.path.join(temp_directory())
 COCO_MODEL_PATH = "mask_rcnn_coco.h5"
-LOCAL_TMP_PATH = "./tmp/"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 class BoundingBox:

@@ -21,12 +21,15 @@ from common.error import MilvusError, S3Error
 from common.const import MINIO_BUCKET_PUBLIC_POLICY
 from common.config import MINIO_ADDR, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
 from common.config import MONGO_ADDR, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD
+
 logger = logging.getLogger(__name__)
 
 
 class Storage:
     def __init__(self):
         pass
+
+
 # code blow this comment need to be rewrite
 
 
@@ -188,8 +191,8 @@ class S3Ins:
                 minioClient.make_bucket(x)
                 minioClient.set_bucket_policy(x, json.dumps(gen_public_policy(x)))
         except Exception as e:
-            logger.error("There has some error when create s3 buckets", exc_info=True)
-            raise S3Error("There has some error when create s3 buckets", e)
+            logger.error("There has some error when create s3 buckets: %s", str(e), exc_info=True)
+            raise S3Error("There has some error when create s3 buckets: %s" % str(e), e)
 
     @classmethod
     def del_s3_buckets(cls, names):

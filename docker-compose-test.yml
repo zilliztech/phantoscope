@@ -28,3 +28,9 @@ services:
       - "50001:50001"
     environment:
       - OP_ENDPOINT=${LOCAL_ADDRESS}:50001
+  ssd:
+    image: psoperator/ssd-detector:latest
+    ports:
+      - "50010:50010"
+    environment:
+      - OP_ENDPOINT=${LOCAL_ADDRESS}:50010
