@@ -123,8 +123,8 @@ def create_pipeline(name, processors, encoder, description=None):
         # create pipeline
         pipe = Pipeline(name=name, processors=processors, encoder=encoder,
                         description=description, input="", output="")
-        if pipeline_ilegal(pipe):
-            return PipelineIlegalError("Pipeline ilegal check error", "")
+        if pipeline_illegal(pipe):
+            return PipelineIlegalError("Pipeline illegal check error", "")
         return pipe.save()
     except Exception as e:
         logger.error(e)
@@ -153,6 +153,7 @@ def run_pipeline(p, **kwargs):
     if not isinstance(p, Pipeline):
         raise PipelineCheckError("check pipeline with error", "%s is not a Pipeline" % p)
     for processor in p.processors:
+        if not processor: continue
         print(processor)
         op = operator_detail(processor["name"])
         ins = op.inspect_instance(processor["instance"])
@@ -160,13 +161,14 @@ def run_pipeline(p, **kwargs):
     op = operator_detail(p.encoder["name"])
     ins = op.inspect_instance(p.encoder["instance"])
     todo_list.append(ins)
+
     def runner(todo_list):
         metadata, vectors = [], []
         urls = [kwargs['url']] if kwargs['url'] else []
         datas = [kwargs['data']] if kwargs['data'] else []
         try:
             for num, i in enumerate(todo_list):
-                if num == len(todo_list)-1:
+                if num == len(todo_list) - 1:
                     vectors, _ = execute(i, urls=urls, datas=datas)
                     return vectors
                 _, metadatas = execute(i, urls=urls, datas=datas)
@@ -175,6 +177,7 @@ def run_pipeline(p, **kwargs):
             return metadata
         except Exception as e:
             raise RPCExecError("Execute with error", e)
+
     try:
         return runner(todo_list)
     except Exception as e:
@@ -192,7 +195,8 @@ def test_pipeline(name, data=None, url=None):
     except Exception as e:
         raise e
 
-def pipelinei_legal(pipe):
+
+def pipeline_illegal(pipe):
     # TODO Rewrite
     # encoder_name = encoder.get("name")
     # encoder_instance_name = encoder.get("instance")

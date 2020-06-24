@@ -64,7 +64,6 @@ def upload(name, **kwargs):
             docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}
             doc_id = MongoIns.insert_documents(f"{app.name}_entity", docs)
             res.append(new_mapping_ins(docs))
-                         fields=new_fields))
         return res
     except Exception as e:
         raise e

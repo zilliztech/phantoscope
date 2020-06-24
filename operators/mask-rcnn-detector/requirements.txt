@@ -4,3 +4,4 @@ grpcio==1.27.2
 pillow
 opencv-python
 scikit-image==0.16.2
+grpcio-reflection

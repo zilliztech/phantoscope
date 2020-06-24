@@ -2,3 +2,4 @@ paddlepaddle
 grpcio==1.27.2
 pillow
 opencv-python
+grpcio-reflection

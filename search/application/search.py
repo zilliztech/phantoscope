@@ -22,8 +22,8 @@ def search(name, fields={}, topk=10, nprobe=16):
     res = []
     try:
         app = application_detail(name)
-        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "object"]
-        pipeline_fields = {x: y['pipeline'] for x, y in app.fields.items() if y.get('type') == "object"}
+        accept_fields = [x for x, y in app.fields.items() if y.get('type') != "pipeline"]
+        pipeline_fields = {x: y['value'] for x, y in app.fields.items() if y.get('type') == "pipeline"}
         for k, _ in fields.items():
             if k not in accept_fields and k not in pipeline_fields:
                 raise RequestError(f"fields {k} not in application", "")
@@ -37,6 +37,7 @@ def search(name, fields={}, topk=10, nprobe=16):
             vectors = run_pipeline(pipe, data=file_data, url=url)
             if not vectors:
                 raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
+
         return res
     except Exception as e:
         raise e

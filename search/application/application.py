@@ -129,7 +129,7 @@ def new_application(app_name, fields, s3_buckets):
                                      value=field.get('value'), app=app_name))
         ids = insert_fields(fieldsdb)
         # create a application entity collection
-        MongoIns.new_mongo_collection(app_name+"_entity")
+        MongoIns.new_mongo_collection(app_name + "_entity")
         app = Application(name=app_name, fields=ids, buckets=s3_buckets)
         # create milvus collections
         create_milvus_collections_by_fields(app)
@@ -138,7 +138,8 @@ def new_application(app_name, fields, s3_buckets):
         app.fields = fields2dict(search_fields(ids))
         return app
     except Exception as e:
-        raise e
+        logger.error("error happen during create app: %s", str(e), exc_info=True)
+        return e
 
 
 def delete_milvus_collections_by_fields(app):
@@ -164,7 +165,7 @@ def delete_application(name):
         delete_milvus_collections_by_fields(app)
         delete_fields(json.loads(x.fields))
         S3Ins.del_s3_buckets(x.s3_buckets.split(","))
-        MongoIns.delete_mongo_collection(name+"_entity")
+        MongoIns.delete_mongo_collection(name + "_entity")
         logger.info("delete application %s", name)
         return app
     except Exception as e:
