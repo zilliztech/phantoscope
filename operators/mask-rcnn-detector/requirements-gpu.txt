@@ -2,6 +2,6 @@ Keras==2.3.1
 tensorflow-gpu==1.15.2
 grpcio==1.27.2
 pillow
-opencv-python
+opencv-python==4.2.0.34
 scikit-image==0.16.2
-grpcio-reflection
+grpcio-reflection==1.30.0
