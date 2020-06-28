@@ -268,7 +268,6 @@ def run(detector, images, urls):
                     result_images.extend(detector.bulk_execute([image]))
     except Exception as e:
         logging.error("something error: %s", str(e), exc_info=True)
-        pass
     end = time.time()
     logging.info('%s cost: {:.3f}s'.format(end - start), "ssd detector")
     return result_images
