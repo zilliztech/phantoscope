@@ -154,7 +154,6 @@ def run_pipeline(p, **kwargs):
         raise PipelineCheckError("check pipeline with error", "%s is not a Pipeline" % p)
     for processor in p.processors:
         if not processor: continue
-        print(processor)
         op = operator_detail(processor["name"])
         ins = op.inspect_instance(processor["instance"])
         todo_list.append(ins)

@@ -11,20 +11,23 @@
 
 
 import logging
+
 import math
+
 from application.application import application_detail
 from application.mapping import new_mapping_ins
-from pipeline.pipeline import pipeline_detail, run_pipeline
-from common.error import NoneVectorError
-from common.error import RequestError
-from common.error import NoneValidFieldError
-from common.error import WrongFieldModeError
-from common.error import WrongInnerFieldModeError
-from storage.storage import MilvusIns
+from application.score.field_decay import decay_helper
 from application.score.function_score import ScoreMode, score_helper
 from application.score.inner_fields_score import InnerFieldScoreMode
-from application.score.field_decay import decay_helper
 from application.score.inner_fields_score import inner_field_score_helper
+from common.error import NoneValidFieldError
+from common.error import NoneVectorError
+from common.error import RequestError
+from common.error import WrongFieldModeError
+from common.error import WrongInnerFieldModeError
+from pipeline.pipeline import pipeline_detail, run_pipeline
+from storage.storage import MilvusIns
+from storage.storage import MongoIns
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +78,8 @@ def get_score_result(fields_result, topk, score_config, score_mode: str):
     return result_ids[:topk]
 
 
-def search_and_score(milvus_collection_name, vectors, topk, nprobe, inner_score_mode: str):
+def search_and_score(milvus_collection_name, mongo_name, field_name, vectors,
+                     topk, nprobe, inner_score_mode: str):
     '''
     search vectors from milvus and score by inner field score mode
     :param milvus_collection_name: collection name will be search
@@ -115,8 +119,7 @@ def search_and_score(milvus_collection_name, vectors, topk, nprobe, inner_score_
                 if not end_flag:
                     continue
             end_flag = True
-
-        result_dbs = search_ids_from_mapping(res_vids)
+        result_dbs = MongoIns.search_by_vector_id(mongo_name, field_name, res_vids)
         # calc a new query_topk if len(result_dbs) < topk
         query_topk += math.ceil(query_topk * increase_rate)
 
@@ -155,11 +158,13 @@ def search(name, fields={}, topk=10, nprobe=16):
                 raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
 
             milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
-            # dbs = search_and_score(milvus_collection_name, vectors, topk, nprobe, inner_score_mode)
+            mongo_name = f"{app.name}_entity"
+            dbs = search_and_score(milvus_collection_name, mongo_name, n, vectors, topk, nprobe, inner_score_mode)
             tmp_res = []
-            # for db in dbs:
-            #     m = new_mapping_ins(db)
-            #     tmp_res.append(m)
+
+            for db in dbs:
+                m = new_mapping_ins(db)
+                tmp_res.append(m)
             fields_res[n] = tmp_res
         if not valid_field_flag:
             raise NoneValidFieldError("There is none valid field in search request boby", Exception())

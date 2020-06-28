@@ -96,6 +96,18 @@ class MongoIns:
             raise e
 
     @staticmethod
+    def search_by_vector_id(name, field_name, ids: list):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            res = getattr(db, name).find({f"{field_name}.ids": {"$in": ids}})
+            return list(res)
+        except Exception as e:
+            raise e
+
+    @staticmethod
     def delete_by_id(name, id):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
@@ -191,8 +203,9 @@ class S3Ins:
                 minioClient.make_bucket(x)
                 minioClient.set_bucket_policy(x, json.dumps(gen_public_policy(x)))
         except Exception as e:
-            logger.error("There has some error when create s3 buckets: %s", str(e), exc_info=True)
-            raise S3Error("There has some error when create s3 buckets: %s" % str(e), e)
+            err_msg = f"There has some error when create s3 buckets: {str(e)}"
+            logger.error(err_msg, exc_info=True)
+            raise S3Error(err_msg, e)
 
     @classmethod
     def del_s3_buckets(cls, names):
@@ -201,7 +214,9 @@ class S3Ins:
             for x in names:
                 minioClient.remove_bucket(x)
         except Exception as e:
-            raise S3Error("There has some error when delete s3 buckets", e)
+            err_msg = f"There has some error when delete s3 buckets: {str(e)}"
+            logger.error(err_msg, exc_info=True)
+            raise S3Error(err_msg, e)
 
     @classmethod
     def upload2bucket(cls, bucket_name, file_path, file_name):
@@ -211,7 +226,9 @@ class S3Ins:
                 file_stat = os.stat(file_path)
                 minioClient.put_object(bucket_name, file_name, f, file_stat.st_size)
         except Exception as e:
-            raise S3Error("There has some error when put file to s3 bucket", e)
+            err_msg = f"There has some error when put file to s3 buckets: {str(e)}"
+            logger.error(err_msg, exc_info=True)
+            raise S3Error(err_msg, e)
 
     @classmethod
     def del_object(cls, bucket_name, object_name):
@@ -219,7 +236,9 @@ class S3Ins:
             minioClient = cls.new_minio_client()
             minioClient.remove_object(bucket_name, object_name)
         except Exception as e:
-            raise S3Error("There has some error when delete object", e)
+            err_msg = f"There has some error when delete object: {str(e)}"
+            logger.error(err_msg, exc_info=True)
+            raise S3Error(err_msg, e)
 
 
 def gen_public_policy(name):

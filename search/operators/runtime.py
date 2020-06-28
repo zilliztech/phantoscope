@@ -40,7 +40,7 @@ class DockerRuntime:
 
     def start_instance(self, name):
         try:
-            container = self.client.container.get(name)
+            container = self.client.containers.get(name)
             container.start()
             return new_operator_instance(container.short_id, container.name,
                                          container.status, container.attrs["NetworkSettings"]["IPAddress"],

@@ -49,7 +49,7 @@ def score_helper(score_mode: ScoreMode):
     def min_score(scores: list):
         res = scores[0]
         for score in scores:
-            res = max(res, score)
+            res = min(res, score)
         return res
 
     def avg_score(scores: list):
