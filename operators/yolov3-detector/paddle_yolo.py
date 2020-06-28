@@ -216,7 +216,6 @@ def run(detector, images, urls):
                     result_images.append(detector.execute(image))
     except Exception as e:
         logging.error("something error: %s", str(e), exc_info=True)
-        pass
     end = time.time()
     logging.info('%s cost: {:.3f}s, get %d results'.format(end - start),
                  "yolov3 detector", len(result_images))

@@ -187,7 +187,6 @@ def run(face_encoder, images, urls):
                     vectors.extend(face_encoder.bulk_execute([image]))
     except Exception as e:
         logging.error("something error: %s", str(e), exc_info=True)
-        pass
     end = time.time()
     logging.info('%s cost: {:.3f}s'.format(end - start), "face_embedding encoder")
     return vectors
