@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    paths:
+    - 'operators/**'
+    branches:
+      - master
+    tags:
+      - v*
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  prepare:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    outputs:
+      rebuild_op_list: ${{ steps.rebuild_operator.outputs.test }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - uses: lots0logs/gh-action-get-changed-files@2.1.4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: find all rebuild operator
+      id: rebuild_operator
+      run: |
+        tmp=`cat ${HOME}/files.json | grep operators | sed 's/.*operators\/\([^\/]*\)\/.*/\1/g' | sed -e 's/example-custom-operator//g' | sed -e 's/rpc//g' | sed -e 's/^[ ]*//g' | sed -e 's/[ ]*$//g'`
+        echo $tmp
+        echo '::set-output name=test::'${tmp}
+    - name: build operator image
+      env:
+        REBUILD_OPERATORS: ${{ steps.rebuild_operator.outputs.test }}
+      run: |
+        cd operators
+        make build
+    - name: push to dockerhub
+      env:
+        PS_DOCKERHUB_TOKEN: ${{ secrets.HUB_OPERATOR }}
+        REBUILD_OPERATORS: ${{ steps.rebuild_operator.outputs.test }}
+      run: |
+        cd operators
+        make push
