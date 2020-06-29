@@ -134,9 +134,9 @@ class MilvusIns:
             }
             res = milvus.create_collection(parma)
             if not res.OK():
-                raise MilvusError("There has some error when create milvus collection", res)
+                raise MilvusError("There war some error when create milvus collection", res)
         except Exception as e:
-            raise MilvusError("There has some error when create milvus collection", e)
+            raise MilvusError("There wars some error when create milvus collection", e)
 
     @staticmethod
     def del_milvus_collection(name):
@@ -145,9 +145,11 @@ class MilvusIns:
             milvus.connect(MILVUS_ADDR, MILVUS_PORT)
             res = milvus.drop_collection(collection_name=name)
             if not res.OK():
-                raise MilvusError("There has some error when drop milvus collection", res)
+                raise MilvusError("There was some error when drop milvus collection", res)
         except Exception as e:
-            raise MilvusError("There has some error when delete milvus collection", e)
+            err_msg = "There was some error when delete milvus collection"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
+            raise MilvusError(err_msg, e)
 
     @staticmethod
     def insert_vectors(name, vectors):
@@ -156,11 +158,14 @@ class MilvusIns:
             milvus.connect(MILVUS_ADDR, MILVUS_PORT)
             res, ids = milvus.insert(collection_name=name, records=vectors)
             if not res.OK():
-                raise MilvusError("There has some error when insert vectors", res)
+                err_msg = "There was some error when insert vectors"
+                logger.error(f"{err_msg} : {str(res)}", exc_info=True)
+                raise MilvusError(err_msg, res)
             return ids
         except Exception as e:
-            logger.error("There has some error when insert vectors", exc_info=True)
-            raise MilvusError("There has some error when insert vectors", e)
+            err_msg = "There was some error when insert vectors"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
+            raise MilvusError(err_msg, e)
 
     @staticmethod
     def search_vectors(name, vector, topk, nprobe):
@@ -170,10 +175,12 @@ class MilvusIns:
             milvus.connect(MILVUS_ADDR, MILVUS_PORT)
             res, ids = milvus.search(collection_name=name, query_records=vector, top_k=topk, params=search_param)
             if not res.OK():
-                raise MilvusError("There has some error when search vectors", res)
+                raise MilvusError("There was some error when search vectors", res)
             return ids
         except Exception as e:
-            raise MilvusError("There has some error when search vectors", e)
+            err_msg = "There was some error when search vectors"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
+            raise MilvusError(err_msg, e)
 
     @staticmethod
     def del_vectors(collection_name, ids):
@@ -182,7 +189,9 @@ class MilvusIns:
             milvus.connect(MILVUS_ADDR, MILVUS_PORT)
             milvus.delete_by_id(collection_name=collection_name, id_array=ids)
         except Exception as e:
-            raise MilvusError("There has some error when delete vectors", e)
+            err_msg = "There was some error when delete vectors"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
+            raise MilvusError(err_msg, e)
 
 
 class S3Ins:
@@ -198,46 +207,46 @@ class S3Ins:
     @classmethod
     def new_s3_buckets(cls, names, region=None):
         try:
-            minioClient = cls.new_minio_client()
+            minio_client = cls.new_minio_client()
             for x in names:
-                minioClient.make_bucket(x)
-                minioClient.set_bucket_policy(x, json.dumps(gen_public_policy(x)))
+                minio_client.make_bucket(x)
+                minio_client.set_bucket_policy(x, json.dumps(gen_public_policy(x)))
         except Exception as e:
-            err_msg = f"There has some error when create s3 buckets: {str(e)}"
-            logger.error(err_msg, exc_info=True)
+            err_msg = "There was some error when create s3 buckets"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
     @classmethod
     def del_s3_buckets(cls, names):
         try:
-            minioClient = cls.new_minio_client()
+            minio_client = cls.new_minio_client()
             for x in names:
-                minioClient.remove_bucket(x)
+                minio_client.remove_bucket(x)
         except Exception as e:
-            err_msg = f"There has some error when delete s3 buckets: {str(e)}"
-            logger.error(err_msg, exc_info=True)
+            err_msg = "There was some error when delete s3 buckets"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
     @classmethod
     def upload2bucket(cls, bucket_name, file_path, file_name):
         try:
-            minioClient = cls.new_minio_client()
+            minio_client = cls.new_minio_client()
             with open(file_path, 'rb') as f:
                 file_stat = os.stat(file_path)
-                minioClient.put_object(bucket_name, file_name, f, file_stat.st_size)
+                minio_client.put_object(bucket_name, file_name, f, file_stat.st_size)
         except Exception as e:
-            err_msg = f"There has some error when put file to s3 buckets: {str(e)}"
-            logger.error(err_msg, exc_info=True)
+            err_msg = "There was some error when put file to s3 buckets"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
     @classmethod
     def del_object(cls, bucket_name, object_name):
         try:
-            minioClient = cls.new_minio_client()
-            minioClient.remove_object(bucket_name, object_name)
+            minio_client = cls.new_minio_client()
+            minio_client.remove_object(bucket_name, object_name)
         except Exception as e:
-            err_msg = f"There has some error when delete object: {str(e)}"
-            logger.error(err_msg, exc_info=True)
+            err_msg = "There was some error when delete object"
+            logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
 
