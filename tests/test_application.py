@@ -4,7 +4,7 @@ import time
 import pytest
 from test_basic import client
 from test_basic import local_ip
-from utils.require import PreOperator, PrePipeline
+from utils.require import pre_instance, pre_operator, pre_pipeline, pre_application
 
 
 class TestApplicationApi:
@@ -23,17 +23,10 @@ class TestApplicationApi:
         rv = client.get(f"/v1/application/{self.name}")
         assert rv.status_code != 200
 
-    def test_new_application_api(self, client):
-        PreOperator().create(
-            {"endpoint": f"{local_ip()}:50001", "name": self.op_name})
-        PrePipeline().create({
-            "name": self.pipeline_name,
-            "input": "image",
-            "description": "this is a test pipeline",
-            "processors": "",
-            "encoder": self.op_name,
-            "index_file_size": 1024
-        })
+    @pre_operator(name="pytest1", type="encoder", addr="psoperator/vgg16-encoder:latest", version="0.1", description="")
+    @pre_instance(operator_name="pytest1", name="ins1")
+    @pre_pipeline(name="test_pipeline", encoder={"name": "pytest1", "instance": "ins1"})
+    def test_create_and_delete_application_api(self, client):
         data = {
             'fields': {
                 self.field_name: {
@@ -47,55 +40,64 @@ class TestApplicationApi:
         json_data = rv.get_json()
         assert rv.status_code == 200
         assert json_data['_application_name'] == self.name
-        try:
-            os.mkdir('./tmp')
-        except Exception as e:
-            pass
+
+        rv = client.delete(f"/v1/application/{self.name}")
+        assert rv.status_code == 200
+        # delete none exist application
+        rv = client.delete(f"/v1/application/{self.name}")
+        assert rv.status_code != 200
 
     def test_new_application_api_error(self, client):
         # create wrong app
         none_exist_pipeline_data = {
             'fields': {
                 self.field_name: {
-                    'type': 'object',
-                    'pipeline': 'none_exist_pipeline'
+                    'type': 'pipeline',
+                    'value': 'none_exist_pipeline'
                 }
             },
             's3Buckets': "s3example"
         }
         rv = client.post(f'/v1/application/{self.name}', json=none_exist_pipeline_data)
-        json_data = rv.get_json()
         assert rv.status_code != 200
         data = {
             'fields': {
                 self.field_name: {
                     'type': 'str',
-                    'pipeline': self.pipeline_name
+                    'value': self.pipeline_name
                 }
             },
             's3Buckets': "s3example"
         }
         rv = client.post(f'/v1/application/{self.name}', json=data)
-        json_data = rv.get_json()
         assert rv.status_code != 200
         data = {
             'fields': {
                 self.field_name: {
-                    'type': 'object',
-                    'pipeline': self.pipeline_name
+                    'type': 'pipeline',
+                    'value': self.pipeline_name
                 }
             },
             's3Buckets': "s3example"
         }
         rv = client.post(f'/v1/application/fail_app', json=data)
-        json_data = rv.get_json()
         assert rv.status_code != 200
 
+    @pre_operator(name="pytest1", type="encoder", addr="psoperator/vgg16-encoder:latest", version="0.1", description="")
+    @pre_instance(operator_name="pytest1", name="ins1")
+    @pre_pipeline(name="test_pipeline", encoder={"name": "pytest1", "instance": "ins1"})
+    @pre_application(name="pyapp1", fields={"full": {"type": "pipeline", "value": "pytest_pipe_1"}},
+                     s3_buckets="s3example")
     def test_application_detail_api(self, client):
-        rv = client.get(f"/v1/application/{self.name}")
+        rv = client.get("/v1/application/pyapp1")
         assert rv.status_code == 200
 
-    def test_upload_api(self, client):
+    @pre_operator(name="pytest1", type="encoder", addr="psoperator/vgg16-encoder:latest", version="0.1", description="")
+    @pre_instance(operator_name="pytest1", name="ins1")
+    @pre_pipeline(name="test_pipeline", encoder={"name": "pytest1", "instance": "ins1"})
+    @pre_application(name="pyapp1", fields={"full": {"type": "pipeline", "value": "pytest_pipe_1"}},
+                     s3_buckets="s3example")
+    def test_application_other_api(self, client):
         data = {
             'fields': {
                 self.field_name: {
@@ -119,7 +121,7 @@ class TestApplicationApi:
             assert rv.status_code == 200
         time.sleep(2)
 
-    def test_search_api(self, client):
+        # search
         data = {
             'fields': {
                 self.field_name: {
@@ -132,7 +134,7 @@ class TestApplicationApi:
         rv = client.post(f"/v1/application/{self.name}/search", json=data)
         assert rv.status_code == 200
 
-    def test_search_score_function(self, client):
+        # search score function
         data = {
             'fields': {
                 self.field_name: {
@@ -146,7 +148,7 @@ class TestApplicationApi:
         rv = client.post(f"/v1/application/{self.name}/search", json=data)
         assert rv.status_code == 200
 
-    def test_entities_api(self, client):
+        # get all entities and delete all
         rv = client.get(f"/v1/application/{self.name}/entity")
         assert rv.status_code == 200
         json_data = rv.get_json()
@@ -161,12 +163,4 @@ class TestApplicationApi:
             f"/v1/application/{self.name}/entity/-1")
         assert reply.status_code != 200
 
-    def test_delete_application_api(self, client):
-        PrePipeline().delete({'name': self.pipeline_name})
-        PreOperator().delete({'name': self.op_name})
-        rv = client.delete(f"/v1/application/{self.name}")
-        assert rv.status_code == 200
-        # delete none exist application
-        rv = client.delete(f"/v1/application/{self.name}")
-        assert rv.status_code != 200
-        shutil.rmtree('./tmp', ignore_errors=True)
+
