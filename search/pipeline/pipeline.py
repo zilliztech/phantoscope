@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 class Pipeline():
     def __init__(self, name, input, output, description,
-                 processors: List[str], encoder: str):
+                 processors, encoder):
         self._pipeline_name = name
         self._input = input
         self._output = output
@@ -153,7 +153,8 @@ def run_pipeline(p, **kwargs):
     if not isinstance(p, Pipeline):
         raise PipelineCheckError("check pipeline with error", "%s is not a Pipeline" % p)
     for processor in p.processors:
-        if not processor: continue
+        if not processor:
+            continue
         op = operator_detail(processor["name"])
         ins = op.inspect_instance(processor["instance"])
         todo_list.append(ins)

@@ -1,36 +1,57 @@
-from operators.operator import register_operators, delete_operators
-from pipeline.pipeline import new_pipeline, delete_pipeline
+from functools import wraps
+
+from operators.operator import register_operators, delete_operators, operator_detail
+from pipeline.pipeline import create_pipeline, delete_pipeline
 from application.application import new_application, delete_application
 
 
-class PreResource:
-    def create(self, data):
-        pass
-
-    def delete(self, data):
-        pass
-
-
-class PreOperator(PreResource):
-    def create(self, data):
-        register_operators(data['endpoint'], data['name'])
-
-    def delete(self, data):
-        delete_operators(data['name'])
+def pre_operator(name="pytest_op_1", type="encoder",
+                 addr="psoperator/vgg16-encoder:latest", author="phantoscope",
+                 version="0.1", description="test operator"):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            register_operators(name=name, type=type, addr=addr, author=author,
+                               version=version, description=description)
+            func(*args, **kwargs)
+            delete_operators(name=name)
+        return wrapper
+    return decorator
 
 
-class PrePipeline(PreResource):
-    def create(self, data):
-        new_pipeline(data['name'], data['input'], data['index_file_size'],
-                     data['processors'], data['encoder'], data['description'])
+def pre_instance(operator_name="pytest_op_1", name="ins1"):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            operator = operator_detail(operator_name)
+            operator.new_instance(name)
+            func(*args, **kwargs)
+            operator.delete_instance(name)
+        return wrapper
+    return decorator
 
-    def delete(self, data):
-        delete_pipeline(data['name'])
+
+def pre_pipeline(name="pytest_pipe_1", processors="",
+                 encoder={"name": "pytest_op_1", "instance": "ins1"},
+                 description="test pipeline"):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            create_pipeline(name=name, processors=processors, encoder=encoder)
+            func(*args, **kwargs)
+            delete_pipeline(name)
+        return wrapper
+    return decorator
 
 
-class PreApplication(PreResource):
-    def create(self, data):
-        new_application(data['name'], data['fields'], data['s3_buckets'])
-
-    def delete(self, data):
-        delete_application(data['name'])
+def pre_application(name="pytest_app_1",
+                    fields={"full": {"type": "pipeline", "value": "pytest_pipe_1"}},
+                    s3_buckets="test_bucket"):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            new_application(name=name, fields=fields, s3_buckets=s3_buckets)
+            func(*args, **kwargs)
+            delete_application(name)
+        return wrapper
+    return decorator
