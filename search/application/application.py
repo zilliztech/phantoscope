@@ -165,7 +165,7 @@ def delete_application(name):
         delete_milvus_collections_by_fields(app)
         delete_fields(json.loads(x.fields))
         S3Ins.del_s3_buckets(x.s3_buckets.split(","))
-        MongoIns.delete_mongo_collection(name + "_entity")
+        MongoIns.delete_mongo_collection(f"{name}_entity")
         logger.info("delete application %s", name)
         return app
     except Exception as e:
