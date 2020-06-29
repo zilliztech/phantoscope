@@ -30,8 +30,8 @@ class DockerRuntime:
     def create_instance(self, name, image, ports, args=None):
         try:
             self.client.containers.run(image=image, name=name,
-                                                   detach=True, ports=ports,
-                                                   labels=self.labels)
+                                       detach=True, ports=ports,
+                                       labels=self.labels)
             containers = self.client.containers.list(all=False, filters={"name": name})
             container = containers[0]
             return new_operator_instance(container.short_id, container.name,
