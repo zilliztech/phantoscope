@@ -16,12 +16,13 @@ import urllib.error
 import urllib.parse
 import base64
 from common.error import DecodeError, DownloadFileError
+from common.config import UPLOAD_FOLDER
 
 
 def save_tmp_file(name, file_data=None, url=None):
-    DEFAULT_PATH = os.path.abspath('./tmp/')
+    default_path = UPLOAD_FOLDER
     extension = "jpg"
-    file_path = os.path.join(DEFAULT_PATH, name + "." + extension)
+    file_path = os.path.join(default_path, name + "." + extension)
     if file_data:
         try:
             img_data = file_data.split(",")
@@ -35,7 +36,7 @@ def save_tmp_file(name, file_data=None, url=None):
                 imgstring = img_data[1]
             else:
                 imgstring = img_data[0]
-            file_path = os.path.join(DEFAULT_PATH, name + "." + extension)
+            file_path = os.path.join(default_path, name + "." + extension)
             with open(file_path, "wb") as f:
                 f.write(base64.b64decode(imgstring))
             return file_path

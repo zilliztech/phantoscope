@@ -124,12 +124,25 @@ class DockerRuntimeError(Error):
         return 400
 
 
-class RequestError(Error):
+class WrongFieldModeError(Error):
     @property
     def code(self):
         return 400
 
+
+class WrongInnerFieldModeError(Error):
+    @property
+    def code(self):
+        return 400
+
+
 class ArgsCheckError(Error):
+    @property
+    def code(self):
+        return 400
+
+
+class NoneValidFieldError(Error):
     @property
     def code(self):
         return 400

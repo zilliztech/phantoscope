@@ -14,7 +14,7 @@ from keras.preprocessing import image
 import base64
 import keras.backend.tensorflow_backend as KTF
 
-LOCAL_TMP_PATH = "./tmp"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 class Xception:

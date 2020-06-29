@@ -31,8 +31,8 @@ def get_app_body_fields(address, app_name):
 def get_app_field_name(address, app_name, pipeline_name=None):
     all_fields = get_app_body_fields(address, app_name)
     for field_name, value in all_fields.items():
-        if value.get("type", None) == 'object':
-            if (not pipeline_name) or value.get("pipeline") == pipeline_name:
+        if value.get("type", None) == 'pipeline':
+            if (not pipeline_name) or value.get("value") == pipeline_name:
                 return field_name
             else:
                 continue

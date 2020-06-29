@@ -10,7 +10,7 @@ import numpy as np
 import tensorflow as tf
 import align.detect_face
 
-LOCAL_TMP_PATH = "./tmp/"
+LOCAL_TMP_PATH = os.getenv("UPLOAD_FOLDER", "/tmp/")
 
 
 class BoundingBox:

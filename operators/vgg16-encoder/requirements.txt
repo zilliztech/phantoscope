@@ -1,4 +1,5 @@
-Keras
 tensorflow==1.15.2
+Keras==2.3.1
 grpcio==1.27.2
 pillow
+grpcio-reflection==1.30.0

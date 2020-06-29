@@ -28,7 +28,6 @@ from common.const import MARKET_IDENTITY_HEADER
 from service import runtime_client
 from operators.instance import OperatorInstance
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -196,8 +195,8 @@ def fetch_operators(url, overwrite=True):
     except Exception as e:
         raise RequestError(e.args[0], e)
     for op in r.json():
-        origin.append(new_operator(op['name'], op['type'], op['addr'],
-                                   op['author'], op['version'], op['description']))
+        origin.append(new_operator(op['name'], op['addr'], op['author'],
+                                   op['version'], op['type'], op['description']))
     local_operators = all_operators()
     local_operator_names = [x.name for x in local_operators]
     for x in origin:

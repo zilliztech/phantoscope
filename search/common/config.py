@@ -23,13 +23,11 @@ MONGO_PORT = os.getenv("MONGO_PORT", 27017)
 MONGO_USERNAME = os.getenv("MONGO_USERNAME", "root")
 MONGO_PASSWORD = os.getenv("MONGO_PASSWD", "passwd")
 
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "tmp/video")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "/tmp/")
+
 ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", {"gif", "jpg", "jpeg", "png"})
 
 ALLOWED_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png"}
-
-LOCAL_CACHE_PATH = "./tmp"
-LOCAL_TMP_PATH = "/tmp"
 
 STAGE_EXTRACT = "extract"
 STAGE_PREDICT = "predict"
@@ -41,8 +39,7 @@ MILVUS_PORT = os.getenv("MILVUS_PORT", "19530")
 SEARCH_MAGIC_NUM = os.getenv("SEARCH_MAGIC_NUM", 6)
 SEARCH_COUNT_NUM = os.getenv("SEARCH COUNT NUM", 3)
 
-
-#--------------
+# --------------
 META_DATABASE_ENDPOINT = os.getenv("SEARCH_IMAGES_DATABASE_EP", "mysql://root:passwd@127.0.0.1:3306/search")
 META_DATABASE_USERNAME = os.getenv("SEARCH_IMAGES_DATABASE_USERNAME", "root")
 META_DATABASE_PASSWD = os.getenv("SEARCH_IMAGES_DATABASE_PASSWD", "passwd")

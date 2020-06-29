@@ -129,7 +129,7 @@ def new_application(app_name, fields, s3_buckets):
                                      value=field.get('value'), app=app_name))
         ids = insert_fields(fieldsdb)
         # create a application entity collection
-        MongoIns.new_mongo_collection(app_name+"_entity")
+        MongoIns.new_mongo_collection(f"{app_name}_entity")
         app = Application(name=app_name, fields=ids, buckets=s3_buckets)
         # create milvus collections
         create_milvus_collections_by_fields(app)
@@ -138,6 +138,7 @@ def new_application(app_name, fields, s3_buckets):
         app.fields = fields2dict(search_fields(ids))
         return app
     except Exception as e:
+        logger.error("error happen during create app: %s", str(e), exc_info=True)
         raise e
 
 
@@ -152,7 +153,7 @@ def delete_milvus_collections_by_fields(app):
 
 def delete_application(name):
     try:
-        if len(entities_list(name, 100, 0)):
+        if len(entities_list(name, 100)):
             raise RequestError("There still have entity in this application", "")
         # TODO rewrite clean all resource before change metadata
         x = del_application(name)
@@ -164,7 +165,7 @@ def delete_application(name):
         delete_milvus_collections_by_fields(app)
         delete_fields(json.loads(x.fields))
         S3Ins.del_s3_buckets(x.s3_buckets.split(","))
-        MongoIns.delete_mongo_collection(name+"_entity")
+        MongoIns.delete_mongo_collection(f"{name}_entity")
         logger.info("delete application %s", name)
         return app
     except Exception as e:
@@ -187,11 +188,14 @@ def entities_list(name, num):
 
 def delete_entity(app_name, entity_id):
     try:
-        entity = MongoIns.search_by_id(f"{app_name}_entity", entity_id)
+        mongo_ins_name = f"{app_name}_entity"
+        entity = MongoIns.search_by_id(mongo_ins_name, entity_id)
         if not entity.count():
             raise NotExistError("Entity %s not exist" % entity_id, "NotExistError")
+        res_en = []
         for item in entity:
             en = new_mapping_ins(item)
+            res_en.append(en)
             for name, fields in en._docs.items():
                 # delete s3 object
                 bucket_name = fields.get("url").split("/")[-2]
@@ -203,9 +207,9 @@ def delete_entity(app_name, entity_id):
                 instance_name = pipe.encoder.get("instance")
                 MilvusIns.del_vectors(f"{app_name}_{name}_{instance_name}", vids)
             # delete from mongo
-            MongoIns.delete_by_id(entity_id)
+            MongoIns.delete_by_id(mongo_ins_name, entity_id)
         logger.info("delete entity %s in application %s", entity_id, app_name)
-        return en
+        return res_en
     except Exception as e:
         logger.error(e)
         raise e

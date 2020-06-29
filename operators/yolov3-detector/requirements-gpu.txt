@@ -1,4 +1,5 @@
 grpcio==1.27.2
 pillow
-opencv-python
+opencv-python==4.2.0.34
 paddlepaddle-gpu==1.7.2.post107
+grpcio-reflection==1.30.0
