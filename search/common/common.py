@@ -53,7 +53,7 @@ def json_response(func):
             res_code = 500
             res_body = {
                 "message": str(res),
-                "error": res.__name__
+                "error": res.__class__.__name__
             }
             if hasattr(res, "code"):
                 res_code = res.code
