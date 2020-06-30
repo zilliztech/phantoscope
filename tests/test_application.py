@@ -3,12 +3,16 @@ import time
 import pytest
 from test_basic import client
 from test_basic import local_ip
-from utils.require import pre_instance, pre_operator, pre_pipeline, pre_application
+from utils.require import pre_instance
+from utils.require import pre_operator
+from utils.require import pre_pipeline
+from utils.require import pre_application
+from utils.require import sleep_time
 
 
 class TestApplicationApi:
     """test class for application api"""
-    test_ver = 29
+    test_ver = 2
     name = f"pytestexample{test_ver}"
     field_name = f"image{test_ver}"
     op_addr = "psoperator/vgg16-encoder:latest"
@@ -30,6 +34,7 @@ class TestApplicationApi:
     @pre_instance(operator_name=op_name, name=op_instance)
     @pre_pipeline(name=pipeline_name,
                   encoder={"name": op_name, "instance": op_instance})
+    @sleep_time(2)
     def test_create_and_delete_api(self, client):
         data = {
             'fields': {
@@ -99,8 +104,8 @@ class TestApplicationApi:
     @pre_application(name=f"{name}1",
                      fields={field_name: {"type": "pipeline", "value": f"{pipeline_name}1"}},
                      s3_buckets=f"s3example{test_ver}")
+    @sleep_time(12)  # sleep for opertaor instance initialization
     def test_application_other_api(self, client):
-        time.sleep(12)  # sleep for opertaor instance initialization
         # upload url image
         data = {
             'fields': {

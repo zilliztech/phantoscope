@@ -27,7 +27,6 @@ def pre_instance(operator_name="pytest_op_1", name="ins1"):
         def wrapper(*args, **kwargs):
             operator = operator_detail(operator_name)
             operator.new_instance(name)
-            time.sleep(2)  # wait for opertaor instance start
             func(*args, **kwargs)
             operator.delete_instance(name)
 
@@ -57,9 +56,22 @@ def pre_application(name="pytest_app_1",
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            time.sleep(2)  # wait for opertaor instance start
             new_application(app_name=name, fields=fields, s3_buckets=s3_buckets)
             func(*args, **kwargs)
             delete_application(name)
+
+        return wrapper
+
+    return decorator
+
+
+def sleep_time(seconds):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            time.sleep(seconds)
+            func(*args, **kwargs)
 
         return wrapper
 

@@ -2,12 +2,15 @@ import time
 import pytest
 from test_basic import client
 from test_basic import local_ip
-from utils.require import pre_operator, pre_instance, pre_pipeline, pre_application
-
+from utils.require import pre_instance
+from utils.require import pre_operator
+from utils.require import pre_pipeline
+from utils.require import pre_application
+from utils.require import sleep_time
 
 class TestScoreFunctionApi:
     """test class for application api"""
-    test_ver = 9
+    test_ver = 1
     name = f"pytestexample{test_ver}"
     field_name1 = f'detector{test_ver}'
     field_name2 = f'none-detector{test_ver}'
@@ -49,8 +52,8 @@ class TestScoreFunctionApi:
                      fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}2"},
                              field_name2: {"type": "pipeline", "value": f"{pipeline_name2}2"}},
                      s3_buckets=f"s3example{test_ver}")
+    @sleep_time(12)  # wait for operator instance initialization
     def test_inner_field_score_api(self, client):
-        time.sleep(12)  # wait for operator instance initialization  # wait for operator instance initialization
         for image_url in self.test_url:
             data = {
                 'fields': {
@@ -144,8 +147,8 @@ class TestScoreFunctionApi:
                      fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}2"},
                              field_name2: {"type": "pipeline", "value": f"{pipeline_name2}2"}},
                      s3_buckets=f"s3example{test_ver}")
+    @sleep_time(12)  # wait for operator instance initialization
     def test_score_api(self, client):
-        time.sleep(12)  # wait for operator instance initialization  # wait for operator instance initialization
         for image_url in self.test_url:
             data = {
                 'fields': {
