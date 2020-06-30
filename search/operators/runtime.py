@@ -107,4 +107,4 @@ class DockerRuntime:
 
 def runtime_client_getter(name):
     if name == "docker":
-        return DockerRuntime("unix://var/run/docker.sock", "1.35", 3, False, None, {})
+        return DockerRuntime("unix://var/run/docker.sock", "1.35", 20, False, None, {})
