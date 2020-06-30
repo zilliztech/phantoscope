@@ -1,6 +1,6 @@
 from test_basic import client
 from utils.require import pre_operator, pre_instance
-
+from utils.require import sleep_time
 
 class TestPipelineApi:
     """test class for pipeline api"""
@@ -8,6 +8,7 @@ class TestPipelineApi:
 
     @pre_operator(name="pytest1", type="encoder", addr="psoperator/vgg16-encoder:latest", version="0.1", description="")
     @pre_instance(operator_name="pytest1", name="ins1")
+    @sleep_time(10)
     def test_create_pipeline_api(self, client):
         data = {
             "description": "this is a test pipeline",
