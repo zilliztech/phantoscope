@@ -2,6 +2,7 @@ from test_basic import client
 from utils.require import pre_operator, pre_instance
 from utils.require import sleep_time
 
+
 class TestPipelineApi:
     """test class for pipeline api"""
     name = "pytest_pipeline"

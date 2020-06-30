@@ -17,7 +17,7 @@ class TestApplicationApi:
     field_name = f"image{test_ver}"
     op_addr = "psoperator/vgg16-encoder:latest"
     op_type = "encoder"
-    op_name = f"pytestop{test_ver}"
+    op_name = f"{test_ver}pytestop"
     op_instance = f"test_instance{test_ver}"
     pipeline_name = f"pytest_pipline{test_ver}"
     test_url = 'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg'
