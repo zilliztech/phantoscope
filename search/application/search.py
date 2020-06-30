@@ -20,11 +20,13 @@ from application.score.field_decay import decay_helper
 from application.score.function_score import ScoreMode, score_helper
 from application.score.inner_fields_score import InnerFieldScoreMode
 from application.score.inner_fields_score import inner_field_score_helper
+from application.score.field_decay import FieldDecayFunction
 from common.error import NoneValidFieldError
 from common.error import NoneVectorError
 from common.error import RequestError
 from common.error import WrongFieldModeError
 from common.error import WrongInnerFieldModeError
+from common.error import UnexpectedError
 from pipeline.pipeline import pipeline_detail, run_pipeline
 from storage.storage import MilvusIns
 from storage.storage import MongoIns
@@ -39,12 +41,14 @@ def get_decay_score(ids, decay_function_mode):
 
 def calc_result_score_list(fields_result, score_config):
     res = {}
-    for field, value in fields_result:
+    for field, value in fields_result.items():
         weight = score_config[field]['weight']
         decay_function = score_config[field]['decay_function']
+        decay_function = FieldDecayFunction(decay_function)
         scores = get_decay_score(value, decay_function)
         for id, score in zip(value, scores):
-            res.get(id, []).append(weight * score)
+            res[id] = res.get(id, [])
+            res[id].append(weight * score)
     return res
 
 
@@ -73,7 +77,7 @@ def get_score_result(fields_result, topk, score_config, score_mode: str):
     for id, score_list in uncombined_scores.items():
         final_score = score_combine_function(score_list)
         res.append((id, final_score))
-        res.sort(key=lambda x: x[1])
+    res.sort(key=lambda x: x[1])
     result_ids = [i[0] for i in res]
     return result_ids[:topk]
 
@@ -175,6 +179,6 @@ def search(name, fields={}, topk=10, nprobe=16):
         res = get_score_result(fields_res, topk, score_config, score_mode)
         return res
     except Exception as e:
-        logger.error("Unexpected error happen when search, %s",
-                     str(e), exc_info=True)
-        raise e
+        err_msg = f"Unexpected error happen when search, {str(e)}"
+        logger.error(err_msg, exc_info=True)
+        raise UnexpectedError(err_msg, e)

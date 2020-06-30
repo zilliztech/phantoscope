@@ -22,6 +22,7 @@ from application.mapping import new_mapping_ins
 from common.config import MINIO_ADDR
 from common.utils import save_tmp_file
 from common.error import NoneVectorError
+from common.error import UnexpectedError
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +64,8 @@ def upload(name, **kwargs):
             S3Ins.upload2bucket(bucket_name, file_path, file_name)
 
             vectors = run_pipeline(pipe, data=file_data, url=url)
+            if not vectors:
+                raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
 
             milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
@@ -70,21 +73,13 @@ def upload(name, **kwargs):
             docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}
             doc_id = MongoIns.insert_documents(f"{app.name}_entity", docs)
             res.append(new_mapping_ins(docs))
-
-            # for vid in vids:
-            #     m = DB(id=vid, app_name=name,
-            #            image_url=gen_url(bucket_name, file_name),
-            #            fields=new_fields)
-            #     add_mapping_data(m)
-            #     res.append(new_mapping_ins(id=vid, app_name=name,
-            #                                image_url=gen_url(bucket_name, file_name),
-            #                                fields=new_fields))
         if not valid_field_flag:
             raise RequestError("none valid field exist", "")
         return res
     except Exception as e:
-        print(e)
-        raise e
+        err_msg = f"Unexpected error happen when upload: {str(e)}"
+        logger.error(err_msg, exc_info=True)
+        raise UnexpectedError(err_msg, e)
 
 
 def gen_url(bucket, name):

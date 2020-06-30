@@ -154,11 +154,11 @@ def delete_milvus_collections_by_fields(app):
 def delete_application(name):
     try:
         if len(entities_list(name, 100)):
-            raise RequestError("There still have entity in this application", "")
+            raise RequestError("Prevent to delete application with entity not deleted", "")
         # TODO rewrite clean all resource before change metadata
         x = del_application(name)
         if not x:
-            raise NotExistError("application %s not exist" % name, "")
+            raise NotExistError(f"application {name} not exist", "")
         x = x[0]
         fields = search_fields(json.loads(x.fields))
         app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
