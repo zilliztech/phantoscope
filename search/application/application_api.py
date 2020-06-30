@@ -7,7 +7,8 @@
 #
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-# or implied. See the License for the specific language governing permissions and limitations under the License.
+# or implied. See the License for the specific language governing
+# permissions and limitations under the License.
 
 
 from flask import Blueprint
@@ -21,7 +22,6 @@ from application.application import entities_list
 from application.application import delete_entity
 from application.upload import upload
 from application.search import search
-
 
 application = Blueprint("application", __name__)
 
@@ -65,7 +65,10 @@ def application_do_search_api(name):
         add_argument("nprobe", type=int, required=False, default=16). \
         parse_args()
     args = from_view_dict(args)
-    return search(name, fields=args['fields'], topk=args['topk'], nprobe=args['nprobe'])
+    return search(name,
+                  fields=args['fields'],
+                  topk=args['topk'],
+                  nprobe=args['nprobe'])
 
 
 @application.route("/<name>/upload", methods=["POST"])
