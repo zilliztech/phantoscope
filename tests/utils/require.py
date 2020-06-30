@@ -26,7 +26,10 @@ def pre_instance(operator_name="pytest_op_1", name="ins1"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             operator = operator_detail(operator_name)
-            operator.new_instance(name)
+            try:
+                operator.new_instance(name)
+            except Exception as e:
+                print(str(e))
             func(*args, **kwargs)
             operator.delete_instance(name)
 
