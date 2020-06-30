@@ -1,8 +1,6 @@
 import os
 import time
-import pytest
 from test_basic import client
-from test_basic import local_ip
 from utils.require import pre_instance
 from utils.require import pre_operator
 from utils.require import pre_pipeline
@@ -31,7 +29,7 @@ class TestApplicationApi:
         assert rv.status_code != 200
 
     @pre_operator(name=op_name, type=op_type, addr=op_addr, version="0.1", description="")
-    @sleep_time(10)  # wait for docker resource on github action
+    @sleep_time(5)  # wait for docker resource on github action
     @pre_instance(operator_name=op_name, name=op_instance)
     @pre_pipeline(name=pipeline_name,
                   encoder={"name": op_name, "instance": op_instance})
