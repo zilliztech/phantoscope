@@ -5,7 +5,7 @@ from test_basic import client
 class TestOperatorApi:
     """test class for operator api"""
     name = "pytestop"
-    addr = "psoperator/vgg16:latest"
+    addr = "psoperator/vgg16-encoder:latest"
     author = "tester"
     type = "encoder"
     description = "this is a test operator"
