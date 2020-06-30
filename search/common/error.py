@@ -146,3 +146,9 @@ class NoneValidFieldError(Error):
     @property
     def code(self):
         return 400
+
+
+class UnexpectedError(Error):
+    @property
+    def code(self):
+        return 400
