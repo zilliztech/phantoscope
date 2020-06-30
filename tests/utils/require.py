@@ -30,6 +30,7 @@ def pre_instance(operator_name="pytest_op_1", name="ins1"):
                 operator.new_instance(name)
             except Exception as e:
                 print(str(e))
+                operator.new_instance(name)
             func(*args, **kwargs)
             operator.delete_instance(name)
 
