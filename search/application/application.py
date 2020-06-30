@@ -190,12 +190,11 @@ def delete_entity(app_name, entity_id):
     try:
         mongo_ins_name = f"{app_name}_entity"
         entity = MongoIns.search_by_id(mongo_ins_name, entity_id)
+
         if not entity.count():
             raise NotExistError("Entity %s not exist" % entity_id, "NotExistError")
-        res_en = []
         for item in entity:
             en = new_mapping_ins(item)
-            res_en.append(en)
             for name, fields in en._docs.items():
                 # delete s3 object
                 bucket_name = fields.get("url").split("/")[-2]
@@ -203,13 +202,15 @@ def delete_entity(app_name, entity_id):
                 S3Ins.del_object(bucket_name, object_name)
                 # delete vector from milvus
                 vids = fields.get("ids")
-                pipe = pipeline_detail(name)
+                app = application_detail(app_name)
+                pipe_name = app.fields[name]["value"]
+                pipe = pipeline_detail(pipe_name)
                 instance_name = pipe.encoder.get("instance")
                 MilvusIns.del_vectors(f"{app_name}_{name}_{instance_name}", vids)
-            # delete from mongo
+            # delete from mongodb
             MongoIns.delete_by_id(mongo_ins_name, entity_id)
-        logger.info("delete entity %s in application %s", entity_id, app_name)
-        return res_en
+            logger.info("delete entity %s in application %s", entity_id, app_name)
+            return en
     except Exception as e:
         logger.error(e)
         raise e

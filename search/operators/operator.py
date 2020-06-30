@@ -175,6 +175,7 @@ def register_operators(**args):
                             version=args['version'],
                             description=args['description'])
     except Exception as e:
+        logger.error(f"Unexpected error happen during register operator, {str(e)}", exc_info=True)
         raise e
 
 

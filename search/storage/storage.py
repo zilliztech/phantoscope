@@ -91,7 +91,7 @@ class MongoIns:
                                          username=MONGO_USERNAME,
                                          password=MONGO_PASSWORD)
             db = client.phantoscope
-            return getattr(db, name).find({"_id": ObjectId(id)})
+            return getattr(db, name).find({"_id": ObjectId(id)}).limit(1)
         except Exception as e:
             raise e
 
