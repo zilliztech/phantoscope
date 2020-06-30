@@ -34,7 +34,7 @@ class TestApplicationApi:
     @pre_instance(operator_name=op_name, name=op_instance)
     @pre_pipeline(name=pipeline_name,
                   encoder={"name": op_name, "instance": op_instance})
-    @sleep_time(2)
+    @sleep_time(4)
     def test_create_and_delete_api(self, client):
         data = {
             'fields': {
