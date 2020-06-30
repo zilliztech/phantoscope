@@ -43,7 +43,7 @@ class TestOperatorApi:
         rv = client.post(f'/v1/operator/{self.name}/instances', json=data)
         assert rv.status_code == 200
 
-    @sleep_time(10)
+    @sleep_time(5)
     def test_list_instacne(self, client):
         rv = client.get(f'/v1/operator/{self.name}/instances')
         assert len(rv.get_json()) == 1

@@ -29,11 +29,10 @@ class TestApplicationApi:
         assert rv.status_code != 200
 
     @pre_operator(name=op_name, type=op_type, addr=op_addr, version="0.1", description="")
-    @sleep_time(5)  # wait for docker resource on github action
     @pre_instance(operator_name=op_name, name=op_instance)
     @pre_pipeline(name=pipeline_name,
                   encoder={"name": op_name, "instance": op_instance})
-    @sleep_time(10)
+    @sleep_time(5)
     def test_create_and_delete_api(self, client):
         data = {
             'fields': {
