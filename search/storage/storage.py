@@ -134,9 +134,9 @@ class MilvusIns:
             }
             res = milvus.create_collection(parma)
             if not res.OK():
-                raise MilvusError("There war some error when create milvus collection", res)
+                raise MilvusError("There was some error when create milvus collection", res)
         except Exception as e:
-            raise MilvusError("There wars some error when create milvus collection", e)
+            raise MilvusError("There was some error when create milvus collection", e)
 
     @staticmethod
     def del_milvus_collection(name):
