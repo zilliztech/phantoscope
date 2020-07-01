@@ -20,6 +20,7 @@ from application.application import application_detail
 from application.application import delete_application
 from application.application import entities_list
 from application.application import delete_entity
+from application.application import count_entities
 from application.upload import upload
 from application.search import search
 
@@ -86,10 +87,18 @@ def application_do_upload_api(name):
 def entities_list_api(app_name):
     args = reqparse.RequestParser(). \
         add_argument("num", type=int, default=10). \
+        add_argument("page", type=int, default=0). \
         parse_args()
     args = from_view_dict(args)
     num = args['num']
-    return entities_list(app_name, num)
+    page = args['page']
+    return entities_list(app_name, num, page)
+
+
+@application.route("/<app_name>/entity/count")
+@json_response
+def count_entities_api(app_name):
+    return count_entities(app_name)
 
 
 @application.route("/<app_name>/entity/<entity_name>", methods=["DELETE"])

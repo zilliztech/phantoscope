@@ -10,7 +10,7 @@ from utils.require import sleep_time
 
 class TestApplicationApi:
     """test class for application api"""
-    test_ver = 4
+    test_ver = 3
     name = f"pytestexample{test_ver}"
     field_name = f"image{test_ver}"
     op_addr = "psoperator/vgg16-encoder:latest"
@@ -266,6 +266,10 @@ class TestApplicationApi:
             assert rv.status_code == 200
         time.sleep(1)  # wait for milvus
 
+        # count entity
+        rv = client.get(f"/v1/application/{self.name}1/entity/count")
+        assert rv.status_code == 200
+
         # search
         data = {
             'fields': {
@@ -311,9 +315,15 @@ class TestApplicationApi:
         assert rv.status_code != 200
 
         # get all entities and delete all
-        rv = client.get(f"/v1/application/{self.name}1/entity")
+        rv = client.get(f"/v1/application/{self.name}1/entity?num=4&page=101")
         assert rv.status_code == 200
         json_data = rv.get_json()
+        assert len(json_data) == 0
+
+        rv = client.get(f"/v1/application/{self.name}1/entity?num=4&page=0")
+        assert rv.status_code == 200
+        json_data = rv.get_json()
+        assert len(json_data) == 2
         for data in json_data:
             reply = client.delete(
                 f"/v1/application/{self.name}1/entity/{data['_id']}")

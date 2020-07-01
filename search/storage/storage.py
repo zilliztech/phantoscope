@@ -74,13 +74,27 @@ class MongoIns:
             raise e
 
     @staticmethod
-    def list_documents(name, num):
+    def list_documents(name, num, page):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
                                          username=MONGO_USERNAME,
                                          password=MONGO_PASSWORD)
             db = client.phantoscope
-            return getattr(db, name).find().limit(num)
+            curso = getattr(db, name).find()
+            res = curso.skip(num * page).limit(num)
+            return res
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def count_documents(name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).count()
+            # return getattr(db, name).find().count()
         except Exception as e:
             raise e
 
