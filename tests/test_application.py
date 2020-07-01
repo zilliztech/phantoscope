@@ -10,7 +10,7 @@ from utils.require import sleep_time
 
 class TestApplicationApi:
     """test class for application api"""
-    test_ver = 2
+    test_ver = 3
     name = f"pytestexample{test_ver}"
     field_name = f"image{test_ver}"
     op_addr = "psoperator/vgg16-encoder:latest"
@@ -58,6 +58,13 @@ class TestApplicationApi:
         rv = client.delete(f"/v1/application/{self.name}")
         assert rv.status_code != 200
 
+    @pre_operator(name=f"{op_name}1", type=op_type, addr=op_addr, version="0.1", description="")
+    @pre_instance(operator_name=f"{op_name}1", name=f"{op_instance}1")
+    @pre_pipeline(name=f"{pipeline_name}1",
+                  encoder={"name": f"{op_name}1", "instance": f"{op_instance}1"})
+    @pre_application(name=f"{name}1",
+                     fields={field_name: {"type": "pipeline", "value": f"{pipeline_name}1"}},
+                     s3_buckets=f"s3example{test_ver}")
     def test_new_application_api_error(self, client):
         """create wrong app"""
         none_exist_pipeline_data = {
@@ -83,17 +90,29 @@ class TestApplicationApi:
         # rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
         # assert rv.status_code != 200
 
-        # data = {
-        #     'fields': {
-        #         self.field_name: {
-        #             'type': 'pipeline',
-        #             'value': self.pipeline_name
-        #         }
-        #     },
-        #     's3Buckets': "s3example"
-        # }
-        # rv = client.post(f'/v1/application/fail_app', json=data)
-        # assert rv.status_code != 200
+        existed_s3_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'pipeline',
+                    'value': self.pipeline_name
+                }
+            },
+            's3Buckets': f"s3example{self.test_ver}"
+        }
+        rv = client.post(f'/v1/application/fail_app', json=existed_s3_data)
+        assert rv.status_code != 200
+
+        existed_app_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'pipeline',
+                    'value': self.pipeline_name
+                }
+            },
+            's3Buckets': f"s3example{self.test_ver}"
+        }
+        rv = client.post(f'/v1/application/{self.name}1', json=existed_app_data)
+        assert rv.status_code != 200
 
     @pre_operator(name=f"{op_name}1", type=op_type, addr=op_addr, version="0.1", description="")
     @pre_instance(operator_name=f"{op_name}1", name=f"{op_instance}1")
@@ -156,6 +175,10 @@ class TestApplicationApi:
         }
         rv = client.post(f"/v1/application/{self.name}1/search", json=data)
         assert rv.status_code == 200
+
+        # detele unempty app
+        rv = client.delete(f"/v1/application/{self.name}1")
+        assert rv.status_code != 200
 
         # get all entities and delete all
         rv = client.get(f"/v1/application/{self.name}1/entity")

@@ -8,9 +8,10 @@ from utils.require import pre_pipeline
 from utils.require import pre_application
 from utils.require import sleep_time
 
+
 class TestScoreFunctionApi:
     """test class for application api"""
-    test_ver = 1
+    test_ver = 4
     name = f"pytestexample{test_ver}"
     field_name1 = f'detector{test_ver}'
     field_name2 = f'none-detector{test_ver}'
@@ -35,7 +36,7 @@ class TestScoreFunctionApi:
                 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1592375248588&di=13521ac5965776e504dde2e242610293&imgtype=0&src=http%3A%2F%2Ft8.baidu.com%2Fit%2Fu%3D2388511970%2C557698405%26fm%3D193',
                 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1668363641,4252982095&fm=26&gp=0.jpg']
 
-    test_search_url = ['https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3442599741,2386083112&fm=26&gp=0.jpg',
+    test_search_url = ['https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2101531399,3036310197&fm=26&gp=0.jpg',
                        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1389311444,3919902992&fm=26&gp=0.jpg']
 
     @pre_operator(name=f"{encoder_name}2", type=encoder_type, addr=encoder_addr, version="0.1", description="")
@@ -46,7 +47,7 @@ class TestScoreFunctionApi:
     @pre_pipeline(name=f"{pipeline_name1}2",
                   encoder={"name": f"{encoder_name}2", "instance": f"{encoder_instance}2"})
     @pre_pipeline(name=f"{pipeline_name2}2",
-                  processors={"name": f"{detector_name}2", "instance": f"{detector_instance}2"},
+                  processors=[{"name": f"{detector_name}2", "instance": f"{detector_instance}2"}],
                   encoder={"name": f"{encoder_name}2", "instance": f"{encoder_instance2}2"})
     @pre_application(name=f"{name}",
                      fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}2"},
@@ -57,7 +58,7 @@ class TestScoreFunctionApi:
         for image_url in self.test_url:
             data = {
                 'fields': {
-                    self.field_name1: {
+                    self.field_name2: {
                         'url': image_url
                     }
                 }
@@ -65,11 +66,12 @@ class TestScoreFunctionApi:
             rv = client.post(f"/v1/application/{self.name}/upload", json=data)
             assert rv.status_code == 200
         time.sleep(1)  # wait for milvus
+
         # test inner filed score mode search
         for inner_field_score_mode in self.inner_fields:
             data = {
                 'fields': {
-                    self.field_name1: {
+                    self.field_name2: {
                         'url': self.test_search_url[0],
                         'inner_field_score_mode': inner_field_score_mode
                     }
@@ -87,7 +89,7 @@ class TestScoreFunctionApi:
         for inner_field_score_mode in self.inner_fields:
             data = {
                 'fields': {
-                    self.field_name1: {
+                    self.field_name2: {
                         'url': self.test_search_url[0],
                         'inner_field_score_mode': inner_field_score_mode
                     }
@@ -133,19 +135,19 @@ class TestScoreFunctionApi:
             json_reply = reply.get_json()
             assert json_reply['_id'] == data['_id']
 
-    @pre_operator(name=f"{encoder_name}2", type=encoder_type, addr=encoder_addr, version="0.1", description="")
-    @pre_instance(operator_name=f"{encoder_name}2", name=f"{encoder_instance}2")
-    @pre_instance(operator_name=f"{encoder_name}2", name=f"{encoder_instance2}2")
-    @pre_operator(name=f"{detector_name}2", type=detector_type, addr=detector_addr, version="0.1", description="")
-    @pre_instance(operator_name=f"{detector_name}2", name=f"{detector_instance}2")
-    @pre_pipeline(name=f"{pipeline_name1}2",
-                  encoder={"name": f"{encoder_name}2", "instance": f"{encoder_instance}2"})
-    @pre_pipeline(name=f"{pipeline_name2}2",
-                  processors=[{"name": f"{detector_name}2", "instance": f"{detector_instance}2"}],
-                  encoder={"name": f"{encoder_name}2", "instance": f"{encoder_instance2}2"})
-    @pre_application(name=f"{name}",
-                     fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}2"},
-                             field_name2: {"type": "pipeline", "value": f"{pipeline_name2}2"}},
+    @pre_operator(name=f"{encoder_name}3", type=encoder_type, addr=encoder_addr, version="0.1", description="")
+    @pre_instance(operator_name=f"{encoder_name}3", name=f"{encoder_instance}3")
+    @pre_instance(operator_name=f"{encoder_name}3", name=f"{encoder_instance2}3")
+    @pre_operator(name=f"{detector_name}3", type=detector_type, addr=detector_addr, version="0.1", description="")
+    @pre_instance(operator_name=f"{detector_name}3", name=f"{detector_instance}3")
+    @pre_pipeline(name=f"{pipeline_name1}3",
+                  encoder={"name": f"{encoder_name}3", "instance": f"{encoder_instance}3"})
+    @pre_pipeline(name=f"{pipeline_name2}3",
+                  processors=[{"name": f"{detector_name}3", "instance": f"{detector_instance}3"}],
+                  encoder={"name": f"{encoder_name}3", "instance": f"{encoder_instance2}3"})
+    @pre_application(name=f"{name}1",
+                     fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}3"},
+                             field_name2: {"type": "pipeline", "value": f"{pipeline_name2}3"}},
                      s3_buckets=f"s3example{test_ver}")
     @sleep_time(12)  # wait for operator instance initialization
     def test_score_api(self, client):
@@ -160,7 +162,7 @@ class TestScoreFunctionApi:
                     }
                 }
             }
-            rv = client.post(f"/v1/application/{self.name}/upload", json=data)
+            rv = client.post(f"/v1/application/{self.name}1/upload", json=data)
             assert rv.status_code == 200
         time.sleep(1)  # wait for milvus
 
@@ -184,18 +186,18 @@ class TestScoreFunctionApi:
                 'topk': topk,
                 'nprobe': 10
             }
-            rv = client.post(f"/v1/application/{self.name}/search", json=data)
+            rv = client.post(f"/v1/application/{self.name}1/search", json=data)
             assert rv.status_code == 200
             json_data = rv.get_json()
             assert len(json_data) == topk
 
         # get and delete all entities
-        rv = client.get(f"/v1/application/{self.name}/entity?num=100")
+        rv = client.get(f"/v1/application/{self.name}1/entity?num=100")
         assert rv.status_code == 200
         json_data = rv.get_json()
         for data in json_data:
             reply = client.delete(
-                f"/v1/application/{self.name}/entity/{data['_id']}")
+                f"/v1/application/{self.name}1/entity/{data['_id']}")
             assert reply.status_code == 200
             json_reply = reply.get_json()
             assert json_reply['_id'] == data['_id']
