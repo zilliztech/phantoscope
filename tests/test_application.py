@@ -10,7 +10,7 @@ from utils.require import sleep_time
 
 class TestApplicationApi:
     """test class for application api"""
-    test_ver = 3
+    test_ver = 4
     name = f"pytestexample{test_ver}"
     field_name = f"image{test_ver}"
     op_addr = "psoperator/vgg16-encoder:latest"
@@ -34,6 +34,7 @@ class TestApplicationApi:
                   encoder={"name": op_name, "instance": op_instance})
     @sleep_time(5)
     def test_create_and_delete_api(self, client):
+        # create app
         data = {
             'fields': {
                 self.field_name: {
@@ -51,11 +52,52 @@ class TestApplicationApi:
         rv = client.get(f"/v1/application/{self.name}")
         assert rv.status_code == 200
 
+        # upload none filed
+        data = {
+            'fields': {
+            }
+        }
+        rv = client.post(f"/v1/application/{self.name}/upload", json=data)
+        assert rv.status_code != 200
+
+        # upload nonexist filed
+        data = {
+            'fields': {
+                "nonexist": {
+                    "url": self.test_url
+                }
+            }
+        }
+        rv = client.post(f"/v1/application/{self.name}/upload", json=data)
+        assert rv.status_code != 200
+
+        # upload nonexist filed
+        data = {
+            'fields': {
+                self.field_name: {
+                }
+            }
+        }
+        rv = client.post(f"/v1/application/{self.name}/upload", json=data)
+        assert rv.status_code != 200
+
+        # delete app
         rv = client.delete(f"/v1/application/{self.name}")
         assert rv.status_code == 200
 
         # delete none exist application
         rv = client.delete(f"/v1/application/{self.name}")
+        assert rv.status_code != 200
+
+        # upload nonexist app
+        data = {
+            'fields': {
+                self.field_name: {
+                    'url': self.test_url
+                }
+            }
+        }
+        rv = client.post(f"/v1/application/{self.name}/upload", json=data)
         assert rv.status_code != 200
 
     @pre_operator(name=f"{op_name}1", type=op_type, addr=op_addr, version="0.1", description="")
@@ -78,17 +120,66 @@ class TestApplicationApi:
         }
         rv = client.post(f'/v1/application/{self.name}', json=none_exist_pipeline_data)
         assert rv.status_code != 200
-        # wrong_type_data = {
-        #     'fields': {
-        #         self.field_name: {
-        #             'type': 'str',
-        #             'value': self.pipeline_name
-        #         }
-        #     },
-        #     's3Buckets': "s3example"
-        # }
-        # rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
-        # assert rv.status_code != 200
+
+        # create with unsupported type
+        wrong_type_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'str',
+                    'value': self.pipeline_name
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
+        assert rv.status_code != 200
+
+        # create with unsupported type
+        wrong_type_data = {
+            'fields': ["hello"],
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
+        assert rv.status_code != 200
+
+        # create with nonexist pipeline
+        wrong_type_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'pipeline',
+                    'value': "wrong field"
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
+        assert rv.status_code != 200
+
+        # create with none type or value
+        wrong_type_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'string',
+                    'pipeline': self.pipeline_name
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
+        assert rv.status_code != 200
+
+        # create with type and wrong value
+        wrong_type_data = {
+            'fields': {
+                self.field_name: {
+                    'type': 'string',
+                    'value': 1.0
+                }
+            },
+            's3Buckets': "s3example"
+        }
+        rv = client.post(f'/v1/application/{self.name}', json=wrong_type_data)
+        assert rv.status_code != 200
 
         existed_s3_data = {
             'fields': {
@@ -123,6 +214,32 @@ class TestApplicationApi:
                      s3_buckets=f"s3example{test_ver}")
     @sleep_time(12)  # sleep for opertaor instance initialization
     def test_application_other_api(self, client):
+        # upload error url image
+        data = {
+            'fields': {
+                self.field_name: {
+                    'url': self.test_url[:3]
+                }
+            }
+        }
+        rv = client.post(f"/v1/application/{self.name}1/upload", json=data)
+        assert rv.status_code != 200
+
+        # upload error base64 image
+        base_txt = os.path.join(os.path.dirname(__file__), 'base64.txt')
+        with open(base_txt, 'r')as file:
+            base_data = file.readline()
+            data = {
+                'fields': {
+                    self.field_name: {
+                        'data': base_data[:10]
+                    }
+                }
+            }
+            rv = client.post(f"/v1/application/{self.name}1/upload", json=data)
+            assert rv.status_code != 200
+        time.sleep(1)  # wait for milvus
+
         # upload url image
         data = {
             'fields': {
@@ -175,6 +292,19 @@ class TestApplicationApi:
         }
         rv = client.post(f"/v1/application/{self.name}1/search", json=data)
         assert rv.status_code == 200
+
+        data = {
+            'fields': {
+                self.field_name: {
+                    'url': self.test_url,
+                    'inner_field_score_mode': 'wrong_mode'
+                }
+            },
+            'topk': 5,
+            'nprobe': 10
+        }
+        rv = client.post(f"/v1/application/{self.name}1/search", json=data)
+        assert rv.status_code != 200
 
         # detele unempty app
         rv = client.delete(f"/v1/application/{self.name}1")

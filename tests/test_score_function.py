@@ -1,7 +1,5 @@
 import time
-import pytest
 from test_basic import client
-from test_basic import local_ip
 from utils.require import pre_instance
 from utils.require import pre_operator
 from utils.require import pre_pipeline
@@ -66,6 +64,34 @@ class TestScoreFunctionApi:
             rv = client.post(f"/v1/application/{self.name}/upload", json=data)
             assert rv.status_code == 200
         time.sleep(1)  # wait for milvus
+
+        # search in empty milvus collection
+        data = {
+            'fields': {
+                self.field_name1: {
+                    'url': self.test_search_url[0],
+                    'inner_field_score_mode': "first"
+                }
+            },
+            'topk': 3,
+            'nprobe': 10
+        }
+        rv = client.post(f"/v1/application/{self.name}/search", json=data)
+        assert rv.status_code != 200
+
+        # search with nonexist field
+        data = {
+            'fields': {
+                "wrong_field": {
+                    'url': self.test_search_url[0],
+                    'inner_field_score_mode': "first"
+                }
+            },
+            'topk': 3,
+            'nprobe': 10
+        }
+        rv = client.post(f"/v1/application/{self.name}/search", json=data)
+        assert rv.status_code != 200
 
         # test inner filed score mode search
         for inner_field_score_mode in self.inner_fields:
