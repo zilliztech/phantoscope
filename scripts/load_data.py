@@ -21,8 +21,8 @@ def get_app_body_fields(address, app_name):
     try:
         reply = requests.get(url)
         content = json.loads(reply.content)
-        application_feilds = content["_fields"]
-        return application_feilds
+        application_fields = content["_fields"]
+        return application_fields
     except Exception as e:
         logging.error("request url %s error: %s", url, str(e), exc_info=True)
         raise e
