@@ -18,7 +18,7 @@ class TestApplicationApi:
     op_name = f"{test_ver}pytestop"
     op_instance = f"test_instance{test_ver}"
     pipeline_name = f"pytest_pipline{test_ver}"
-    test_url = 'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg'
+    test_url = 'https://live.staticflickr.com/65535/50063878058_c7c04603cc_o.jpg'
 
     def test_list_application_api(self, client):
         rv = client.get("/v1/application/")

@@ -14,7 +14,7 @@ import logging
 import requests
 from models.operator import Operator as DB
 from models.operator import search_operator, insert_operator, del_operator
-from models.operator import insert_operators, replace_all_operators
+from models.operator import replace_all_operators
 from operators.client import identity
 from operators.client import health
 from common.error import NotExistError

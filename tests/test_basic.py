@@ -15,12 +15,3 @@ def db():
         yield db
         db.drop_all()
         db.session.commit()
-
-
-def local_ip():
-    import socket
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip = s.getsockname()[0]
-    s.close()
-    return ip
