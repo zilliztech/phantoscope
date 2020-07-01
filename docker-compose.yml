@@ -35,7 +35,7 @@ services:
     volumes:
       - /mnt/om/mongo:/data/db
   milvus:
-    image: milvusdb/milvus:0.7.0-cpu-d031120-de409b
+    image: milvusdb/milvus:0.10.0-cpu-d061620-5f3c00
     ports:
       - "19530:19530"
       - "8080:8080"
