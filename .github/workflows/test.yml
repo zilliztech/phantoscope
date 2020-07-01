@@ -7,8 +7,14 @@ name: CI
 on:
   pull_request:
     paths-ignore:
-    - 'docs/**'
-    - 'operators/**'
+      - 'docs/**'
+      - 'operators/**'
+    branches:
+      - master
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'operators/**'
     branches:
       - master
 
