@@ -29,13 +29,13 @@ class TestScoreFunctionApi:
 
     inner_fields = ['first', 'random', 'avg', 'distance_first']
     score_modes = ['first', 'sum', 'max', 'min', 'multiple', 'avg']
-    test_url = ['https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1592371648552&di=28d2be13f40539aacaa81ab5f43642e6&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20151130%2Fmp45332712_1448864892504_4.jpeg',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1592375248588&di=13521ac5965776e504dde2e242610293&imgtype=0&src=http%3A%2F%2Ft8.baidu.com%2Fit%2Fu%3D2388511970%2C557698405%26fm%3D193',
-                'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1668363641,4252982095&fm=26&gp=0.jpg']
+    test_url = ['https://live.staticflickr.com/65535/50064435471_0583cf876c_o.jpg',
+                'https://live.staticflickr.com/65535/50063878058_c7c04603cc_o.jpg',
+                'https://live.staticflickr.com/65535/50064692802_90aed5e68a_o.jpg',
+                'https://live.staticflickr.com/65535/50064709412_e204654f9b_o.jpg']
 
-    test_search_url = ['https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2101531399,3036310197&fm=26&gp=0.jpg',
-                       'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1389311444,3919902992&fm=26&gp=0.jpg']
+    test_search_url = ['https://live.staticflickr.com/65535/50064411181_574e2e8eed_o.jpg',
+                       'https://live.staticflickr.com/65535/50064411221_6564587552_o.jpg']
 
     @pre_operator(name=f"{encoder_name}2", type=encoder_type, addr=encoder_addr, version="0.1", description="")
     @pre_instance(operator_name=f"{encoder_name}2", name=f"{encoder_instance}2")

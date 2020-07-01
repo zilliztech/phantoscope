@@ -1,6 +1,9 @@
 import time
+import pytest
 from test_basic import client
 from utils.require import sleep_time
+from operators.client import health, identity, execute
+from operators.instance import new_operator_instance
 
 
 class TestOperatorApi:
@@ -27,6 +30,10 @@ class TestOperatorApi:
         assert rv.status_code == 200
         assert json_data["_name"] == self.name
         assert json_data["_addr"] == self.addr
+
+        # register exist operator
+        rv = client.post('/v1/operator/register', json=data)
+        assert rv.status_code != 200
 
     def test_fetch_operator(self, client):
         data = {
@@ -98,3 +105,22 @@ class TestOperatorApi:
     def test_delete_operator(self, client):
         rv = client.delete(f"/v1/operator/{self.name}")
         assert rv.status_code == 200
+
+    def test_error_operator(self, client):
+        rv = client.get(f"/v1/operator/{self.name}")
+        assert rv.status_code != 200
+
+        rv = client.delete(f"/v1/operator/{self.name}")
+        assert rv.status_code != 200
+
+    def test_op_grpc_client(self):
+        error_endpoint = '127.0.0.1:80'
+        with pytest.raises(Exception):
+            identity(error_endpoint)
+
+        op = new_operator_instance(1, "name", "running", "127.0.0.1", "222")
+        with pytest.raises(Exception):
+            health(op)
+
+        with pytest.raises(Exception):
+            execute(op)
