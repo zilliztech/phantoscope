@@ -88,7 +88,7 @@ class DownloadFileError(Error):
         return 598
 
 
-class PipelineIlegalError(Error):
+class PipelineIllegalError(Error):
     @property
     def code(self):
         return 400

@@ -18,11 +18,13 @@ from models.pipeline import insert_pipeline
 from models.pipeline import search_pipeline
 from models.pipeline import del_pipeline
 from common.error import PipelineCheckError
-from common.error import PipelineIlegalError
+from common.error import PipelineIllegalError
 from common.error import RPCExecError
 from common.error import NotExistError
+from common.error import ExistError
 from common.const import OPERATOR_TYPE_ENCODER
 from common.const import OPERATOR_TYPE_PROCESSOR
+from common.const import INSTANCE_STATUS_RUNNING
 from operators.operator import all_operators
 from operators.operator import operator_detail
 from operators.client import execute, identity
@@ -54,9 +56,17 @@ class Pipeline():
     def input(self):
         return self._input
 
+    @input.setter
+    def input(self, input):
+        self._input = input
+
     @property
     def output(self):
         return self.output
+
+    @output.setter
+    def output(self, output):
+        self._output = output
 
     @property
     def processors(self):
@@ -85,16 +95,26 @@ class Pipeline():
         return self
 
 
+def new_pipeline(name, input, output, description, processors, encoder):
+    if isinstance(processors, str):
+        processors = json.loads(processors)
+    if isinstance(encoder, str):
+        encoder = json.loads(encoder)
+    return Pipeline(name=name, input=input, output=output,
+                    description=description, processors=processors,
+                    encoder=encoder)
+
+
 def all_pipelines():
     res = []
     try:
         pipelines = search_pipeline()
         for p in pipelines:
-            pipe = Pipeline(name=p.Pipeline.name, input=p.Pipeline.input,
-                            output=p.Pipeline.output,
-                            description=p.Pipeline.description,
-                            processors=json.loads(p.Pipeline.processors),
-                            encoder=json.loads(p.Pipeline.encoder))
+            pipe = new_pipeline(name=p.Pipeline.name, input=p.Pipeline.input,
+                                output=p.Pipeline.output,
+                                description=p.Pipeline.description,
+                                processors=p.Pipeline.processors,
+                                encoder=p.Pipeline.encoder)
             res.append(pipe)
         return res
     except Exception as e:
@@ -107,24 +127,25 @@ def pipeline_detail(name):
         p = search_pipeline(name)
         if not p:
             raise NotExistError("pipeline %s is not exist" % name, "")
-        pipe = Pipeline(name=p.name, input=p.input,
-                        output=p.output,
-                        description=p.description,
-                        processors=json.loads(p.processors),
-                        encoder=json.loads(p.encoder))
+        pipe = new_pipeline(name=p.name, input=p.input,
+                            output=p.output,
+                            description=p.description,
+                            processors=p.processors,
+                            encoder=p.encoder)
         return pipe
     except Exception as e:
         raise e
 
 
-def create_pipeline(name, processors, encoder, description=None):
+def create_pipeline(name, processors=None, encoder=None, description=None):
     try:
-        # add encoder args check
-        # create pipeline
-        pipe = Pipeline(name=name, processors=processors, encoder=encoder,
-                        description=description, input="", output="")
+        p = search_pipeline(name)
+        if p:
+            raise ExistError(f"pipeline <{name}> already exists", "")
+        pipe = new_pipeline(name=name, processors=processors, encoder=encoder,
+                            description=description, input="", output="")
         if pipeline_illegal(pipe):
-            return PipelineIlegalError("Pipeline illegal check error", "")
+            raise PipelineIllegalError("Pipeline illegal check error", "")
         return pipe.save()
     except Exception as e:
         logger.error(e)
@@ -137,11 +158,11 @@ def delete_pipeline(name):
         if not p:
             raise NotExistError("pipeline %s is not exist" % name, "")
         p = p[0]
-        pipe = Pipeline(name=p.name, input=p.input,
-                        output=p.output,
-                        description=p.description,
-                        processors=json.loads(p.processors),
-                        encoder=json.loads(p.encoder))
+        pipe = new_pipeline(name=p.name, input=p.input,
+                            output=p.output,
+                            description=p.description,
+                            processors=p.processors,
+                            encoder=p.encoder)
         return pipe
     except Exception as e:
         logger.error(e)
@@ -188,21 +209,39 @@ def run_pipeline(p, **kwargs):
 def test_pipeline(name, data=None, url=None):
     try:
         pipe = search_pipeline(name)
-        p = Pipeline(name=pipe.name, input=pipe.input, output=pipe.output,
-                     description=pipe.description, processors=json.loads(pipe.processors),
-                     encoder=json.loads(pipe.encoder))
+        p = new_pipeline(name=pipe.name, input=pipe.input, output=pipe.output,
+                         description=pipe.description, processors=pipe.processors,
+                         encoder=pipe.encoder)
         return {"result": run_pipeline(p, data=data, url=url)}
     except Exception as e:
         raise e
 
 
 def pipeline_illegal(pipe):
-    # TODO Rewrite
-    # encoder_name = encoder.get("name")
-    # encoder_instance_name = encoder.get("instance")
-    # # check operator and instance exist
-    # encoder = operator_detail(encoder_name)
-    # # get port and addr from runtime client
-    # encoder_instance = encoder.inspect_instance(encoder_instance_name)
-    # encoder_identity = identity(encoder_instance.endpoint)
-    return False
+    input, output = None, None
+    try:
+        operators = pipe.processors.copy()
+        operators.append(pipe.encoder)
+        for num, operator in enumerate(operators):
+            # check operator and instance exist
+            op = operator_detail(operator.get("name"))
+            # get container endpoint
+            ins = op.inspect_instance(operator.get("instance"))
+            if ins.status != INSTANCE_STATUS_RUNNING:
+                raise PipelineIllegalError("Pipeline illegal check error", "")
+            # use identity check container health
+            info = identity(ins.endpoint)
+            if num == len(operators)-1:
+                if info.get("type") != OPERATOR_TYPE_ENCODER:
+                    raise PipelineIllegalError("Pipeline illegal check error", "")
+            else:
+                if info.get("type") != OPERATOR_TYPE_PROCESSOR:
+                    raise PipelineIllegalError("Pipeline illegal check error", "")
+            # check input and output
+            if not input and not output:
+                input, output = info.get("input"), info.get("output")
+            else:
+                if output != info.get("input"):
+                    raise PipelineIllegalError("Pipeline illegal check error", "")
+    except Exception as e:
+        raise e

@@ -21,6 +21,5 @@ class OperatorInstance:
 
 
 def new_operator_instance(id, name, status, ip, ports):
-    # endpoint = f"{ip}:{ports['80/tcp'][0]['HostPort']}"
     endpoint = f"{ip}:80"
     return OperatorInstance(id, name, status, ip, ports, endpoint)
