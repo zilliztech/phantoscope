@@ -123,9 +123,8 @@ class MilvusIns:
     @staticmethod
     def new_milvus_collection(name, dimension, index_file_size, metric_type):
         metric_type = type_mapping.get(metric_type, MetricType.L2)
-        milvus = Milvus()
         try:
-            milvus.connect(MILVUS_ADDR, MILVUS_PORT)
+            milvus = Milvus(host=MILVUS_ADDR, port=MILVUS_PORT)
             parma = {
                 "collection_name": name,
                 "dimension": dimension,
@@ -140,9 +139,8 @@ class MilvusIns:
 
     @staticmethod
     def del_milvus_collection(name):
-        milvus = Milvus()
         try:
-            milvus.connect(MILVUS_ADDR, MILVUS_PORT)
+            milvus = Milvus(host=MILVUS_ADDR, port=MILVUS_PORT)
             res = milvus.drop_collection(collection_name=name)
             if not res.OK():
                 raise MilvusError("There was some error when drop milvus collection", res)
@@ -153,9 +151,8 @@ class MilvusIns:
 
     @staticmethod
     def insert_vectors(name, vectors):
-        milvus = Milvus()
         try:
-            milvus.connect(MILVUS_ADDR, MILVUS_PORT)
+            milvus = Milvus(host=MILVUS_ADDR, port=MILVUS_PORT)
             res, ids = milvus.insert(collection_name=name, records=vectors)
             if not res.OK():
                 err_msg = "There was some error when insert vectors"
@@ -169,10 +166,9 @@ class MilvusIns:
 
     @staticmethod
     def search_vectors(name, vector, topk, nprobe):
-        milvus = Milvus()
         search_param = {'nprobe': nprobe}
         try:
-            milvus.connect(MILVUS_ADDR, MILVUS_PORT)
+            milvus = Milvus(host=MILVUS_ADDR, port=MILVUS_PORT)
             res, ids = milvus.search(collection_name=name, query_records=vector, top_k=topk, params=search_param)
             if not res.OK():
                 raise MilvusError("There was some error when search vectors", res)
@@ -184,10 +180,9 @@ class MilvusIns:
 
     @staticmethod
     def del_vectors(collection_name, ids):
-        milvus = Milvus()
         try:
-            milvus.connect(MILVUS_ADDR, MILVUS_PORT)
-            milvus.delete_by_id(collection_name=collection_name, id_array=ids)
+            milvus = Milvus(host=MILVUS_ADDR, port=MILVUS_PORT)
+            milvus.delete_entity_by_id(collection_name=collection_name, id_array=ids)
         except Exception as e:
             err_msg = "There was some error when delete vectors"
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
