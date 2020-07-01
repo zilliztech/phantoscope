@@ -84,15 +84,17 @@ def get_score_result(fields_result, topk, score_config, score_mode: str):
 
 def search_and_score(milvus_collection_name, mongo_name, field_name, vectors,
                      topk, nprobe, inner_score_mode: str):
-    '''
+    """
     search vectors from milvus and score by inner field score mode
     :param milvus_collection_name: collection name will be search
+    :param mongo_name: mongo collection name will be selected from
+    :param field_name: field name for searching from mongodb
     :param vectors: vectors which will be searched in milvus
     :param topk: milvus topk number
     :param nprobe: milvus nprobe number
     :param inner_score_mode:
     :return: image id of entity
-    '''
+    """
     result_dbs = []
     MAX_TOPK = 2048
     magic_number = 60

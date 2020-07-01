@@ -1,5 +1,5 @@
+import time
 from functools import wraps
-
 from operators.operator import register_operators, delete_operators, operator_detail
 from pipeline.pipeline import create_pipeline, delete_pipeline
 from application.application import new_application, delete_application
@@ -15,7 +15,9 @@ def pre_operator(name="pytest_op_1", type="encoder",
                                version=version, description=description)
             func(*args, **kwargs)
             delete_operators(name=name)
+
         return wrapper
+
     return decorator
 
 
@@ -27,7 +29,9 @@ def pre_instance(operator_name="pytest_op_1", name="ins1"):
             operator.new_instance(name)
             func(*args, **kwargs)
             operator.delete_instance(name)
+
         return wrapper
+
     return decorator
 
 
@@ -40,7 +44,9 @@ def pre_pipeline(name="pytest_pipe_1", processors="",
             create_pipeline(name=name, processors=processors, encoder=encoder)
             func(*args, **kwargs)
             delete_pipeline(name)
+
         return wrapper
+
     return decorator
 
 
@@ -50,8 +56,23 @@ def pre_application(name="pytest_app_1",
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            new_application(name=name, fields=fields, s3_buckets=s3_buckets)
+            time.sleep(5)  # wait for opertaor instance start
+            new_application(app_name=name, fields=fields, s3_buckets=s3_buckets)
             func(*args, **kwargs)
             delete_application(name)
+
         return wrapper
+
+    return decorator
+
+
+def sleep_time(seconds):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            time.sleep(seconds)
+            func(*args, **kwargs)
+
+        return wrapper
+
     return decorator

@@ -1,36 +1,25 @@
 version: '3'
 services:
   mysql:
-    image: daocloud.io/library/mysql:5.6
+    image: mysql:5.6
     environment:
       - MYSQL_ROOT_PASSWORD=passwd
     ports:
       - "3306:3306"
-    # volumes:
-    #   - /mnt/om/mysql:/var/lib/mysql
   milvus:
     image: milvusdb/milvus:0.10.0-cpu-d061620-5f3c00
     ports:
       - "19530:19530"
       - "8080:8080"
-    # volumes:
-    #   - /mnt/om/milvus/db:/var/lib/milvus/db
   minio:
     image: minio/minio:latest
     ports:
       - "9000:9000"
-    # volumes:
-    #   - /mnt/om/minio/data:/data
     command: ["server","/data"]
-  vgg:
-    image: psoperator/vgg16:latest
-    ports:
-      - "50001:50001"
+  mongo:
+    image: mongo
     environment:
-      - OP_ENDPOINT=${LOCAL_ADDRESS}:50001
-  ssd:
-    image: psoperator/ssd-detector:latest
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=passwd
     ports:
-      - "50010:50010"
-    environment:
-      - OP_ENDPOINT=${LOCAL_ADDRESS}:50010
+      - "27017:27017"

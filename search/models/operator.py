@@ -44,16 +44,6 @@ def insert_operator(operator):
     except Exception as e:
         raise Insert2SQLError("Insert operator to sql error", e.orig.args[-1])
 
-
-def insert_operators(operators):
-    try:
-        for op in operators:
-            db.session.add(op)
-        db.session.commit()
-    except Exception as e:
-        raise Insert2SQLError("Insert operator to sql error", e.orig.args[-1])
-
-
 def del_operator(name):
     try:
         res = db.session.query(Operator).filter(Operator.name == name).first()
