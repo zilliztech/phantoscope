@@ -50,7 +50,7 @@ def fields_exist_check(fields):
     return False, ""
 
 
-def search_fields(fields=[]):
+def search_fields(fields):
     try:
         res = db.session.query(Fields).filter(Fields.id.in_(fields)).all()
         res.sort(key=lambda x: fields.index(x.id))
@@ -59,11 +59,10 @@ def search_fields(fields=[]):
         raise QueryFromSQLError("query from sql error", e.orig.args[-1])
 
 
-def delete_fields(fields=[]):
+def delete_fields(fields):
     try:
         for field in fields:
             db.session.query(Fields).filter(Fields.id == field).delete()
         db.session.commit()
     except Exception as e:
-        print(e)
         raise DeleteFromSQLError("delete from sql error", e)

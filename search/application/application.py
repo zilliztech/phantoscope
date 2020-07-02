@@ -61,15 +61,10 @@ class Application():
         fields = json.dumps(self._fields)
         app = DB(name=self._application_name, fields=fields, s3_buckets=self._buckets)
         try:
-            # Record created resource
-            # TODO create s3 bucket if bucket not exist
-            S3Ins.new_s3_buckets(self.buckets.split(","))
-            # TODO create milvus collections
             insert_application(app)
             logger.info("create new application %s", self.name)
         except Exception as e:
             logger.error(e)
-            # TODO collection created resource
             raise e
         return self
 
@@ -122,22 +117,33 @@ def new_application(app_name, fields, s3_buckets):
         # check application exist
         if search_application(app_name):
             raise ExistError(f"application <{app_name}> had exist", "")
+    except ExistError:
+        raise
         # insert fields to metadata
-        fieldsdb = []
-        for name, field in fields.items():
-            fieldsdb.append(FieldsDB(name=name, type=field.get('type'),
-                                     value=field.get('value'), app=app_name))
+    fieldsdb = []
+    for name, field in fields.items():
+        fieldsdb.append(FieldsDB(name=name, type=field.get('type'),
+                                 value=field.get('value'), app=app_name))
+    gc_list = []
+    try:
         ids = insert_fields(fieldsdb)
+        gc_list.append({"func": delete_fields, "args": ids})
         # create a application entity collection
         MongoIns.new_mongo_collection(f"{app_name}_entity")
-        app = Application(name=app_name, fields=ids, buckets=s3_buckets)
+        gc_list.append({"func": MongoIns.delete_mongo_collection, "args": f"{app_name}_entity"})
+        S3Ins.new_s3_buckets(s3_buckets)
+        gc_list.append({"func": S3Ins.del_s3_buckets, "args": s3_buckets})
         # create milvus collections
+        app = Application(name=app_name, fields=ids, buckets=s3_buckets)
         create_milvus_collections_by_fields(app)
+        gc_list.append({"func": delete_milvus_collections_by_fields, "args": app})
         # insert application to metadata
         app.save()
         app.fields = fields2dict(search_fields(ids))
         return app
     except Exception as e:
+        for cleaner in gc_list:
+            cleaner["func"](cleaner["args"])
         logger.error("error happen during create app: %s", str(e), exc_info=True)
         raise e
 
@@ -155,17 +161,16 @@ def delete_application(name):
     try:
         if len(entities_list(name, 100)):
             raise RequestError("Prevent to delete application with entity not deleted", "")
-        # TODO rewrite clean all resource before change metadata
-        x = del_application(name)
-        if not x:
+        app = search_application(name)
+        if not app:
             raise NotExistError(f"application {name} not exist", "")
-        x = x[0]
-        fields = search_fields(json.loads(x.fields))
-        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
+        print(app.fields)
+        app.fields = fields2dict(search_fields(app.fields))
         delete_milvus_collections_by_fields(app)
-        delete_fields(json.loads(x.fields))
-        S3Ins.del_s3_buckets(x.s3_buckets.split(","))
+        delete_fields(app.fields)
+        S3Ins.del_s3_buckets(app.s3_buckets)
         MongoIns.delete_mongo_collection(f"{name}_entity")
+        del_application(name)
         logger.info("delete application %s", name)
         return app
     except Exception as e:

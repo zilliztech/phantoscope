@@ -65,9 +65,7 @@ def application_do_search_api(name):
         add_argument("nprobe", type=int, required=False, default=16). \
         parse_args()
     args = from_view_dict(args)
-    return search(name,
-                  fields=args['fields'],
-                  topk=args['topk'],
+    return search(name, fields=args['fields'], topk=args['topk'],
                   nprobe=args['nprobe'])
 
 

@@ -208,6 +208,10 @@ class S3Ins:
     def new_s3_buckets(cls, names, region=None):
         try:
             minio_client = cls.new_minio_client()
+            if isinstance(names, str):
+                minio_client.make_bucket(names)
+                minio_client.set_bucket_policy(names, json.dumps(gen_public_policy(names)))
+                return
             for x in names:
                 minio_client.make_bucket(x)
                 minio_client.set_bucket_policy(x, json.dumps(gen_public_policy(x)))
@@ -220,6 +224,9 @@ class S3Ins:
     def del_s3_buckets(cls, names):
         try:
             minio_client = cls.new_minio_client()
+            if isinstance(names, str):
+                minio_client.remove_bucket(names)
+                return
             for x in names:
                 minio_client.remove_bucket(x)
         except Exception as e:
