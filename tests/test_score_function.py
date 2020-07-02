@@ -9,7 +9,7 @@ from utils.require import sleep_time
 
 class TestScoreFunctionApi:
     """test class for application api"""
-    test_ver = 4
+    test_ver = 2
     name = f"pytestexample{test_ver}"
     field_name1 = f'detector{test_ver}'
     field_name2 = f'none-detector{test_ver}'
@@ -128,27 +128,6 @@ class TestScoreFunctionApi:
             json_data = rv.get_json()
             assert len(json_data) > 0
             assert len(json_data) < topk
-
-        # test multi field score function
-        topk = len(self.test_url) * 10
-        for inner_field_score_mode in self.inner_fields:
-            data = {
-                'fields': {
-                    self.field_name1: {
-                        'url': self.test_search_url[0],
-                        'inner_field_score_mode': inner_field_score_mode,
-                        'weight': 6
-                    },
-                    self.field_name2: {
-                        'url': self.test_search_url[1],
-                        'inner_field_score_mode': inner_field_score_mode,
-                        'weight': 2
-                    }
-                },
-                'topk': topk,
-                'nprobe': 10
-            }
-            pass
 
         # get and delete all entities
         rv = client.get(f"/v1/application/{self.name}/entity?num=100")
