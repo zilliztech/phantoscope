@@ -3,7 +3,7 @@ Operator 是 Phantoscope 中的工作单元
 
 正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能
 
-同样您也可以根据[文档](../../../../operators/HowToAnddaOperator.md)实现自己的 Operator 然后加入到 Phantoscope 中为您工作
+同样您也可以根据[文档](../../../../operators/HowToAddAnOperator.md)实现自己的 Operator 然后加入到 Phantoscope 中为您工作
 
 Operator 根据工作不同分为两种 Processor 与 Encoder
 
