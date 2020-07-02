@@ -3,11 +3,16 @@ from flask import Flask
 from flask_cors import CORS
 from common.config import UPLOAD_FOLDER
 from common.config import DEFAULT_RUNTIME
+from common.config import MONGO_METADATA_COLLECTIONS
 from operators.runtime import runtime_client_getter
+from storage.storage import MongoIns
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+for collection in MONGO_METADATA_COLLECTIONS:
+    if not MongoIns.collection_exists(collection):
+        MongoIns.new_mongo_collection(collection)
 
 CORS(app)
 

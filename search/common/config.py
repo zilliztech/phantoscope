@@ -46,3 +46,5 @@ META_DATABASE_PASSWD = os.getenv("SEARCH_IMAGES_DATABASE_PASSWD", "passwd")
 META_DATABASE_NAME = os.getenv("SEARCH_IMAGES_DATABASE_NAME", "search")
 
 DEFAULT_RUNTIME = "docker"
+
+MONGO_METADATA_COLLECTIONS = ["metadata_application", "metadata_operator", "metadata_pipeline"]

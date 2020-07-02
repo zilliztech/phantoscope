@@ -14,6 +14,7 @@ import json
 import logging
 import pymongo
 from bson.objectid import ObjectId
+from bson.json_util import dumps
 from milvus import Milvus, MetricType
 from minio import Minio
 from common.config import MILVUS_ADDR, MILVUS_PORT
@@ -62,6 +63,30 @@ class MongoIns:
             raise e
 
     @staticmethod
+    def collection_exists(name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            if name in db.list_collection_names():
+                return True
+            return False
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def search_by_name(collection_name, name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return list(getattr(db, collection_name).find({"name": {"$eq": name}}))
+        except Exception as e:
+            raise e
+
+    @staticmethod
     def insert_documents(name, docs):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
@@ -70,6 +95,17 @@ class MongoIns:
             db = client.phantoscope
             id = getattr(db, name).insert_one(docs).inserted_id
             return id
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def delete_by_name(collection_name, name):
+        try:
+            client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
+                                         username=MONGO_USERNAME,
+                                         password=MONGO_PASSWORD)
+            db = client.phantoscope
+            return getattr(db, name).remove({"name": {"$eq": name}})
         except Exception as e:
             raise e
 

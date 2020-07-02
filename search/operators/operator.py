@@ -8,13 +8,15 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied. See the License for the specific language governing permissions and limitations under the License.
-
-
+import json
+import uuid
+from collections import namedtuple
+import time
+import datetime
+from resource.resource import Resource, new_resource
 import logging
 import requests
-from models.operator import Operator as DB
-from models.operator import search_operator, insert_operator, del_operator
-from models.operator import insert_operators, replace_all_operators
+from storage.storage import MongoIns
 from operators.client import identity
 from operators.client import health
 from common.error import NotExistError
@@ -25,99 +27,69 @@ from common.error import DockerRuntimeError
 from common.error import RequestError
 from common.config import DEFAULT_RUNTIME
 from common.const import MARKET_IDENTITY_HEADER
+from common.const import OPERATOR_COLLECTION_NAME
 from service import runtime_client
 from operators.instance import OperatorInstance
 
 logger = logging.getLogger(__name__)
 
 
-class Operator:
+class Operator(Resource):
     def __init__(self, name, addr, author, version, type, description):
-        self._name = name
-        self._addr = addr
-        self._author = author
-        self._version = version
-        self._type = type
-        self._description = description
-        self._runtime_client = DEFAULT_RUNTIME
+        self.name = name
+        self.addr = addr
+        self.author = author
+        self.version = version
+        self.type = type
+        self.description = description
+        self.runtime_client = DEFAULT_RUNTIME
+        self.metadata = None
 
     @property
-    def type(self):
-        return self._type
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def addr(self):
-        return self._addr
-
-    @property
-    def author(self):
-        return self._author
-
-    @property
-    def version(self):
-        return self._version
-
-    @property
-    def description(self):
-        return self._description
-
-    @property
-    def runtime_client(self):
-        self._runtime_client = runtime_client
-        return self._runtime_client
+    def runtime(self):
+        self.runtime_client = runtime_client
+        return self.runtime_client
 
     def list_instances(self):
-        return self.runtime_client.list_instances(self.name)
+        return self.runtime.list_instances(self.name)
 
     def new_instance(self, name):
         ports = {"80/tcp": None}
-        ins = self.runtime_client.create_instance(f"phantoscope_{self.name}_{name}", self.addr, ports)
+        ins = self.runtime.create_instance(f"phantoscope_{self.name}_{name}", self.addr, ports)
         return ins
 
     def delete_instance(self, name):
         try:
-            ins = self.runtime_client.delete_instance(f"phantoscope_{self.name}_{name}")
+            ins = self.runtime.delete_instance(f"phantoscope_{self.name}_{name}")
             return ins
         except DockerRuntimeError as e:
             raise e
 
     def stop_instance(self, name):
-        ins = self.runtime_client.stop_instance(f"phantoscope_{self.name}_{name}")
+        ins = self.runtime.stop_instance(f"phantoscope_{self.name}_{name}")
         return ins
 
     def start_instance(self, name):
-        ins = self.runtime_client.start_instance(f"phantoscope_{self.name}_{name}")
+        ins = self.runtime.start_instance(f"phantoscope_{self.name}_{name}")
         return ins
 
     def restart_instance(self, name):
-        ins = self.runtime_client.restart_instance(f"phantoscope_{self.name}_{name}")
+        ins = self.runtime.restart_instance(f"phantoscope_{self.name}_{name}")
         return ins
 
     def inspect_instance(self, name):
-        ins = self.runtime_client.inspect_instance(f"phantoscope_{self.name}_{name}")
+        ins = self.runtime.inspect_instance(f"phantoscope_{self.name}_{name}")
         return ins
-
-
-def new_operator(name, addr, author, version, type, description):
-    return Operator(name=name, addr=addr, author=author, version=version,
-                    type=type, description=description)
 
 
 def all_operators():
     res = []
     try:
-        operators = search_operator()
+        operators = MongoIns.list_documents(OPERATOR_COLLECTION_NAME, 0)
         for x in operators:
-            res.append(new_operator(name=x.Operator.name,
-                                    type=x.Operator.type,
-                                    addr=x.Operator.addr,
-                                    author=x.Operator.author,
-                                    version=x.Operator.version,
-                                    description=x.Operator.description))
+            op = Operator(x["name"], x["addr"], x["author"], x["version"], x["type"], x["description"])
+            op.metadata = x["metadata"]
+            res.append(op)
         return res
     except Exception as e:
         logger.error(e)
@@ -126,15 +98,14 @@ def all_operators():
 
 def delete_operators(name):
     try:
-        op = del_operator(name)
+        op = MongoIns.search_by_name(OPERATOR_COLLECTION_NAME, name)
         if not op:
-            raise NotExistError("operator %s not exist" % name, "")
-        return new_operator(name=op.name,
-                            type=op.type,
-                            addr=op.addr,
-                            author=op.author,
-                            version=op.version,
-                            description=op.description)
+            raise NotExistError(f"operator {name} not exist", "")
+        op = op[0]
+        MongoIns.delete_by_name(OPERATOR_COLLECTION_NAME, name)
+        operator = Operator(op["name"], op["addr"], op["author"], op["version"], op["type"], op["description"])
+        operator.metadata = op["metadata"]
+        return operator
     except Exception as e:
         logger.error(e)
         raise e
@@ -142,39 +113,28 @@ def delete_operators(name):
 
 def operator_detail(name):
     try:
-        op = search_operator(name)
+        op = MongoIns.search_by_name(OPERATOR_COLLECTION_NAME, name)
         if not op:
-            raise NotExistError("operator %s not exist" % name, "")
-        return new_operator(name=op.name,
-                            type=op.type,
-                            addr=op.addr,
-                            author=op.author,
-                            version=op.version,
-                            description=op.description)
-
+            raise NotExistError(f"operator {name} not exist", "")
+        op = op[0]
+        operator = Operator(op["name"], op["addr"], op["author"], op["version"], op["type"], op["description"])
+        operator.metadata = op["metadata"]
+        return operator
     except Exception as e:
         logger.error(e)
         raise e
 
 
-def register_operators(**args):
-    op = DB(name=args['name'],
-            type=args['type'],
-            addr=args['addr'],
-            author=args['author'],
-            version=args['version'],
-            description=args['description'])
+def register_operators(name, addr, author, version, type, description):
     try:
-        if search_operator(args['name']):
-            raise ExistError(f"operator {args['name']} had exist", "")
-        insert_operator(op)
-        return new_operator(name=args['name'],
-                            type=args['type'],
-                            addr=args['addr'],
-                            author=args['author'],
-                            version=args['version'],
-                            description=args['description'])
+        op = Operator(name, addr, author, version, type, description)
+        op.metadata = op._metadata()
+        if MongoIns.search_by_name(OPERATOR_COLLECTION_NAME, name):
+            raise ExistError(f"operator {name} had exist", "")
+        MongoIns.insert_documents(OPERATOR_COLLECTION_NAME, op.to_dict())
+        return op.to_dict()
     except Exception as e:
+        logger.error(e)
         raise e
 
 
@@ -195,8 +155,8 @@ def fetch_operators(url, overwrite=True):
     except Exception as e:
         raise RequestError(e.args[0], e)
     for op in r.json():
-        origin.append(new_operator(op['name'], op['addr'], op['author'],
-                                   op['version'], op['type'], op['description']))
+        origin.append(Operator(op['name'], op['addr'], op['author'],
+                               op['version'], op['type'], op['description']))
     local_operators = all_operators()
     local_operator_names = [x.name for x in local_operators]
     for x in origin:
@@ -208,7 +168,7 @@ def fetch_operators(url, overwrite=True):
                     if lop.name == x.name:
                         local_operators.remove(lop)
                         local_operators.append(x)
-    replace_all_operators([DB(name=x.name, type=x.type, addr=x.addr,
-                              author=x.author, version=x.version,
-                              description=x.description) for x in local_operators])
+    MongoIns.delete_mongo_collection(OPERATOR_COLLECTION_NAME)
+    for x in local_operators:
+        MongoIns.insert_documents(OPERATOR_COLLECTION_NAME, x.to_dict())
     return local_operators

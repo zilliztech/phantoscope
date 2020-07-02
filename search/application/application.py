@@ -12,8 +12,6 @@
 
 import json
 import logging
-from models.application import Application as DB
-from models.application import insert_application, search_application, del_application, update_application
 from common.error import NotExistError
 from common.error import RequestError
 from common.error import ArgsCheckError
@@ -22,8 +20,6 @@ from storage.storage import S3Ins, MilvusIns
 from storage.storage import MongoIns
 from application.mapping import new_mapping_ins
 from application.utils import fields_check, fields2dict
-from models.fields import insert_fields, search_fields, delete_fields
-from models.fields import Fields as FieldsDB
 from pipeline.pipeline import pipeline_detail
 from operators.client import identity
 from operators.operator import operator_detail
