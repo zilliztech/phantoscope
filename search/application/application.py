@@ -153,7 +153,7 @@ def delete_milvus_collections_by_fields(app):
 
 def delete_application(name):
     try:
-        if len(entities_list(name, 100)):
+        if len(entities_list(name, 100, 0)):
             raise RequestError("Prevent to delete application with entity not deleted", "")
         # TODO rewrite clean all resource before change metadata
         x = del_application(name)
@@ -173,14 +173,24 @@ def delete_application(name):
         raise e
 
 
-def entities_list(name, num):
+def entities_list(name, num, page):
     res = []
     try:
-        docs = MongoIns.list_documents(f"{name}_entity", num)
+        docs = MongoIns.list_documents(f"{name}_entity", num, page)
         for doc in docs:
             res.append(new_mapping_ins(docs=doc))
         logger.info("get application %s entity list", name)
         return res
+    except Exception as e:
+        logger.error(e)
+        raise e
+
+
+def count_entities(name):
+    try:
+        count = MongoIns.count_documents(f"{name}_entity")
+        logger.info(f"get count of application {name} entities")
+        return str(count)
     except Exception as e:
         logger.error(e)
         raise e
