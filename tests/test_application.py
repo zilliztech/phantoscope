@@ -10,7 +10,7 @@ from utils.require import sleep_time
 
 class TestApplicationApi:
     """test class for application api"""
-    test_ver = 3
+    test_ver = 1
     name = f"pytestexample{test_ver}"
     field_name = f"image{test_ver}"
     op_addr = "psoperator/vgg16-encoder:latest"
