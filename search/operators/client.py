@@ -47,7 +47,7 @@ def execute(operator, datas=[], urls=[]):
     try:
         options = [('grpc.max_send_message_length', 100 * 1024 * 1024),
                    ('grpc.max_receive_message_length', 100 * 1024 * 1024)]
-        with grpc.insecure_channel(operator.endpoint, options=options) as channel:
+        with grpc.insecure_channel(operator["endpoint"], options=options) as channel:
             stub = rpc_pb2_grpc.OperatorStub(channel)
             res = stub.Execute(pb.ExecuteRequest(urls=urls, datas=datas))
             return [list(x.element) for x in res.vectors], res.metadata

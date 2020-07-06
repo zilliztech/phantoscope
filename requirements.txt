@@ -6,12 +6,9 @@ pymilvus==0.2.13
 gunicorn==19.10.0
 pytest==5.3.5
 requests==2.23.0
-flask-sqlalchemy==2.4.1
-mysqlclient==1.4.6
 inflection
 grpcio==1.27.2
 wheel==0.34.2
-sqlalchemy-utils==0.36.5
 pylint==2.5.2
 docker==4.2.1
 pymongo

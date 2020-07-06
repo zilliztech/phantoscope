@@ -24,6 +24,7 @@ from application.application import count_entities
 from application.upload import upload
 from application.search import search
 
+
 application = Blueprint("application", __name__)
 
 
@@ -44,7 +45,7 @@ def application_detail_api(name):
 def new_application_api(name):
     args = reqparse.RequestParser(). \
         add_argument("fields", type=dict, required=True). \
-        add_argument("s3Buckets", type=str, required=True). \
+        add_argument("s3Bucket", type=str, required=True). \
         parse_args()
     args = from_view_dict(args)
     args['app_name'] = name
@@ -66,9 +67,7 @@ def application_do_search_api(name):
         add_argument("nprobe", type=int, required=False, default=16). \
         parse_args()
     args = from_view_dict(args)
-    return search(name,
-                  fields=args['fields'],
-                  topk=args['topk'],
+    return search(name, fields=args['fields'], topk=args['topk'],
                   nprobe=args['nprobe'])
 
 

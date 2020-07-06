@@ -10,15 +10,6 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 import argparse
-from service import db
-from models.pipeline import Pipeline
-from models.application import Application
-from models.operator import Operator
-from models.fields import Fields
-try:
-    db.create_all()
-except Exception as e:
-    print(e)
 from service.api import app
 
 
