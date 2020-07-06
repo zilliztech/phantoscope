@@ -116,7 +116,9 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/face_detector/instanc
 --data '{
     "instanceName": "face_detector1" 
 }'
-```
+
+将 vgg16 以 vgg16_example 的名字注册到 Phantoscope 中
+
 
 第一次创建可能会从远端拉取镜像。创建成功后本地机器上会出现一个该镜像的容器。
 

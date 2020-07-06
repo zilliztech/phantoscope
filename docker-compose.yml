@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: phantoscope/api-server:v0.1.0
+    image: phantoscope/api-server:dfef600
     ports:
       - "5000:5000"
     environment:
@@ -13,6 +13,8 @@ services:
       - SEARCH_IMAGES_DATABASE_PASSWD=passwd
       - MILVUS_PORT=19530
       - MINIO_BUCKET_NUM=20
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - milvus
       - minio
@@ -48,11 +50,3 @@ services:
     volumes:
       - /mnt/om/minio/data:/data
     command: ["server","/data"]
-  vgg:
-    image: psoperator/vgg16:latest
-    ports:
-      - "50001:50001"
-    environment:
-      - OP_ENDPOINT=${LOCAL_ADDRESS}:50001
-    depends_on:
-      - api

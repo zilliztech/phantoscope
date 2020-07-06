@@ -1,0 +1,810 @@
+---
+swagger: "2.0"
+info:
+  description: Phantoscope open API
+  version: 0.2.0
+  title: Phantoscope Open API
+  contact:
+    email: phantoscope@zilliz.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: 127.0.0.1:5000
+basePath: /v1
+tags:
+- name: application
+  description: Defines the data structure and pipeline.
+- name: pipeline
+  description: Describes how operators are organized.
+- name: operator
+  description: The minimal work unit in an application.
+schemes:
+- http
+paths:
+  /application/:
+    get:
+      tags:
+      - application
+      summary: Views the application list.
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: The request is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application'
+        "500":
+          description: A server error has occurred.
+          schema:
+            $ref: '#/definitions/Error'
+  /application/{applicationName}/:
+    get:
+      tags:
+      - application
+      summary: Gets the details of an application.
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: The application name.
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The application is retrieved.
+          schema:
+            $ref: '#/definitions/Application'
+        "404":
+          description: The application is not found.
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+      - application
+      summary: Creates an application.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: The application name.
+        required: true
+        type: string
+      - in: body
+        name: fields
+        description: |-
+          Custom fields.
+          - If type is "integer" "float" or "string", fields should contain "value" which is defalut value.
+          - If type is "pipeline", fields should contain "value" which is pipeline name.
+        required: true
+        schema:
+          $ref: '#/definitions/Application'
+      responses:
+        "200":
+          description: The application is created.
+          schema:
+            $ref: '#/definitions/Application'
+    delete:
+      tags:
+      - application
+      summary: Deletes an applicaiton.
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: The application name.
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The application is deleted.
+          schema:
+            $ref: '#/definitions/Application'
+  /application/{applicationName}/search/:
+    post:
+      tags:
+      - application
+      summary: Searches for an application by name.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: The application name.
+        required: true
+        type: string
+      - in: body
+        name: fields
+        description: none
+        required: true
+        schema:
+            $ref: '#/definitions/SearchFields'
+         
+      responses:
+        "200":
+          description: The search request is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+  /application/{applicationName}/upload/:
+    post:
+      tags:
+      - application
+      summary: Uploads images to an application.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: The application name.
+        required: true
+        type: string
+      - in: body
+        name: fields
+        description: |-
+          Custom fields.
+          - If the key in the application is "integer" or "string", fields only need "value".
+          - If the key is "object", you need use "data" or "url". "data" is a string that is encoded in base64 for an image.
+          - If the key is "data" and "url", only "data" is used if both "data" and "url" exist.
+        required: false
+        schema:
+          $ref: '#/definitions/UploadFields'
+      responses:
+        "200":
+          description: The request is successful.
+          schema:
+            $ref: '#/definitions/Entity'
+  /application/{applicationName}/entity/:
+    get:
+      tags:
+      - application
+      summary: Gets all entities under an application.
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: applicaiton name
+        required: true
+        type: string
+      - name: num
+        in: query
+        description: entity num will be listed
+        type: integer
+        required: false
+      - name: page
+        in: query
+        description: entity page will be listed
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: The request is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+
+  /application/{applicationName}/entity/{entityId}/:
+    delete:
+      tags:
+      - application
+      summary: Deletes an entity under an application.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: applicationName
+        in: path
+        description: The application name.
+        required: true
+        type: string
+      - name: entityId
+        in: path
+        description: The ID of the entity to delete.
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The entity is successfully deleted.
+          schema:
+            $ref: '#/definitions/Entity'
+  /pipeline:
+    get:
+      tags:
+      - pipeline
+      summary: Gets all pipelines.
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pipeline'
+  /pipeline/{pipelineName}/:
+    get:
+      tags:
+      - pipeline
+      summary: Gets the details of a pipeline.
+      produces:
+      - application/json
+      parameters:
+      - name: pipelineName
+        in: path
+        description: The pipeline name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Pipeline'
+    post:
+      tags:
+      - pipeline
+      summary: Creates a pipeline.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: pipelineName
+        in: path
+        description: The pipeline name.
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: false
+        schema:
+          $ref: '#/definitions/Pipeline'
+      responses:
+        "200":
+          description: A pipeline is successfully created.
+          schema:
+            $ref: '#/definitions/Pipeline'
+    delete:
+      tags:
+      - pipeline
+      summary: Deletes a pipeline.
+      description: none
+      produces:
+      - application/json
+      parameters:
+      - name: pipelineName
+        in: path
+        description: The pipeline name.
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The pipeline is deleted.
+          schema:
+            $ref: '#/definitions/Pipeline'
+  /pipeline/{pipelineName}/test:
+    post:
+      tags:
+      - pipeline
+      summary: Test a pipeline running
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: pipelineName
+        in: path
+        description: The pipeline name.
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: false
+        schema:
+          type: object
+          properties:
+            data:
+                type: string
+                example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA.....7A8ga238GDhzwf/Z
+                description: Image base64 encoded data. 
+            url:
+                type: string
+                example: 192.168.100.1:9000/test/vdacdd-oqca123.jpg
+                description: Image url. 
+      responses:
+        "200":
+          description: the pipeline is ok
+          schema:
+            $ref: '#/definitions/Pipeline'
+    
+  /operator:
+    get:
+      tags:
+      - operator
+      summary: Gets the operator list.
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: The operator list is retrieved.
+          schema:
+            $ref: '#/definitions/Operator'
+  
+  /operator/register/:
+    post:
+      tags:
+      - operator
+      summary: Registers an operator.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: |-
+          The information of operator is required.
+          When you register an oprator, ensure that you can pull this operator.
+        required: true
+        schema:
+          $ref: '#/definitions/OperatorPost'
+      responses:
+        "200":
+          description: The operator is successfully registered.
+          schema:
+            $ref: '#/definitions/Operator'
+
+  /operator/fetch/:
+    post:
+      tags:
+      - operator
+      summary: Fetch operators information from url and register operator.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: |-
+          The url is required.
+          Ensure you can get the operator informations from url.
+        required: true
+        schema:
+          properties:
+            url:
+              type: string
+              example: http://ss
+            override:
+              type: boolean
+              example: False
+      responses:
+        "200":
+          description: fetch and register operators successfully.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Operator'
+            
+  /operator/{operatorName}/:
+    get:
+      tags:
+      - operator
+      summary: Gets the details of an operator.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator details are retrieved.
+          schema:
+            $ref: '#/definitions/Operator'
+    delete:
+      tags:
+      - operator
+      summary: Deletes an operator.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator is successfully deleted.
+          schema:
+            $ref: '#/definitions/Operator'
+  
+  /operator/{operatorName}/instances:
+    get:
+      tags:
+      - operator
+      summary: Gets all instances of an operator.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator instances are detected.
+          schema:
+            $ref: '#/definitions/OperatorInstance'
+  
+  /operator/{operatorName}/instances/{instanceName}:
+    post:
+      tags:
+      - operator
+      summary: create an operator instance.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      - in: path
+        name: instanceName
+        description: The operator instance name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator instance is successfully created.
+          schema:
+            $ref: '#/definitions/OperatorInstance'
+    delete:
+      tags:
+      - operator
+      summary: delete an operator instance.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      - name: instanceName
+        in: path
+        description: The operator instance name
+        required: true
+        type: string
+      
+      responses:
+        "200":
+          description: The operator is successfully deleted.
+          schema:
+            $ref: '#/definitions/Operator'
+
+  /operator/{operatorName}/instances/{instanceName}/start:
+    post:
+      tags:
+      - operator
+      summary: start an operator instance.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      - in: path
+        name: instanceName
+        description: The operator instance name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator instance is successfully started.
+          schema:
+            $ref: '#/definitions/OperatorInstance'
+  
+
+  /operator/{operatorName}/instances/{instanceName}/stop:
+    post:
+      tags:
+      - operator
+      summary: stop an operator instance.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      - in: path
+        name: instanceName
+        description: The operator instance name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator instance is successfully stopped.
+          schema:
+            $ref: '#/definitions/OperatorInstance'
+
+  /operator/{operatorName}/instances/{instanceName}/restart:
+    post:
+      tags:
+      - operator
+      summary: restart an operator instance.
+      produces:
+      - application/json
+      parameters:
+      - name: operatorName
+        in: path
+        description: The operator name
+        required: true
+        type: string
+      - in: path
+        name: instanceName
+        description: The operator instance name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The operator instance is successfully restarted.
+          schema:
+            $ref: '#/definitions/OperatorInstance'
+
+definitions:
+  Application:
+    type: object
+    properties:
+      fields:
+        $ref: '#/definitions/Fields'
+      s3Buckets:
+        type: string
+        example: example1
+        description: The bucket name in s3 storage. The uploaded image will be saved here.
+  Fields:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        type:
+          type: string
+          example: string
+          description: The type of fields. Only "integer", "float" ,"string", or "pipeline" is valid.
+        value:
+          type: string
+          example: tom
+          description: The value of fields. If the type is "pipeline", value is the pipeline name.
+  UploadFields:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        value:
+          type: string
+          example: tom
+          description: Required only if the corresponding fileds type is not pipeline.
+        data:
+          type: string
+          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA.....7A8ga238GDhzwf/Z
+          description: Image base64 encoded data. Required only if the corresponding fields type is pipeline. If both exist with url, data prevails.
+        url:
+          type: string
+          example: 192.168.100.1:9000/test/vdacdd-oqca123.jpg
+          description: Image url. Required only if the corresponding fields type is pipeline. If both exist with data, data prevails.
+  SearchFields:
+    type: object
+    properties:
+      topk:
+        type: integer
+        example: 10
+        description: The return number.
+      score_mode: 
+        type: string
+        example: first
+        description: the score mode, optional value 'first' 'sum' 'max' 'min'
+    additionalProperties:
+      type: object
+      properties:
+        value:
+          type: string
+          example: tom
+          description: Required only if the corresponding fileds type is not pipeline.
+        data:
+          type: string
+          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA.....7A8ga238GDhzwf/Z
+          description: Image base64 encoded data. Required only if the corresponding fields type is pipeline. If both exist with url, data prevails.
+        url:
+          type: string
+          example: 192.168.100.1:9000/test/vdacdd-oqca123.jpg
+          description: Image url. Required only if the corresponding fields type is pipeline. If both exist with data, data prevails.
+        weight: 
+          type: integer
+          example: 2
+          description: Optional. Set weight of this field if search with multiple fields.
+  Pipeline:
+    type: object
+    properties:
+      name:
+        type: string
+        example: test-pipeline
+        description: The pipeline name.
+      input:
+        type: string
+        example: image
+        description: The type of data processed by this pipeline.
+      description:
+        type: string
+        example: This is a test pipeline.
+        description: A description of the pipeline.
+      processors:
+        type: array
+        items:
+          type: object
+          description: The processor name.
+          properties:
+            name:
+              type: string
+              example: face_detector
+              description: The processor name.
+            instance:
+              type: string
+              example: face_instance1
+              description: The processor instance name.
+      encoder:
+        type: object
+        description: The processor name.
+        properties:
+          name:
+            type: string
+            example: vgg16
+            description: The encoder name.
+          instance:
+            type: string
+            example: vgg_instance1
+            description: The processor instance name.
+        
+      indexFileSize:
+        type: integer
+        example: 1024
+        description: Number of the documents automatically indexed.
+  Operator:
+    type: object
+    properties:
+      name:
+        type: string
+        example: operator-test
+        description: The operator name.
+      backend:
+        type: string
+        example: vgg16
+        description: The name of the container where the operator is provided.
+      type:
+        type: string
+        example: encoder
+        description: The type of the operator. Can be either "encoder" or "processor".
+      input:
+        type: string
+        example: image
+        description: The type of the input data.
+      outout:
+        type: string
+        example: vector
+        description: The type of the output data.
+      endpoint:
+        type: string
+        example: 192.168.100.1:35000
+        description: The endpoint of the container.
+      metric_type:
+        type: string
+        example: l2
+        description: The way to calculate vector distance. Only in "encoder"
+      dimension:
+        type: integer
+        example: 512
+        description: The dimension of the vector. Only in "encoder"
+  OperatorPost:
+    type: object
+    properties:
+      name:
+        type: string
+        example: operator-test
+        description: The operator name.
+      addr:
+        type: string
+        example: psoperator/vgg16-encoder:latest
+        description: The address of the operator image which can pull.
+      author:
+        type: string
+        example: phantoscope
+        description: The author of the operator.
+      type:
+        type: string
+        example: encoder
+        description: Type of the operator, processor and encoder is accepted.
+      description:
+        type: string
+        example: this is the vgg16 encoder operator.
+        description: Description of the operator.
+      version:
+        type: string
+        example: 0.1
+        description: The version of the operator.
+  Entity:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "13055410131"
+        description: The unique identifier.
+      app_name:
+        type: string
+        example: test
+        description: The application name.
+      image_url:
+        type: string
+        example: http://test.com/dog.jpg
+        description: The image url in s3 storage.
+      fields:
+        $ref: '#/definitions/Fields'
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Application test does not exist.
+      error:
+        type: string
+        example: NotExistError
+  OperatorInstance:
+    type: object
+    properties:
+      name:
+        type: string
+        example: operator-test
+        description: The operator name.
+      addr:
+        type: string
+        example: psoperator/vgg16-encoder:latest
+        description: The address of the operator image which can pull.
+      author:
+        type: string
+        example: phantoscope
+        description: The author of the operator.
+      type:
+        type: string
+        example: encoder
+        description: Type of the operator, processor and encoder is accepted.
+      description:
+        type: string
+        example: this is the vgg16 encoder operator.
+        description: Description of the operator.
+      version:
+        type: string
+        example: 0.1
+        description: The version of the operator.
