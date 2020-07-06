@@ -32,3 +32,4 @@ INSTANCE_STATUS_RUNNING = "running"
 
 OPERATOR_COLLECTION_NAME = "phantoscope_operator"
 PIPELINE_COLLECTION_NAME = "phantoscope_pipeline"
+APPLICATION_COLLECTION_NAME = "phantoscope_application"
