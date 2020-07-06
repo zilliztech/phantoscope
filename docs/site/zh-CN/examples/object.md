@@ -29,11 +29,51 @@ $ unzip /tmp/coco-animals.zip -d /tmp/
 > 尝试更大的数据集？使用完整的 MSCOCO 图片数据集替换数据路径。
 
 ## 创建 Phantoscope Application
-使用 ssd-object-detector 与 xception-encoder 的镜像创建容器。第一次运行会从 Dockerhub 拉取镜像，需要等待一段时间。
+在 Phantoscope 中注册 ssd-object-detector 与 xception-encoder 的信息
 ```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-$ docker run -d -p 50010:50010 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50010 psoperator/ssd-detector:latest
-$ docker run -d -p 50011:50011 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50011 psoperator/xception-encoder:latest
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/register' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "ssd_detector",
+    "addr": "psoperator/ssd-detector",
+    "author" :"phantoscope",
+    "type":"processor",
+    "description": "detect object in input images",
+    "version": "0.1.0"
+}'
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/register' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "xception_encoder",
+    "addr": "psoperator/xception-encoder",
+    "author" :"phantoscope",
+    "type":"encoder",
+    "description": "embedding picture as vector",
+    "version": "0.1.0"
+}'
+```
+
+正确的运行结果会返回对应 Operator 的信息：
+```bash
+{"_name": "ssd_detector", "_backend": "ssd", "_type": "processor", "_input": "image", "_output": "images", "_endpoint": "192.168.1.192:50010", "_metric_type": "-1", "_dimension": -1}%  
+
+{"_name": "xception", "_backend": "xception", "_type": "encoder", "_input": "image", "_output": "vector", "_endpoint": "192.168.1.192:50011", "_metric_type": "L2", "_dimension": 2048}% 
+```
+
+使用 Phantoscope runtime 接口根据 Opeator 信息以 docker container 的形式创建一个 Operator 实例。
+
+```bash
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/ssd_detector/instances' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "instanceName": "ssd_instance1" 
+}'
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/vgg16_encoder/instances' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "instanceName": "vgg_instance1" 
+}'
 ```
 
 查看容器的运行状态。
@@ -50,45 +90,23 @@ f5e387c6016b        minio/minio:latest                         "/usr/bin/docker-
 bedc9420d6d5        phantoscope/preview:latest                 "/bin/bash -c '/usr/…"   40 minutes ago      Up 40 minutes       0.0.0.0:8000->80/tcp                               brave_ellis
 ```
 
-将 ssd-object-detector 与 xception-encoder 注册到 Phantoscope 中。
-
-此过程需要以 Operator 暴露的服务端口和自定义的 Operator 名称构造请求。下面所列命令中，50010 和 50011 分别是两个 Operator 暴露的端口， ssd_detector 和 xception 为自定义的 Opertaor 名称。关于 Operator 的详细描述请参考 [什么是 Operator](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/operator.md)。
-```bash
-# register ssd-object-detector to phantoscope with exposed 50010 port and a self-defined name 'ssd_detector'
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/regist' \
---header 'Content-Type: application/json' \
---data '{
-    "endpoint": "'${LOCAL_ADDRESS}':50010",
-    "name": "ssd_detector"
-}'
-# register xception-encoder to phantoscope with exposed 50011 port and a self-defined name 'xception'
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/regist' \
---header 'Content-Type: application/json' \
---data '{
-    "endpoint": "'${LOCAL_ADDRESS}':50011",
-    "name": "xception"
-}'
-```
-正确的运行结果会返回对应 Operator 的信息：
-```bash
-{"_name": "ssd_detector", "_backend": "ssd", "_type": "processor", "_input": "image", "_output": "images", "_endpoint": "192.168.1.192:50010", "_metric_type": "-1", "_dimension": -1}%  
-
-{"_name": "xception", "_backend": "xception", "_type": "encoder", "_input": "image", "_output": "vector", "_endpoint": "192.168.1.192:50011", "_metric_type": "L2", "_dimension": 2048}% 
-```
-
 创建一条包含 ssd_detector 和 xception 的 Pipeline。
 
 下面所列命令中 object_pipeline 是自定义的 Pipeline 名称，ssd-detector 和 xception 是组成 Pipeline 的 Operator 的名称。关于 Pipeline 的详细描述请参考 [什么是Pipeline](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/pipeline.md)。
 ```bash
 # create a pipeline with necessary information
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/object_pipeline' \
+$ curl --location --request POST ${LOCAL_ADDRESS}'/v1/pipeline/object_pipeline' \
 --header 'Content-Type: application/json' \
 --data '{
-	"input": "image",
-	"description": "object detect and encode",
-	"processors": "ssd_detector",
-	"encoder": "xception",
-	"indexFileSize": 1024
+	"description":"object detect and encode",
+	"processors": [{
+		"name": "ssd_detector",
+		"instance":"ssd_instance1"
+	}],
+	"encoder": {
+		"name": "xception_encoder",
+		"instance":"xception_instance1"
+	}
 }'
 ```
 成功创建后会返回 Pipeline 的详细信息：

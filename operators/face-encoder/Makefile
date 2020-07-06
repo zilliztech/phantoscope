@@ -10,7 +10,7 @@ endif
 
 TAG=$(shell cat version)
 
-data:
+data1:
 	cd data
 	./prepare_model.sh
 	cd -

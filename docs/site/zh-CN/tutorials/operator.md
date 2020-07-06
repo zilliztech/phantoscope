@@ -1,11 +1,11 @@
 # 什么是 Operator
-Operator 是 Phantoscope 中的工作单元
+Operator 是 Phantoscope 中工作单元的抽象描述，根据 Operator 可以创建工作单元。
 
 正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能
 
-同样您也可以根据[文档](../../../../operators/HowToAnddaOperator.md)实现自己的 Operator 然后加入到 Phantoscope 中为您工作
+同样你也可以根据[文档](../../../../operators/HowToAddAnOperator.md)实现自己的 Operator 然后注册到 Phantoscope 中为你工作
 
-Operator 根据工作不同分为两种 Processor 与 Encoder
+Operator 根据工作不同分为两种: Processor 与 Encoder
 
 ## Processor
 Processor 是 Operator 当中最通用的一类，它们接收数据，并将处理完成数据交给下一个 Operator
@@ -21,12 +21,13 @@ Processor 只要进行接收、处理、发送
 至于从哪里接收与发送到什么地方，Processor 都不需要关心
 
 目前 Phantoscope 内置的 Processor 有以下几种。
+
 - ###### MTCNN-face-detector
     - 镜像名： face-detector
     - 功能： 检测输入图片中的人脸
     - 接受： 一张图片
     - 返回： 检测出的一组人脸图片
-    - 样例 Pipeline：mtcnn_detect_face -> face_embedding
+    - 样例 Pipeline：mtcnn-face-detector -> face-encoder
 
 > 以 [Facenet](https://github.com/davidsandberg/facenet.git) 实现。 
 
@@ -35,7 +36,7 @@ Processor 只要进行接收、处理、发送
     - 功能： 检测输入图片中的物体
     - 接受： 一张图片
     - 返回： 检测出的一组物体图片
-    - 样例 Pipeline：mask_rcnn -> vgg/xception
+    - 样例 Pipeline：mask-rcnn-object-detetcor -> vgg/xception
 
 > 以 [Mask_RCNN](https://github.com/matterport/Mask_RCNN) 实现
 
@@ -89,36 +90,35 @@ Encoder 会将非结构化的数据转变成向量或者是标签
 
 > 以 [Facenet](https://github.com/davidsandberg/facenet.git) 实现。
 
-## 运行一个 Operator
+## 注册一个 Operator
+Phantoscope 启动时是没有 Operator 的，在当前版本中，你可以使用以下命令注册一个 Operator。
+其中 addr 是 Operator 拉取的地址，在下面的命令中可以理解为镜像地址。
+```bash
+curl --location --request POST '127.0.0.1:5000/v1/operator/register' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "face_detector",
+    "addr": "psoperator/face-detector:latest",
+    "author" :"phantoscope",
+    "type":"processor",
+    "description": "detect face in input images",
+    "version": "0.1.0"
+}'
+```
+
+## 创建一个 Operator Instance
+已经注册成功一个 Operator 后，还需要根据该 Operator 创建一个 instance 作为 Phantoscope 实际的工作单元。
+当前版本可以通过以下命令创建。
 
 ```bash
-$ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-# 拉取对应版本的 docker 镜像
-$ docker pull psoperator/face-encoder:latest
-# 以该镜像快速启动一个容器,同时设置容器配置:
-# 1. 设置容器服务 endpoint 为 ${LOCAL_ADDRESS}:50004，并将容器的50004端口映射到本机
-# 2. 将容器的 /app/tmp 目录映射到本机,以方便查看/调试 encoder 内部图片缓存
-$ docker run -p 50004:50004 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50004 -v `pwd`/tmp:/app/tmp -d psoperator/face-encoder:latest
+curl --location --request POST '127.0.0.1:5000/v1/operator/face_detector/instances' \
+--header 'Content-Type: application/json' \
+--data '{
+    "instanceName": "face_detector1" 
+}'
 ```
 
-## Operator 是如何注册到 Phantoscope 中的
-当 Phantosscope 启动时是没有 Operator 的，在当前的版本中如果你想在 Phantoscope 中发现并使用 Operator 需要先将 Operator 手动注册到 phantoscope 中。
-
-在默认情况下 Phantoscope 在启动时会启动一个 vgg16 的 Operator 并监听本地的 50001 端口。
-
-这时 vgg16 虽然已经启动但是还没有注册到 Phantoscope 中。
-
-通过向 ```/v1/operator/regist```这个 API 发送 
-
-```json
-{
-    "endpoint": "LOCAL_HOST_IP:50001",
-	"name": "vgg16_example"
-}
-```
-将 vgg16 以 vgg16_example 的名字注册到 Phantoscope 中
-
-此处的 endpoint 会被 Phantoscope 用来与 Operator 进行通讯,故不能填写为 127.0.0.1,应该填写为 192 或 10 开头的内网地址，确保在 phantoscope 可以访问。
+第一次创建可能会从远端拉取镜像。创建成功后本地机器上会出现一个该镜像的容器。
 
 # Operator 的设计原则
 Operator 应该是无状态的 
