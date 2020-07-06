@@ -12,75 +12,38 @@
 
 import json
 import logging
-from models.application import Application as DB
-from models.application import insert_application, search_application, del_application, update_application
 from common.error import NotExistError
 from common.error import RequestError
 from common.error import ArgsCheckError
 from common.error import ExistError
+from common.const import APPLICATION_COLLECTION_NAME, PIPELINE_COLLECTION_NAME
 from storage.storage import S3Ins, MilvusIns
 from storage.storage import MongoIns
 from application.mapping import new_mapping_ins
 from application.utils import fields_check, fields2dict
-from models.fields import insert_fields, search_fields, delete_fields
-from models.fields import Fields as FieldsDB
 from pipeline.pipeline import pipeline_detail
 from operators.client import identity
 from operators.operator import operator_detail
-
+from resource.resource import Resource
 logger = logging.getLogger(__name__)
 
 
-class Application():
-    def __init__(self, name, fields, buckets):
-        self._application_name = name
-        self._fields = fields
-        self._buckets = buckets
-
-    @property
-    def name(self):
-        return self._application_name
-
-    @property
-    def fields(self):
-        return self._fields
-
-    @fields.setter
-    def fields(self, fields):
-        self._fields = fields
-
-    @property
-    def buckets(self):
-        return self._buckets
-
-    @buckets.setter
-    def buckets(self, buckets):
-        self._buckets = buckets
-
-    def save(self):
-        fields = json.dumps(self._fields)
-        app = DB(name=self._application_name, fields=fields, s3_buckets=self._buckets)
-        try:
-            # Record created resource
-            # TODO create s3 bucket if bucket not exist
-            S3Ins.new_s3_buckets(self.buckets.split(","))
-            # TODO create milvus collections
-            insert_application(app)
-            logger.info("create new application %s", self.name)
-        except Exception as e:
-            logger.error(e)
-            # TODO collection created resource
-            raise e
-        return self
+class Application(Resource):
+    def __init__(self, name, fields, bucket):
+        self.name = name
+        self.fields = fields
+        self.bucket = bucket
+        self.metadata = None
 
 
 def all_applications():
     res = []
     try:
-        apps = search_application()
+        apps = MongoIns.list_documents(APPLICATION_COLLECTION_NAME, 0)
         for x in apps:
-            fields = search_fields(json.loads(x.Application.fields))
-            app = Application(name=x.Application.name, fields=fields2dict(fields), buckets=x.Application.s3_buckets)
+            print(x)
+            app = Application(name=x["name"], fields=x["fields"], bucket=x["bucket"])
+            app.metadata = x["metadata"]
             res.append(app)
         logger.info("get all application")
         return res
@@ -91,51 +54,42 @@ def all_applications():
 
 def application_detail(name):
     try:
-        x = search_application(name)
-        if not x:
+        app = MongoIns.search_by_name(APPLICATION_COLLECTION_NAME, name)
+        if not app:
             raise NotExistError(f"application {name} not exist", "")
-        fields = search_fields(json.loads(x.fields))
-        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
-        return app
+        app = app[0]
+        application = Application(app["name"], app["fields"], app["bucket"])
+        application.metadata = app["metadata"]
+        return application
     except Exception as e:
         logger.error(e)
         raise e
 
 
-def create_milvus_collections_by_fields(app):
-    for field in search_fields(app.fields):
-        if field.type == "pipeline":
-            pipe = pipeline_detail(field.value)
-            name = pipe.encoder.get("name")
-            instance_name = pipe.encoder.get("instance")
-            encoder = operator_detail(name)
-            instance = encoder.inspect_instance(instance_name)
-            ei = identity(instance.endpoint)
-            MilvusIns.new_milvus_collection(f"{app.name}_{name}_{instance_name}", int(ei["dimension"]), 1024, "l2")
-
-
-def new_application(app_name, fields, s3_buckets):
+def new_application(app_name, fields, s3_bucket):
     ok, message = fields_check(fields)
     if not ok:
         raise ArgsCheckError(message, "")
     try:
         # check application exist
-        if search_application(app_name):
+        if MongoIns.search_by_name(APPLICATION_COLLECTION_NAME, app_name):
             raise ExistError(f"application <{app_name}> had exist", "")
-        # insert fields to metadata
-        fieldsdb = []
-        for name, field in fields.items():
-            fieldsdb.append(FieldsDB(name=name, type=field.get('type'),
-                                     value=field.get('value'), app=app_name))
-        ids = insert_fields(fieldsdb)
+    except ExistError:
+        raise
+    try:
+        for key, value in fields.items():
+            if value.get("type") == "pipeline":
+                pipe = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, value.get("value"))[0]
+                ei = identity(pipe.get("encoder").get("instance").get("endpoint"))
+                name = f"{app_name}_{pipe.get('encoder').get('instance').get('name').replace('phantoscope_', '')}"
+                MilvusIns.new_milvus_collection(name, int(ei["dimension"]), 1024, "l2")
         # create a application entity collection
         MongoIns.new_mongo_collection(f"{app_name}_entity")
-        app = Application(name=app_name, fields=ids, buckets=s3_buckets)
+        S3Ins.new_s3_buckets(s3_bucket)
         # create milvus collections
-        create_milvus_collections_by_fields(app)
-        # insert application to metadata
-        app.save()
-        app.fields = fields2dict(search_fields(ids))
+        app = Application(name=app_name, fields=fields, bucket=s3_bucket)
+        app.metadata = app._metadata()
+        MongoIns.insert_documents(APPLICATION_COLLECTION_NAME, app.to_dict())
         return app
     except Exception as e:
         logger.error("error happen during create app: %s", str(e), exc_info=True)
@@ -143,31 +97,29 @@ def new_application(app_name, fields, s3_buckets):
 
 
 def delete_milvus_collections_by_fields(app):
-    for _, field in app.fields.items():
+    for _, field in app['fields'].items():
         if field["type"] == "pipeline":
-            pipe = pipeline_detail(field["value"])
-            name = pipe.encoder.get("name")
-            instance_name = pipe.encoder.get("instance")
-            MilvusIns.del_milvus_collection(f"{app.name}_{name}_{instance_name}")
+            pipe = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, field.get("value"))[0]
+            name = f"{app.get('name')}_{pipe.get('encoder').get('instance').get('name').replace('phantoscope_', '')}"
+            MilvusIns.del_milvus_collection(name)
 
 
 def delete_application(name):
     try:
         if len(entities_list(name, 100, 0)):
             raise RequestError("Prevent to delete application with entity not deleted", "")
-        # TODO rewrite clean all resource before change metadata
-        x = del_application(name)
-        if not x:
+        app = MongoIns.search_by_name(APPLICATION_COLLECTION_NAME, name)
+        if not app:
             raise NotExistError(f"application {name} not exist", "")
-        x = x[0]
-        fields = search_fields(json.loads(x.fields))
-        app = Application(name=x.name, fields=fields2dict(fields), buckets=x.s3_buckets)
+        app = app[0]
         delete_milvus_collections_by_fields(app)
-        delete_fields(json.loads(x.fields))
-        S3Ins.del_s3_buckets(x.s3_buckets.split(","))
+        S3Ins.del_s3_buckets(app['bucket'])
         MongoIns.delete_mongo_collection(f"{name}_entity")
+        MongoIns.delete_by_name(APPLICATION_COLLECTION_NAME, name)
         logger.info("delete application %s", name)
-        return app
+        application = Application(app["name"], app["fields"], app["bucket"])
+        application.metadata = app["metadata"]
+        return application
     except Exception as e:
         logger.error(e)
         raise e

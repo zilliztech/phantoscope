@@ -13,6 +13,7 @@
 from flask import Blueprint
 from flask_restful import reqparse
 from common.common import from_view_dict, json_response
+from common.error import RequestError
 from pipeline.pipeline import all_pipelines
 from pipeline.pipeline import pipeline_detail
 from pipeline.pipeline import create_pipeline
@@ -40,11 +41,18 @@ def pipeline_detail_api(name):
 def create_pipeline_api(name):
     args = reqparse.RequestParser(). \
         add_argument("description", type=str, required=True). \
-        add_argument("processors", type=dict, required=True, action="append"). \
+        add_argument("processors", type=dict, action="append"). \
         add_argument("encoder", type=dict, required=True). \
         parse_args()
     args = from_view_dict(args)
     args['name'] = name
+    if not args["processors"]:
+        args["processors"] = []
+    if "name" not in args['encoder'] or "instance" not in args["encoder"]:
+        raise RequestError("name or instance not in encoder", "")
+    for processor in args['processors']:
+        if "name" not in processor or "instance" not in processor:
+            raise RequestError(f"name or instance not in processor <{processor}>", "")
     return create_pipeline(**args)
 
 
