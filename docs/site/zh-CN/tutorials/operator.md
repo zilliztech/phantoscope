@@ -94,7 +94,7 @@ Encoder 会将非结构化的数据转变成向量或者是标签
 Phantoscope 启动时是没有 Operator 的，在当前版本中，你可以使用以下命令注册一个 Operator。
 其中 addr 是 Operator 拉取的地址，在下面的命令中可以理解为镜像地址。
 ```bash
-curl --location --request POST '127.0.0.1:5000/v1/operator/register' \
+$ curl --location --request POST '127.0.0.1:5000/v1/operator/register' \
 --header 'Content-Type: application/json' \
 --data '{
     "name": "face_detector",
@@ -111,16 +111,18 @@ curl --location --request POST '127.0.0.1:5000/v1/operator/register' \
 当前版本可以通过以下命令创建。
 
 ```bash
-curl --location --request POST '127.0.0.1:5000/v1/operator/face_detector/instances' \
+$ curl --location --request POST '127.0.0.1:5000/v1/operator/face_detector/instances' \
 --header 'Content-Type: application/json' \
 --data '{
     "instanceName": "face_detector1" 
 }'
-
-将 vgg16 以 vgg16_example 的名字注册到 Phantoscope 中
-
+```
 
 第一次创建可能会从远端拉取镜像。创建成功后本地机器上会出现一个该镜像的容器。
+```bash
+CONTAINER ID        IMAGE                                       COMMAND                  CREATED             STATUS              PORTS                                                NAMES
+67b697aad41b        psoperator/face-detector:latest             "python3 server.py"      26 seconds ago      Up 25 seconds       51001/tcp, 0.0.0.0:32768->80/tcp                     phantoscope_face_detector_face_detector1
+```
 
 # Operator 的设计原则
 Operator 应该是无状态的 

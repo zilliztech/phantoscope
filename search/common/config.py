@@ -19,7 +19,7 @@ MINIO_1ST_BUCKET = os.getenv("1ST_BUCKET", "alpha")
 MINIO_BUCKET_NUM = os.getenv("MINIO_OBJ_LIMIT", 20)
 
 MONGO_ADDR = os.getenv("MONGO_ADDR", "127.0.0.1")
-MONGO_PORT = os.getenv("MONGO_PORT", 27017)
+MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
 MONGO_USERNAME = os.getenv("MONGO_USERNAME", "root")
 MONGO_PASSWORD = os.getenv("MONGO_PASSWD", "passwd")
 

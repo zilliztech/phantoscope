@@ -36,7 +36,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/register' \
 --header 'Content-Type: application/json' \
 --data '{
     "name": "ssd_detector",
-    "addr": "psoperator/ssd-detector",
+    "addr": "psoperator/ssd-detector:latest",
     "author" :"phantoscope",
     "type":"processor",
     "description": "detect object in input images",
@@ -46,7 +46,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/register' \
 --header 'Content-Type: application/json' \
 --data '{
     "name": "xception_encoder",
-    "addr": "psoperator/xception-encoder",
+    "addr": "psoperator/xception-encoder:latest",
     "author" :"phantoscope",
     "type":"encoder",
     "description": "embedding picture as vector",
@@ -56,38 +56,32 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/register' \
 
 正确的运行结果会返回对应 Operator 的信息：
 ```bash
-{"_name": "ssd_detector", "_backend": "ssd", "_type": "processor", "_input": "image", "_output": "images", "_endpoint": "192.168.1.192:50010", "_metric_type": "-1", "_dimension": -1}%  
+{"_name": "ssd_detector", "_addr": "psoperator/ssd-detector", "_author": "phantoscope", "_version": "0.1.0", "_type": "processor", "_description": "detect object in input images", "_runtime_client": "docker"}
 
-{"_name": "xception", "_backend": "xception", "_type": "encoder", "_input": "image", "_output": "vector", "_endpoint": "192.168.1.192:50011", "_metric_type": "L2", "_dimension": 2048}% 
+{"_name": "xception_encoder", "_addr": "psoperator/xception-encoder", "_author": "phantoscope", "_version": "0.1.0", "_type": "encoder", "_description": "embedding picture as vector", "_runtime_client": "docker"} 
 ```
 
 使用 Phantoscope runtime 接口根据 Opeator 信息以 docker container 的形式创建一个 Operator 实例。
 
 ```bash
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/ssd_detector/instances' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "instanceName": "ssd_instance1" 
-}'
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/vgg16_encoder/instances' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "instanceName": "vgg_instance1" 
-}'
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/ssd_detector/instances/ssd_instance1' \
+--header 'Content-Type: application/json' 
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/operator/xception_encoder/instances/xception_instance1' \
+--header 'Content-Type: application/json'
 ```
 
 查看容器的运行状态。
 ```bash
 $ docker ps                                                                                            
-CONTAINER ID        IMAGE                                      COMMAND                  CREATED             STATUS              PORTS                                              NAMES
-05e666f48f5f        psoperator/xception-encoder:latest         "python3 server.py"      9 seconds ago       Up 9 seconds        0.0.0.0:50011->50011/tcp, 50012/tcp                happy_ellis
-c4dd13b3fc5d        psoperator/ssd-detector:latest             "python3 server.py"      15 seconds ago      Up 14 seconds       0.0.0.0:50010->50010/tcp, 51002/tcp                keen_leavitt
-09bd2658493b        psoperator/vgg16:latest                    "python3 server.py"      23 seconds ago      Up 22 seconds       0.0.0.0:50001->50001/tcp                           omnisearch_vgg_1
-0ce974dc8891        phantoscope/api-server:0.1.0               "/usr/bin/gunicorn3 …"   23 seconds ago      Up 22 seconds       0.0.0.0:5000->5000/tcp                             omnisearch_api_1
-3bf49c362d79        daocloud.io/library/mysql:5.6              "docker-entrypoint.s…"   26 seconds ago      Up 24 seconds       0.0.0.0:3306->3306/tcp                             omnisearch_mysql_1
-3f6f6750bc21        milvusdb/milvus:0.7.0-cpu-d031120-de409b   "/var/lib/milvus/doc…"   26 seconds ago      Up 23 seconds       0.0.0.0:8080->8080/tcp, 0.0.0.0:19530->19530/tcp   omnisearch_milvus_1
-f5e387c6016b        minio/minio:latest                         "/usr/bin/docker-ent…"   26 seconds ago      Up 24 seconds       0.0.0.0:9000->9000/tcp                             omnisearch_minio_1
-bedc9420d6d5        phantoscope/preview:latest                 "/bin/bash -c '/usr/…"   40 minutes ago      Up 40 minutes       0.0.0.0:8000->80/tcp                               brave_ellis
+CONTAINER ID        IMAGE                                       COMMAND                  CREATED              STATUS              PORTS                                                NAMES
+7de57c8dc60a        psoperator/xception-encoder                 "python3 server.py"      20 seconds ago       Up 20 seconds       0.0.0.0:32770->80/tcp                                phantoscope_xception_encoder_xception_instance1
+c6e5dde452e7        psoperator/ssd-detector                     "python3 server.py"      About a minute ago   Up About a minute   0.0.0.0:32769->80/tcp                                phantoscope_ssd_detector_ssd_instance1
+67b697aad41b        psoperator/face-detector:latest             "python3 server.py"      2 hours ago          Up 2 hours          51001/tcp, 0.0.0.0:32768->80/tcp                     phantoscope_face_detector_face_detector1
+2fa431c04255        phantoscope/api-server:dfef600              "/usr/bin/gunicorn3 …"   2 hours ago          Up 2 hours          0.0.0.0:5000->5000/tcp                               omnisearch_api_1
+6337e006d189        mongo                                       "docker-entrypoint.s…"   2 hours ago          Up 2 hours          0.0.0.0:27017->27017/tcp                             omnisearch_mongo_1
+b408a089349d        milvusdb/milvus:0.10.0-cpu-d061620-5f3c00   "/var/lib/milvus/doc…"   2 hours ago          Up 2 hours          0.0.0.0:19121->19121/tcp, 0.0.0.0:19530->19530/tcp   omnisearch_milvus_1
+5473e3f4e220        minio/minio:latest                          "/usr/bin/docker-ent…"   2 hours ago          Up 2 hours          0.0.0.0:9000->9000/tcp                               omnisearch_minio_1
+19199581f593        mysql:5.6                                   "docker-entrypoint.s…"   2 hours ago          Up 2 hours          0.0.0.0:3306->3306/tcp                               omnisearch_mysql_1
 ```
 
 创建一条包含 ssd_detector 和 xception 的 Pipeline。
@@ -95,7 +89,7 @@ bedc9420d6d5        phantoscope/preview:latest                 "/bin/bash -c '/u
 下面所列命令中 object_pipeline 是自定义的 Pipeline 名称，ssd-detector 和 xception 是组成 Pipeline 的 Operator 的名称。关于 Pipeline 的详细描述请参考 [什么是Pipeline](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/pipeline.md)。
 ```bash
 # create a pipeline with necessary information
-$ curl --location --request POST ${LOCAL_ADDRESS}'/v1/pipeline/object_pipeline' \
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/object_pipeline' \
 --header 'Content-Type: application/json' \
 --data '{
 	"description":"object detect and encode",
@@ -111,21 +105,21 @@ $ curl --location --request POST ${LOCAL_ADDRESS}'/v1/pipeline/object_pipeline' 
 ```
 成功创建后会返回 Pipeline 的详细信息：
 ```bash
-{"_pipeline_name": "object_pipeline", "_input": "image", "_output": "vector", "_dimension": 2048, "_index_file_size": 1024, "_metric_type": "L2", "_pipeline_description": "object detect and encode", "_processors": ["ssd_detector"], "_encoder": "xception", "_description": "object detect and encode"}%
+{"_pipeline_name": "object_pipeline", "_input": "", "_output": "", "_pipeline_description": "object detect and encode", "_processors": [{"name": "ssd_detector", "instance": "ssd_instance1"}], "_encoder": {"name": "xception_encoder", "instance": "xception_instance1"}, "_description": "object detect and encode"}%
 ```
 
 以 object_pipeline 构建一个 Phantoscope Application。
 
-下面所列命令中 object-example 是自定义 Application 的名称，object_field 是自定义的字段名称，保存着 object_pipeline 处理后的结果，同时将图片存储在名为 object-s3 的 S3 bucket 中。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)。
+下面所列命令中 object_example 是自定义 Application 的名称，object_field 是自定义的字段名称，保存着 object_pipeline 处理后的结果，同时将图片存储在名为 object-s3 的 S3 bucket 中。关于 Application 的详细描述请参考 [什么是Application](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/application.md)。
 ```bash
 # create an application with a self-define field name assocatied with pipeline created in step3 
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-example' \
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object_example' \
 --header 'Content-Type: application/json' \
 --data '{
     "fields":{
         "object_field": {
-            "type": "object",
-            "pipeline": "object_pipeline"
+            "type": "pipeline",
+            "value": "object_pipeline"
         }
     },
     "s3Buckets": "object-s3"
@@ -133,7 +127,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 ```
 成功创建后会返回 Application 的详细信息：
 ```bash
-{"_application_name": "object-example", "_fields": {"object_field": {"type": "object", "pipeline": "object_pipeline"}}, "_buckets": "object-s3"}%  
+{"_application_name": "object_example", "_fields": {"object_field": {"type": "object", "pipeline": "object_pipeline"}}, "_buckets": "object-s3"}%  
 ```
 
 如果运行到这里一切顺利，代表着已经成功创建了一个完整的 Phantoscope Application，接下来将演示如何使用。
@@ -145,11 +139,11 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 
 ```bash
 $ pip3 install requests tqdm
-$ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object-example -p object_pipeline
+$ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object_example -p object_pipeline
 ```
 等待运行结束，上传结果如下所示。
 ```bash
-upload url is http://127.0.0.1:5000/v1/application/object-example/upload
+upload url is http://127.0.0.1:5000/v1/application/object_example/upload
 allocate 4 processes to load data, each task including 200 images
 Now begin to load image data and upload to phantoscope: ...
 100%|████████████████████████████████████████████████████████████████████████████████| 800/800 [03:16<00:00,  4.07it/s]
@@ -162,7 +156,7 @@ Please read file 'path_to_error_log' to check upload_error log.
 图片导入结束，使用 Phantoscope Application 进行搜索。
 
 ```bash
-$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-example/search' \
+$ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object_example/search' \
 --header 'Content-Type: application/json' \
 --data '{
 	"fields": {
@@ -179,8 +173,8 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 [
     {
         "_id": "1591788614578665000",
-        "_app_name": "object-example",
-        "_image_url": "http://192.168.1.192:9000/object-s3/object-example-efb4be8a38ac4297a1be1e9d589397f4",
+        "_app_name": "object_example",
+        "_image_url": "http://192.168.1.192:9000/object-s3/object_example-efb4be8a38ac4297a1be1e9d589397f4",
         "_fields": {
             "object_field": {
                 "type": "object",
@@ -190,8 +184,8 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
     },
     {
         "_id": "1591788654504043000",
-        "_app_name": "object-example",
-        "_image_url": "http://192.168.1.192:9000/object-s3/object-example-5a3644c89da74ce28c2f42949180e066",
+        "_app_name": "object_example",
+        "_image_url": "http://192.168.1.192:9000/object-s3/object_example-5a3644c89da74ce28c2f42949180e066",
         "_fields": {
             "object_field": {
                 "type": "object",
@@ -201,8 +195,8 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
     },
     {
         "_id": "1591788654504043001",
-        "_app_name": "object-example",
-        "_image_url": "http://192.168.1.192:9000/object-s3/object-example-5a3644c89da74ce28c2f42949180e066",
+        "_app_name": "object_example",
+        "_image_url": "http://192.168.1.192:9000/object-s3/object_example-5a3644c89da74ce28c2f42949180e066",
         "_fields": {
             "object_field": {
                 "type": "object",
@@ -212,8 +206,8 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
     },
     {
         "_id": "1591788635868801000",
-        "_app_name": "object-example",
-        "_image_url": "http://192.168.1.192:9000/object-s3/object-example-2520010f066e4f9093d85f329d045fe4",
+        "_app_name": "object_example",
+        "_image_url": "http://192.168.1.192:9000/object-s3/object_example-2520010f066e4f9093d85f329d045fe4",
         "_fields": {
             "object_field": {
                 "type": "object",
@@ -223,8 +217,8 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
     },
     {
         "_id": "1591788680008488000",
-        "_app_name": "object-example",
-        "_image_url": "http://192.168.1.192:9000/object-s3/object-example-e2891d3d5252476cbe874e9d5239d3d6",
+        "_app_name": "object_example",
+        "_image_url": "http://192.168.1.192:9000/object-s3/object_example-e2891d3d5252476cbe874e9d5239d3d6",
         "_fields": {
             "object_field": {
                 "type": "object",
@@ -236,7 +230,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object-ex
 ```
 
 3.使用 [Phantoscope Preview](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/preview.md) 更直观地进行搜索。演示效果如下图所示：
->  注意切换为 object-example 的 application。
+>  注意切换为 object_example 的 application。
 ![result](/.github/example/object-example.gif)
 
 > 本文所使用 API 详见 [API 文档](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0)。

@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: phantoscope/api-server:dfef600
+    image: phantoscope/api-server:9746dc5
     ports:
       - "5000:5000"
     environment:
@@ -13,6 +13,10 @@ services:
       - SEARCH_IMAGES_DATABASE_PASSWD=passwd
       - MILVUS_PORT=19530
       - MINIO_BUCKET_NUM=20
+      - MONGO_ADDR=mongo
+      - MONGO_PORT=27017
+      - MONGO_USERNAME=root
+      - MONGO_PASSWD=passwd
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -40,7 +44,7 @@ services:
     image: milvusdb/milvus:0.10.0-cpu-d061620-5f3c00
     ports:
       - "19530:19530"
-      - "8080:8080"
+      - "19121:19121"
     volumes:
       - /mnt/om/milvus/db:/var/lib/milvus/db
   minio:
