@@ -31,7 +31,8 @@ class DockerRuntime:
         try:
             self.client.containers.run(image=image, name=name,
                                        detach=True, ports=ports,
-                                       labels=self.labels)
+                                       labels=self.labels,
+                                       network="phantoscope_default")
             containers = self.client.containers.list(all=False, filters={"name": name})
             container = containers[0]
             return new_operator_instance(container.short_id, container.name,
