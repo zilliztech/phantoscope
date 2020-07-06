@@ -110,7 +110,7 @@ class MongoIns:
             raise e
 
     @staticmethod
-    def list_documents(name, num):
+    def list_documents(name, num, page=0):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
                                          username=MONGO_USERNAME,
