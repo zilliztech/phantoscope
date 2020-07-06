@@ -31,3 +31,4 @@ MARKET_IDENTITY_HEADER = "phantoscope_market_version"
 INSTANCE_STATUS_RUNNING = "running"
 
 OPERATOR_COLLECTION_NAME = "phantoscope_operator"
+PIPELINE_COLLECTION_NAME = "phantoscope_pipeline"

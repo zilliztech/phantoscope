@@ -105,11 +105,11 @@ class MongoIns:
                                          username=MONGO_USERNAME,
                                          password=MONGO_PASSWORD)
             db = client.phantoscope
-            return getattr(db, name).remove({"name": {"$eq": name}})
+            return getattr(db, collection_name).remove({"name": {"$eq": name}})
         except Exception as e:
             raise e
 
-    @staticmethod
+    @ staticmethod
     def list_documents(name, num):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
@@ -120,7 +120,7 @@ class MongoIns:
         except Exception as e:
             raise e
 
-    @staticmethod
+    @ staticmethod
     def search_by_id(name, id):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
@@ -131,7 +131,7 @@ class MongoIns:
         except Exception as e:
             raise e
 
-    @staticmethod
+    @ staticmethod
     def search_by_vector_id(name, field_name, ids: list):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
@@ -143,7 +143,7 @@ class MongoIns:
         except Exception as e:
             raise e
 
-    @staticmethod
+    @ staticmethod
     def delete_by_id(name, id):
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
@@ -156,7 +156,7 @@ class MongoIns:
 
 
 class MilvusIns:
-    @staticmethod
+    @ staticmethod
     def new_milvus_collection(name, dimension, index_file_size, metric_type):
         metric_type = type_mapping.get(metric_type, MetricType.L2)
         milvus = Milvus()
@@ -174,7 +174,7 @@ class MilvusIns:
         except Exception as e:
             raise MilvusError("There was some error when create milvus collection", e)
 
-    @staticmethod
+    @ staticmethod
     def del_milvus_collection(name):
         milvus = Milvus()
         try:
@@ -187,7 +187,7 @@ class MilvusIns:
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise MilvusError(err_msg, e)
 
-    @staticmethod
+    @ staticmethod
     def insert_vectors(name, vectors):
         milvus = Milvus()
         try:
@@ -203,7 +203,7 @@ class MilvusIns:
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise MilvusError(err_msg, e)
 
-    @staticmethod
+    @ staticmethod
     def search_vectors(name, vector, topk, nprobe):
         milvus = Milvus()
         search_param = {'nprobe': nprobe}
@@ -218,7 +218,7 @@ class MilvusIns:
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise MilvusError(err_msg, e)
 
-    @staticmethod
+    @ staticmethod
     def del_vectors(collection_name, ids):
         milvus = Milvus()
         try:
@@ -231,7 +231,7 @@ class MilvusIns:
 
 
 class S3Ins:
-    @classmethod
+    @ classmethod
     def new_minio_client(cls):
         return Minio(
             MINIO_ADDR,
@@ -240,7 +240,7 @@ class S3Ins:
             secure=False
         )
 
-    @classmethod
+    @ classmethod
     def new_s3_buckets(cls, names, region=None):
         try:
             minio_client = cls.new_minio_client()
@@ -256,7 +256,7 @@ class S3Ins:
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
-    @classmethod
+    @ classmethod
     def del_s3_buckets(cls, names):
         try:
             minio_client = cls.new_minio_client()
@@ -270,7 +270,7 @@ class S3Ins:
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
-    @classmethod
+    @ classmethod
     def upload2bucket(cls, bucket_name, file_path, file_name):
         try:
             minio_client = cls.new_minio_client()
@@ -282,7 +282,7 @@ class S3Ins:
             logger.error(f"{err_msg} : {str(e)}", exc_info=True)
             raise S3Error(err_msg, e)
 
-    @classmethod
+    @ classmethod
     def del_object(cls, bucket_name, object_name):
         try:
             minio_client = cls.new_minio_client()

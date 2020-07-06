@@ -43,29 +43,31 @@ def json_response(func):
             res = e
         res_code = 200
         if isinstance(res, list):
-            res_body = json.dumps([r.__dict__ if not isinstance(r, dict) else r for r in res])
-        elif isinstance(res, str):
-            res_body = res
-        elif isinstance(res, tuple):
-            res_body, res_code = res
-            if isinstance(res_body, list):
-                res_body = json.dumps([r.__dict__ for r in res_body])
-        elif isinstance(res, Exception):
-            res_code = 500
-            res_body = {
-                "message": "",
-                "error": ""
-            }
-            if hasattr(res, "code"):
-                res_code = res.code
-            if hasattr(res, "description"):
-                res_body["message"] = res.description
-            if hasattr(res, "name"):
-                res_body["error"] = res.name
-            res_body = json.dumps(res_body)
-        elif isinstance(res, dict):
+            res_body = json.dumps([x.to_dict() for x in res])
+        if isinstance(res, dict):
             res_body = json.dumps(res)
+            # elif isinstance(res, str):
+            #     res_body = res
+            # elif isinstance(res, tuple):
+            #     res_body, res_code = res
+            #     if isinstance(res_body, list):
+            #         res_body = json.dumps([r.__dict__ for r in res_body])
+            # elif isinstance(res, Exception):
+            #     res_code = 500
+            #     res_body = {
+            #         "message": "",
+            #         "error": ""
+            #     }
+            #     if hasattr(res, "code"):
+            #         res_code = res.code
+            #     if hasattr(res, "description"):
+            #         res_body["message"] = res.description
+            #     if hasattr(res, "name"):
+            #         res_body["error"] = res.name
+            #     res_body = json.dumps(res_body)
+            # elif isinstance(res, dict):
+            #     res_body = json.dumps(res)
         else:
-            res_body = json.dumps(res.__dict__)
+            res_body = json.dumps(res.to_dict())
         return Response(response=res_body, status=res_code, mimetype="application/json")
     return wrapper
