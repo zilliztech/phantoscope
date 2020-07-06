@@ -10,8 +10,8 @@
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
-import json
 import logging
+from resource.resource import Resource
 from common.error import NotExistError
 from common.error import RequestError
 from common.error import ArgsCheckError
@@ -20,11 +20,11 @@ from common.const import APPLICATION_COLLECTION_NAME, PIPELINE_COLLECTION_NAME
 from storage.storage import S3Ins, MilvusIns
 from storage.storage import MongoIns
 from application.mapping import new_mapping_ins
-from application.utils import fields_check, fields2dict
+from application.utils import fields_check
 from pipeline.pipeline import pipeline_detail
 from operators.client import identity
-from operators.operator import operator_detail
-from resource.resource import Resource
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -77,7 +77,7 @@ def new_application(app_name, fields, s3_bucket):
     except ExistError:
         raise
     try:
-        for key, value in fields.items():
+        for _, value in fields.items():
             if value.get("type") == "pipeline":
                 pipe = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, value.get("value"))[0]
                 ei = identity(pipe.get("encoder").get("instance").get("endpoint"))
@@ -106,7 +106,7 @@ def delete_milvus_collections_by_fields(app):
 
 def delete_application(name):
     try:
-        if len(entities_list(name, 100, 0)):
+        if not entities_list(name, 100, 0):
             raise RequestError("Prevent to delete application with entity not deleted", "")
         app = MongoIns.search_by_name(APPLICATION_COLLECTION_NAME, name)
         if not app:

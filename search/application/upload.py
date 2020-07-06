@@ -11,14 +11,13 @@
 
 
 import uuid
-import time
 import logging
 from application.application import application_detail
+from application.mapping import new_mapping_ins
 from pipeline.pipeline import pipeline_detail, run_pipeline
+from storage.storage import MilvusIns, S3Ins, MongoIns
 from common.error import NotExistError
 from common.error import RequestError
-from storage.storage import MilvusIns, S3Ins, MongoIns
-from application.mapping import new_mapping_ins
 from common.config import MINIO_ADDR
 from common.utils import save_tmp_file
 from common.error import NoneVectorError
@@ -32,7 +31,7 @@ def upload(name, **kwargs):
         app = application_detail(name)
         if not app:
             raise NotExistError("application not exist", "application %s not exist" % name)
-        bucket_name = app.buckets.split(",")[0]
+        bucket_name = app.bucket.split(",")[0]
         accept_fields = [x for x, y in app.fields.items() if y.get('type') != "pipeline"]
         pipeline_fields = {x: y['value'] for x, y in app.fields.items() if y.get('type') == "pipeline"}
         new_fields = app.fields.copy()
@@ -71,7 +70,7 @@ def upload(name, **kwargs):
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
 
             docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}
-            doc_id = MongoIns.insert_documents(f"{app.name}_entity", docs)
+            MongoIns.insert_documents(f"{app.name}_entity", docs)
             res.append(new_mapping_ins(docs))
         if not valid_field_flag:
             raise RequestError("none valid field exist", "")
