@@ -52,21 +52,21 @@ def json_response(func):
             #     res_body, res_code = res
             #     if isinstance(res_body, list):
             #         res_body = json.dumps([r.__dict__ for r in res_body])
-            # elif isinstance(res, Exception):
-            #     res_code = 500
-            #     res_body = {
-            #         "message": "",
-            #         "error": ""
-            #     }
-            #     if hasattr(res, "code"):
-            #         res_code = res.code
-            #     if hasattr(res, "description"):
-            #         res_body["message"] = res.description
-            #     if hasattr(res, "name"):
-            #         res_body["error"] = res.name
-            #     res_body = json.dumps(res_body)
-            # elif isinstance(res, dict):
-            #     res_body = json.dumps(res)
+        elif isinstance(res, Exception):
+            res_code = 500
+            res_body = {
+                "message": "",
+                "error": ""
+            }
+            if hasattr(res, "code"):
+                res_code = res.code
+            if hasattr(res, "description"):
+                res_body["message"] = res.description
+            if hasattr(res, "name"):
+                res_body["error"] = res.name
+                res_body = json.dumps(res_body)
+            elif isinstance(res, dict):
+                res_body = json.dumps(res)
         else:
             res_body = json.dumps(res.to_dict())
         return Response(response=res_body, status=res_code, mimetype="application/json")
