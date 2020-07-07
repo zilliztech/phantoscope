@@ -52,12 +52,12 @@ def pre_pipeline(name="pytest_pipe_1", processors="",
 
 def pre_application(name="pytest_app_1",
                     fields={"full": {"type": "pipeline", "value": "pytest_pipe_1"}},
-                    s3_buckets="test_bucket"):
+                    s3_buckets="test-bucket"):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             time.sleep(5)  # wait for opertaor instance start
-            new_application(app_name=name, fields=fields, s3_buckets=s3_buckets)
+            new_application(app_name=name, fields=fields, s3_bucket=s3_bucket3)
             func(*args, **kwargs)
             delete_application(name)
 

@@ -9,17 +9,13 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
+from resource.resource import Resource
 
-class Mapping:
+
+class Mapping(Resource):
     def __init__(self, id, docs):
         self._id = id
         self._docs = docs
-
-# def new_mapping_ins(id, app_name, image_url, fields):
-#     if isinstance(fields, str):
-#         fields = ast.literal_eval(fields)
-#     return Mapping(id=id, app_name=app_name, image_url=image_url,
-#                    fields=fields)
 
 
 def new_mapping_ins(docs):

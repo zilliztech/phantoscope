@@ -47,11 +47,11 @@ class TestScoreFunctionApi:
     @pre_pipeline(name=f"{pipeline_name2}2",
                   processors=[{"name": f"{detector_name}2", "instance": f"{detector_instance}2"}],
                   encoder={"name": f"{encoder_name}2", "instance": f"{encoder_instance2}2"})
+    @sleep_time(12)  # wait for operator instance initialization
     @pre_application(name=f"{name}",
                      fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}2"},
                              field_name2: {"type": "pipeline", "value": f"{pipeline_name2}2"}},
                      s3_buckets=f"s3example{test_ver}")
-    @sleep_time(12)  # wait for operator instance initialization
     def test_inner_field_score_api(self, client):
         for image_url in self.test_url:
             data = {
@@ -150,11 +150,11 @@ class TestScoreFunctionApi:
     @pre_pipeline(name=f"{pipeline_name2}3",
                   processors=[{"name": f"{detector_name}3", "instance": f"{detector_instance}3"}],
                   encoder={"name": f"{encoder_name}3", "instance": f"{encoder_instance2}3"})
+    @sleep_time(12)  # wait for operator instance initialization
     @pre_application(name=f"{name}1",
                      fields={field_name1: {"type": "pipeline", "value": f"{pipeline_name1}3"},
                              field_name2: {"type": "pipeline", "value": f"{pipeline_name2}3"}},
                      s3_buckets=f"s3example{test_ver}")
-    @sleep_time(12)  # wait for operator instance initialization
     def test_score_api(self, client):
         for image_url in self.test_url:
             data = {
