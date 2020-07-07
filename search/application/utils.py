@@ -23,9 +23,9 @@ def pipeline_exist(name):
 def fields_check(fields):
     check_list = {
         "pipeline": pipeline_exist,
-        "string": lambda x : isinstance(x, str),
+        "string": lambda x: isinstance(x, str),
         "integer": lambda x: isinstance(x, int),
-        "float": lambda x : isinstance(x, float)
+        "float": lambda x: isinstance(x, float)
     }
 
     if not isinstance(fields, dict):

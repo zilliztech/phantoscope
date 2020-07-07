@@ -8,6 +8,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied. See the License for the specific language governing permissions and limitations under the License.
+import json
 
 
 class OperatorInstance:
@@ -19,8 +20,10 @@ class OperatorInstance:
         self.ip = ip
         self.endpoint = endpoint
 
+    def to_dict(self):
+        return json.loads(json.dumps(self, default=lambda o: o.__dict__))
+
 
 def new_operator_instance(id, name, status, ip, ports):
-    # endpoint = f"{ip}:{ports['80/tcp'][0]['HostPort']}"
     endpoint = f"{ip}:80"
     return OperatorInstance(id, name, status, ip, ports, endpoint)

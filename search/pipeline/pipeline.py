@@ -11,91 +11,43 @@
 
 
 import logging
-import json
-from typing import List
-from models.pipeline import Pipeline as DB
-from models.pipeline import insert_pipeline
-from models.pipeline import search_pipeline
-from models.pipeline import del_pipeline
+from resource.resource import Resource
 from common.error import PipelineCheckError
-from common.error import PipelineIlegalError
+from common.error import PipelineIllegalError
 from common.error import RPCExecError
 from common.error import NotExistError
+from common.error import ExistError
 from common.const import OPERATOR_TYPE_ENCODER
 from common.const import OPERATOR_TYPE_PROCESSOR
-from operators.operator import all_operators
+from common.const import PIPELINE_COLLECTION_NAME
 from operators.operator import operator_detail
 from operators.client import execute, identity
-from storage.storage import MilvusIns
+from storage.storage import MongoIns
 
 logger = logging.getLogger(__name__)
 
 
-class Pipeline():
-    def __init__(self, name, input, output, description,
-                 processors, encoder):
-        self._pipeline_name = name
-        self._input = input
-        self._output = output
-        self._pipeline_description = description
-        self._processors = processors
-        self._encoder = encoder
-        self._description = description
-
-    @property
-    def name(self):
-        return self._pipeline_name
-
-    @property
-    def description(self):
-        return self._pipeline_description
-
-    @property
-    def input(self):
-        return self._input
-
-    @property
-    def output(self):
-        return self.output
-
-    @property
-    def processors(self):
-        return self._processors
-
-    @processors.setter
-    def processors(self, processors):
-        self._processors = processors
-
-    @property
-    def encoder(self):
-        return self._encoder
-
-    @encoder.setter
-    def encoder(self, encoder):
-        self._encoder = encoder
-
-    def save(self):
-        p = DB(name=self._pipeline_name, input=self._input,
-               output=self._output, processors=json.dumps(self.processors),
-               encoder=json.dumps(self.encoder), description=self._description)
-        try:
-            insert_pipeline(p)
-        except Exception as e:
-            raise e
-        return self
+class Pipeline(Resource):
+    def __init__(self, name, description,
+                 processors, encoder, input=None, output=None):
+        self.name = name
+        self.input = input
+        self.output = output
+        self.processors = processors
+        self.encoder = encoder
+        self.description = description
+        self.metadata = None
 
 
 def all_pipelines():
     res = []
     try:
-        pipelines = search_pipeline()
-        for p in pipelines:
-            pipe = Pipeline(name=p.Pipeline.name, input=p.Pipeline.input,
-                            output=p.Pipeline.output,
-                            description=p.Pipeline.description,
-                            processors=json.loads(p.Pipeline.processors),
-                            encoder=json.loads(p.Pipeline.encoder))
-            res.append(pipe)
+        pipes = MongoIns.list_documents(PIPELINE_COLLECTION_NAME, 0)
+        for pipe in pipes:
+            p = Pipeline(pipe["name"], pipe["description"], pipe["processors"],
+                         pipe["encoder"], pipe["input"], pipe["output"])
+            p.metadata = pipe["metadata"]
+            res.append(p)
         return res
     except Exception as e:
         logger.error(e)
@@ -104,28 +56,35 @@ def all_pipelines():
 
 def pipeline_detail(name):
     try:
-        p = search_pipeline(name)
+        p = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, name)
         if not p:
             raise NotExistError("pipeline %s is not exist" % name, "")
-        pipe = Pipeline(name=p.name, input=p.input,
-                        output=p.output,
-                        description=p.description,
-                        processors=json.loads(p.processors),
-                        encoder=json.loads(p.encoder))
+        p = p[0]
+        pipe = Pipeline(p["name"], p["description"], p["processors"], p["encoder"], p["input"], p["output"])
+        pipe.metadata = p["metadata"]
         return pipe
     except Exception as e:
         raise e
 
 
-def create_pipeline(name, processors, encoder, description=None):
+def create_pipeline(name, processors=None, encoder=None, description=None):
     try:
-        # add encoder args check
-        # create pipeline
-        pipe = Pipeline(name=name, processors=processors, encoder=encoder,
-                        description=description, input="", output="")
+        p = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, name)
+        if p:
+            raise ExistError(f"pipeline <{name}> already exists", "")
+        pro = []
+        encoder_res = {}
+        for processor in processors:
+            pro.append(operator_detail(processor["name"]))
+        e = operator_detail(encoder["name"])
+        encoder_res["operator"] = e.to_dict()
+        encoder_res["instance"] = e.inspect_instance(encoder["instance"])
+        pipe = Pipeline(name, description, pro, encoder_res)
+        pipe.metadata = pipe._metadata()
         if pipeline_illegal(pipe):
-            return PipelineIlegalError("Pipeline illegal check error", "")
-        return pipe.save()
+            raise PipelineIllegalError("Pipeline illegal check error", "")
+        MongoIns.insert_documents(PIPELINE_COLLECTION_NAME, pipe.to_dict())
+        return pipe
     except Exception as e:
         logger.error(e)
         raise e
@@ -133,15 +92,13 @@ def create_pipeline(name, processors, encoder, description=None):
 
 def delete_pipeline(name):
     try:
-        p = del_pipeline(name)
+        p = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, name)
         if not p:
             raise NotExistError("pipeline %s is not exist" % name, "")
         p = p[0]
-        pipe = Pipeline(name=p.name, input=p.input,
-                        output=p.output,
-                        description=p.description,
-                        processors=json.loads(p.processors),
-                        encoder=json.loads(p.encoder))
+        MongoIns.delete_by_name(PIPELINE_COLLECTION_NAME, name)
+        pipe = Pipeline(p["name"], p["description"], p["processors"], p["encoder"], p["input"], p["output"])
+        pipe.metadata = p["metadata"]
         return pipe
     except Exception as e:
         logger.error(e)
@@ -153,14 +110,8 @@ def run_pipeline(p, **kwargs):
     if not isinstance(p, Pipeline):
         raise PipelineCheckError("check pipeline with error", "%s is not a Pipeline" % p)
     for processor in p.processors:
-        if not processor:
-            continue
-        op = operator_detail(processor["name"])
-        ins = op.inspect_instance(processor["instance"])
-        todo_list.append(ins)
-    op = operator_detail(p.encoder["name"])
-    ins = op.inspect_instance(p.encoder["instance"])
-    todo_list.append(ins)
+        todo_list.append(processor["instance"])
+    todo_list.append(p.encoder["instance"])
 
     def runner(todo_list):
         metadata, vectors = [], []
@@ -187,22 +138,41 @@ def run_pipeline(p, **kwargs):
 
 def test_pipeline(name, data=None, url=None):
     try:
-        pipe = search_pipeline(name)
-        p = Pipeline(name=pipe.name, input=pipe.input, output=pipe.output,
-                     description=pipe.description, processors=json.loads(pipe.processors),
-                     encoder=json.loads(pipe.encoder))
+        pipe = MongoIns.search_by_name(PIPELINE_COLLECTION_NAME, name)
+        if not pipe:
+            raise NotExistError("pipeline %s is not exist" % name, "")
+        pipe = pipe[0]
+        p = Pipeline(pipe["name"], pipe["description"], pipe["processors"],
+                     pipe["encoder"], pipe["input"], pipe["output"])
+        p.metadata = pipe["metadata"]
         return {"result": run_pipeline(p, data=data, url=url)}
     except Exception as e:
         raise e
 
 
 def pipeline_illegal(pipe):
-    # TODO Rewrite
-    # encoder_name = encoder.get("name")
-    # encoder_instance_name = encoder.get("instance")
-    # # check operator and instance exist
-    # encoder = operator_detail(encoder_name)
-    # # get port and addr from runtime client
-    # encoder_instance = encoder.inspect_instance(encoder_instance_name)
-    # encoder_identity = identity(encoder_instance.endpoint)
-    return False
+    input, output = None, None
+    try:
+        operators = pipe.processors.copy()
+        operators.append(pipe.encoder)
+        for num, operator in enumerate(operators):
+            # check operator and instance exist
+            print(pipe)
+            print(pipe.to_dict())
+            # use identity check container health
+            info = identity(operator['instance'].endpoint)
+            if num == len(operators)-1:
+                if info.get("type") != OPERATOR_TYPE_ENCODER:
+                    raise PipelineIllegalError("Pipeline illegal check error", "")
+            else:
+                if info.get("type") != OPERATOR_TYPE_PROCESSOR:
+                    raise PipelineIllegalError("Pipeline illegal check error", "")
+            # check input and output
+            if not input and not output:
+                input, output = info.get("input"), info.get("output")
+            else:
+                if output != info.get("input"):
+                    raise PipelineIllegalError("Pipeline illegal check error", "")
+            pipe.input, pipe.output = input, output
+    except Exception as e:
+        raise e
