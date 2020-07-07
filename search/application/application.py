@@ -103,10 +103,11 @@ def delete_milvus_collections_by_fields(app):
             MilvusIns.del_milvus_collection(name)
 
 
-def delete_application(name):
+def delete_application(name, force=False):
     try:
-        if not entities_list(name, 100, 0):
-            raise RequestError("Prevent to delete application with entity not deleted", "")
+        if not force:
+            if not entities_list(name, 100, 0):
+                raise RequestError("Prevent to delete application with entity not deleted", "")
         app = MongoIns.search_by_name(APPLICATION_COLLECTION_NAME, name)
         if not app:
             raise NotExistError(f"application {name} not exist", "")

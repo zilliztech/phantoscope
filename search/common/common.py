@@ -45,8 +45,8 @@ def json_response(func):
             res_body = json.dumps([x.to_dict() for x in res])
         elif isinstance(res, dict):
             res_body = json.dumps(res)
-            # elif isinstance(res, str):
-            #     res_body = res
+        elif isinstance(res, str):
+            res_body = res
             # elif isinstance(res, tuple):
             #     res_body, res_code = res
             #     if isinstance(res_body, list):
