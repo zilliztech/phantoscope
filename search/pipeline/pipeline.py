@@ -74,8 +74,12 @@ def create_pipeline(name, processors=None, encoder=None, description=None):
             raise ExistError(f"pipeline <{name}> already exists", "")
         pro = []
         encoder_res = {}
+        processor_res = {}
         for processor in processors:
-            pro.append(operator_detail(processor["name"]))
+            pr = operator_detail(processor["name"])
+            processor_res["operator"] = pr.to_dict()
+            processor_res["instance"] = pr.inspect_instance(processor["instance"])
+            pro.append(processor_res)
         e = operator_detail(encoder["name"])
         encoder_res["operator"] = e.to_dict()
         encoder_res["instance"] = e.inspect_instance(encoder["instance"])
@@ -166,11 +170,11 @@ def pipeline_illegal(pipe):
                 if info.get("type") != OPERATOR_TYPE_PROCESSOR:
                     raise PipelineIllegalError("Pipeline illegal check error", "")
             # check input and output
-            if not input and not output:
-                input, output = info.get("input"), info.get("output")
-            else:
-                if output != info.get("input"):
-                    raise PipelineIllegalError("Pipeline illegal check error", "")
-            pipe.input, pipe.output = input, output
+            # if not input and not output:
+            #     input, output = info.get("input"), info.get("output")
+            # else:
+            #     if output != info.get("input"):
+            #         raise PipelineIllegalError("Pipeline illegal check error", "")
+            # pipe.input, pipe.output = input, output
     except Exception as e:
         raise e
