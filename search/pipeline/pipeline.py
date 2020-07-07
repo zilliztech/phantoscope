@@ -157,8 +157,6 @@ def pipeline_illegal(pipe):
         operators.append(pipe.encoder)
         for num, operator in enumerate(operators):
             # check operator and instance exist
-            print(pipe)
-            print(pipe.to_dict())
             # use identity check container health
             info = identity(operator['instance'].endpoint)
             if num == len(operators)-1:

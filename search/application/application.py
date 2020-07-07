@@ -41,7 +41,6 @@ def all_applications():
     try:
         apps = MongoIns.list_documents(APPLICATION_COLLECTION_NAME, 0)
         for x in apps:
-            print(x)
             app = Application(name=x["name"], fields=x["fields"], bucket=x["bucket"])
             app.metadata = x["metadata"]
             res.append(app)
