@@ -29,7 +29,7 @@ services:
     image: milvusdb/milvus:0.7.0-cpu-d031120-de409b
     ports:
       - "19530:19530"
-      - "8080:8080"
+      - "19121:19121"
     volumes:
       - /mnt/om/milvus/db:/var/lib/milvus/db
   minio:

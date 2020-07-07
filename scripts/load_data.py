@@ -73,7 +73,7 @@ def get_file_generator(data_path, file_max_num):
                 yield os.path.join(root, file)
 
 
-def upload_image(file_num, file_generator, field_name):
+def upload_image(upload_url, file_num, file_generator, field_name):
     success_count, fail_count = 0, 0
 
     start = time.time()
@@ -94,15 +94,15 @@ def upload_image(file_num, file_generator, field_name):
             except Exception as e:
                 logging.error("Upload file '%s' error due to: %s" % (img, str(e)))
 
-    logging.info("Data in this task has been uploaded: \n"
-                 "success: {} fail: {} total: {}".format(
-        success_count, fail_count, file_num))
+    logging.info(
+        f"Data in this task has been uploaded: \nsuccess: {success_count} fail: {fail_count} total: {file_num}")
     end = time.time()
     logging.info('upload %d images cost: {:.3f}s'.format(end - start), file_num)
     return (success_count, fail_count)
 
 
 def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_num=12):
+    global upload_url
     split_every = (lambda n, it:
                    takewhile(bool, (list(islice(it, n)) for _ in repeat(None))))
     start = time.time()
@@ -111,7 +111,7 @@ def parallel_upload(file_num, file_generator, field_name, batch_size=500, pool_n
         splited_list = split_every(batch_size, iter(file_generator))
         for tmp_list in splited_list:
             num = len(tmp_list)
-            pool_list.append(pool.apply_async(upload_image, (num, tmp_list, field_name)))
+            pool_list.append(pool.apply_async(upload_image, (upload_url, num, tmp_list, field_name)))
 
         # sum all result
         success_cnt = 0
