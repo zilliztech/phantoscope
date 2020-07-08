@@ -191,6 +191,9 @@ class MilvusIns:
     def del_milvus_collection(name):
         try:
             milvus = Milvus(host=MILVUS_ADDR, port=MILVUS_PORT)
+            _, exist = milvus.has_collection(name)
+            if not exist:
+                return
             res = milvus.drop_collection(collection_name=name)
             if not res.OK():
                 raise MilvusError("There was some error when drop milvus collection", res)

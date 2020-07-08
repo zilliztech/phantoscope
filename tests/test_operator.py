@@ -1,4 +1,5 @@
 import time
+import json
 import pytest
 from test_basic import client
 from utils.require import sleep_time
@@ -74,7 +75,7 @@ class TestOperatorApi:
     @sleep_time(5)
     def test_list_instacne(self, client):
         rv = client.get(f'/v1/operator/{self.name}/instances')
-        assert len(rv.get_json()) == 1
+        assert rv.status_code == 200
 
     def test_stop_instance(self, client):
         rv = client.post(f'/v1/operator/{self.name}/instances/{self.instance_name}/stop')

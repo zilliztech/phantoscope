@@ -13,7 +13,6 @@ class TestPipelineApi:
     def test_create_pipeline_api(self, client):
         data = {
             "description": "this is a test pipeline",
-            "processors": "",
             "encoder": {
                 "name": "pytest1",
                 "instance": "ins1"
@@ -22,7 +21,7 @@ class TestPipelineApi:
         rv = client.post(f'/v1/pipeline/{self.name}', json=data)
         json_data = rv.get_json()
         assert rv.status_code == 200
-        assert json_data['_pipeline_name'] == self.name
+        assert json_data['name'] == self.name
 
         # create exist pipeline
         rv = client.post(f'/v1/pipeline/{self.name}', json=data)

@@ -22,17 +22,7 @@ services:
     depends_on:
       - milvus
       - minio
-      - mysql
-    networks:
-      - phantoscope-network
-  mysql:
-    image: mysql:5.6
-    environment:
-      - MYSQL_ROOT_PASSWORD=passwd
-    ports:
-      - "3306:3306"
-    volumes:
-      - /mnt/om/mysql:/var/lib/mysql
+      - mongo
     networks:
       - phantoscope-network
   mongo:

@@ -163,8 +163,7 @@ def search(name, fields={}, topk=10, nprobe=16):
             vectors = run_pipeline(pipe, data=file_data, url=url)
             if not vectors:
                 raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
-
-            milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
+            milvus_collection_name = f"{app.name}_{pipe.encoder['instance']['name'].replace('phantoscope_', '')}"
             mongo_name = f"{app.name}_entity"
             dbs = search_and_score(milvus_collection_name, mongo_name, n, vectors, topk, nprobe, inner_score_mode)
             tmp_res = []
