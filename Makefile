@@ -10,7 +10,7 @@ env:
 test:
 	docker pull psoperator/vgg16-encoder:latest
 	docker pull psoperator/ssd-detector:latest
-	PYTHONPATH=$(shell pwd)/search pytest tests --cov=./
+	PYTHONPATH=$(shell pwd)/search pytest tests
 lint:
 	PYTHONPATH=$(shell pwd)/search pylint --rcfile=pylint.conf search --msg-template='{msg_id}:{line:3d},{column}: {obj}: {msg}' --exit-zero > lintoutput
 	echo $(shell tail -2 lintoutput | grep -P "\d+" -o |sed -n "1p").$(shell tail -2 lintoutput | grep -P "\d+" -o |sed -n "2p")

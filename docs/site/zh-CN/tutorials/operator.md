@@ -1,7 +1,8 @@
 # 什么是 Operator
-Operator 是 Phantoscope 中工作单元的抽象描述，根据 Operator 可以创建工作单元。
+Operator 是 Phantoscope 中工作单元的抽象描述，
+Operator 实例是 Phantoscope 中工作单元，可由 Phantoscope 根据 Operator 创建。
 
-正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能
+正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能.
 
 同样你也可以根据[文档](../../../../operators/HowToAddAnOperator.md)实现自己的 Operator 然后注册到 Phantoscope 中为你工作
 
@@ -118,7 +119,7 @@ $ curl --location --request POST '127.0.0.1:5000/v1/operator/face_detector/insta
 }'
 ```
 
-第一次创建可能会从远端拉取镜像。创建成功后本地机器上会出现一个该镜像的容器。
+第一次创建会从远端拉取镜像, 比较耗时。创建成功后本地机器上会出现一个该镜像的容器。
 ```bash
 CONTAINER ID        IMAGE                                       COMMAND                  CREATED             STATUS              PORTS                                                NAMES
 67b697aad41b        psoperator/face-detector:latest             "python3 server.py"      26 seconds ago      Up 25 seconds       51001/tcp, 0.0.0.0:32768->80/tcp                     phantoscope_face_detector_face_detector1

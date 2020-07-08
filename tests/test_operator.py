@@ -28,8 +28,8 @@ class TestOperatorApi:
         rv = client.post('/v1/operator/register', json=data)
         json_data = rv.get_json()
         assert rv.status_code == 200
-        assert json_data["_name"] == self.name
-        assert json_data["_addr"] == self.addr
+        assert json_data["name"] == self.name
+        assert json_data["addr"] == self.addr
 
         # register exist operator
         rv = client.post('/v1/operator/register', json=data)

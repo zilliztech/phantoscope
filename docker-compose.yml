@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   api:
     image: phantoscope/api-server:9746dc5
@@ -23,6 +23,8 @@ services:
       - milvus
       - minio
       - mysql
+    networks:
+      - phantoscope-network
   mysql:
     image: mysql:5.6
     environment:
@@ -31,6 +33,8 @@ services:
       - "3306:3306"
     volumes:
       - /mnt/om/mysql:/var/lib/mysql
+    networks:
+      - phantoscope-network
   mongo:
     image: mongo
     environment:
@@ -40,6 +44,8 @@ services:
       - "27017:27017"
     volumes:
       - /mnt/om/mongo:/data/db
+    networks:
+      - phantoscope-network
   milvus:
     image: milvusdb/milvus:0.10.0-cpu-d061620-5f3c00
     ports:
@@ -47,6 +53,8 @@ services:
       - "19121:19121"
     volumes:
       - /mnt/om/milvus/db:/var/lib/milvus/db
+    networks:
+      - phantoscope-network
   minio:
     image: minio/minio:latest
     ports:
@@ -54,3 +62,9 @@ services:
     volumes:
       - /mnt/om/minio/data:/data
     command: ["server","/data"]
+    networks:
+      - phantoscope-network
+
+networks:
+  phantoscope-network:
+    name: phantoscope_default
