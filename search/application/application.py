@@ -41,7 +41,6 @@ def all_applications():
     try:
         apps = MongoIns.list_documents(APPLICATION_COLLECTION_NAME, 0)
         for x in apps:
-            print(x)
             app = Application(name=x["name"], fields=x["fields"], bucket=x["bucket"])
             app.metadata = x["metadata"]
             res.append(app)
@@ -104,10 +103,11 @@ def delete_milvus_collections_by_fields(app):
             MilvusIns.del_milvus_collection(name)
 
 
-def delete_application(name):
+def delete_application(name, force=False):
     try:
-        if not entities_list(name, 100, 0):
-            raise RequestError("Prevent to delete application with entity not deleted", "")
+        if not force:
+            if not entities_list(name, 100, 0):
+                raise RequestError("Prevent to delete application with entity not deleted", "")
         app = MongoIns.search_by_name(APPLICATION_COLLECTION_NAME, name)
         if not app:
             raise NotExistError(f"application {name} not exist", "")

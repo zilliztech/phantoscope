@@ -31,7 +31,7 @@ def upload(name, **kwargs):
         app = application_detail(name)
         if not app:
             raise NotExistError("application not exist", "application %s not exist" % name)
-        bucket_name = app.bucket.split(",")[0]
+        bucket_name = app.bucket
         accept_fields = [x for x, y in app.fields.items() if y.get('type') != "pipeline"]
         pipeline_fields = {x: y['value'] for x, y in app.fields.items() if y.get('type') == "pipeline"}
         new_fields = app.fields.copy()
@@ -65,8 +65,7 @@ def upload(name, **kwargs):
             vectors = run_pipeline(pipe, data=file_data, url=url)
             if not vectors:
                 raise NoneVectorError("can't encode data by encoder, check input or encoder", "")
-
-            milvus_collection_name = f"{app.name}_{pipe.encoder['name']}_{pipe.encoder['instance']}"
+            milvus_collection_name = f"{app.name}_{pipe.encoder['instance']['name'].replace('phantoscope_', '')}"
             vids = MilvusIns.insert_vectors(milvus_collection_name, vectors)
 
             docs[n] = {"ids": vids, "url": gen_url(bucket_name, file_name)}

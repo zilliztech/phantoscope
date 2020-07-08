@@ -26,17 +26,18 @@ class DockerRuntime:
                                           user_agent=user_agent,
                                           credstore_env=credstore_env)
         self.labels = ["phantoscope"]
+        self.network = "phantoscope_default"
 
     def create_instance(self, name, image, ports, args=None):
         try:
             self.client.containers.run(image=image, name=name,
                                        detach=True, ports=ports,
                                        labels=self.labels,
-                                       network="phantoscope_default")
+                                       network=self.network)
             containers = self.client.containers.list(all=False, filters={"name": name})
             container = containers[0]
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.status, self.get_container_ip(container),
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
@@ -46,7 +47,7 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.start()
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.status, self.get_container_ip(container),
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
@@ -56,7 +57,7 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.stop()
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.status, self.get_container_ip(container),
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
@@ -66,7 +67,7 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.remove(force=True)
             return new_operator_instance(container.short_id, container.name,
-                                         "deleted", container.attrs["NetworkSettings"]["IPAddress"],
+                                         "deleted", self.get_container_ip(container),
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
@@ -76,7 +77,7 @@ class DockerRuntime:
             container = self.client.containers.get(name)
             container.restart()
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.status, self.get_container_ip(container),
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
@@ -90,7 +91,7 @@ class DockerRuntime:
                 res.append(new_operator_instance(container.short_id,
                                                  container.name,
                                                  container.status,
-                                                 container.attrs["NetworkSettings"]["IPAddress"],
+                                                 self.get_container_ip(container),
                                                  container.ports))
             return res
         except APIError as e:
@@ -100,10 +101,13 @@ class DockerRuntime:
         try:
             container = self.client.containers.get(name)
             return new_operator_instance(container.short_id, container.name,
-                                         container.status, container.attrs["NetworkSettings"]["IPAddress"],
+                                         container.status, self.get_container_ip(container),
                                          container.ports)
         except APIError as e:
             raise DockerRuntimeError(e.explanation, e)
+
+    def get_container_ip(self, container):
+        return container.attrs["NetworkSettings"]["Networks"][self.network]["IPAddress"]
 
 
 def runtime_client_getter(name):

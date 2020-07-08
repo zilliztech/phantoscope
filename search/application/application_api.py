@@ -55,7 +55,12 @@ def new_application_api(name):
 @application.route("/<name>", methods=['DELETE'])
 @json_response
 def delete_application_api(name):
-    return delete_application(name)
+    args = reqparse.RequestParser(). \
+        add_argument("force", type=bool, default=False). \
+        parse_args()
+    args = from_view_dict(args)
+    force = args['force']
+    return delete_application(name, force)
 
 
 @application.route("/<name>/search", methods=['POST'])
