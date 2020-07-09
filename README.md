@@ -55,7 +55,7 @@ Phantoscope is the right tool for you. Empowered by miscellaneous deep-learning 
 
 Download Phantoscope
 ```bash
-$ git clone https://github.com/zilliztech/phantoscope.git && cd phantoscope
+$ git clone https://github.com/zilliztech/phantoscope.git -b 0.1.0 && cd phantoscope
 ```
 
 Set up environment
