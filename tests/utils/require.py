@@ -56,7 +56,6 @@ def pre_application(name="pytest_app_1",
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            time.sleep(5)  # wait for opertaor instance start
             new_application(app_name=name, fields=fields, s3_bucket=s3_buckets)
             func(*args, **kwargs)
             delete_application(name, True)

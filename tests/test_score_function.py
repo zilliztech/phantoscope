@@ -42,7 +42,7 @@ class TestScoreFunctionApi:
     @pre_instance(operator_name=f"{encoder_name}2", name=f"{encoder_instance2}2")
     @pre_operator(name=f"{detector_name}2", type=detector_type, addr=detector_addr, version="0.1", description="")
     @pre_instance(operator_name=f"{detector_name}2", name=f"{detector_instance}2")
-    @sleep_time(12)  # wait for operator instance initialization
+    @sleep_time(15)  # wait for operator instance initialization
     @pre_pipeline(name=f"{pipeline_name1}2",
                   encoder={"name": f"{encoder_name}2", "instance": f"{encoder_instance}2"})
     @pre_pipeline(name=f"{pipeline_name2}2",
@@ -145,7 +145,7 @@ class TestScoreFunctionApi:
     @pre_instance(operator_name=f"{encoder_name}3", name=f"{encoder_instance2}3")
     @pre_operator(name=f"{detector_name}3", type=detector_type, addr=detector_addr, version="0.1", description="")
     @pre_instance(operator_name=f"{detector_name}3", name=f"{detector_instance}3")
-    @sleep_time(12)  # wait for operator instance initialization
+    @sleep_time(15)  # wait for operator instance initialization
     @pre_pipeline(name=f"{pipeline_name1}3",
                   encoder={"name": f"{encoder_name}3", "instance": f"{encoder_instance}3"})
     @pre_pipeline(name=f"{pipeline_name2}3",
