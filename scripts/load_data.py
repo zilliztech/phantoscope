@@ -21,7 +21,7 @@ def get_app_body_fields(address, app_name):
     try:
         reply = requests.get(url)
         content = json.loads(reply.content)
-        application_fields = content["_fields"]
+        application_fields = content["fields"]
         return application_fields
     except Exception as e:
         logging.error("request url %s error: %s", url, str(e), exc_info=True)
@@ -30,12 +30,15 @@ def get_app_body_fields(address, app_name):
 
 def get_app_field_name(address, app_name, pipeline_name=None):
     all_fields = get_app_body_fields(address, app_name)
+    res_fields = []
     for field_name, value in all_fields.items():
         if value.get("type", None) == 'pipeline':
-            if (not pipeline_name) or value.get("value") == pipeline_name:
-                return field_name
+            if (not pipeline_name) or value.get("value") in pipeline_name:
+                res_fields.append(field_name)
             else:
                 continue
+    if res_fields:
+        return res_fields
     err_msg = "Can not find pipeline %s in app %s" % (pipeline_name, app_name)
     logging.error(err_msg)
     raise Exception(err_msg)
@@ -44,9 +47,7 @@ def get_app_field_name(address, app_name, pipeline_name=None):
 def construt_request_body(image_field, base64_image):
     template_data = {
         "fields": {
-            image_field: {
-                "data": base64_image
-            }
+            key: {"data": base64_image} for key in image_field
         }
     }
     return template_data
@@ -133,7 +134,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--app_name", type=str, help='assigned app name',
                         dest='app_name', default='example')
     parser.add_argument("-p", "--pipeline_name", type=str, help='assigned pipeline name',
-                        dest='pipeline_name', default=None)
+                        dest='pipeline_name', action='append', default=None)
     parser.add_argument("-d", "--data_path", type=str, help='assigned data path',
                         dest='data_dir')
     parser.add_argument("-s", "--server", type=str, help='assigned search api address',

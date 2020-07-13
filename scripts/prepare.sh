@@ -28,7 +28,7 @@ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/pipeline/example_pipeli
 --header 'Content-Type: application/json' \
 --data '{
 	"description":"pipeline example",
-	"processors": {},
+	"processors": [],
 	"encoder": {
 		"name": "vgg_encoder",
 		"instance":"vgg_instance1"
@@ -46,5 +46,5 @@ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/example_app
             "value": "example_pipeline"
         }
     },
-    "s3Buckets": "example-s3"
+    "s3Bucket": "example-s3"
 }'
