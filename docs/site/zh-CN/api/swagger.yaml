@@ -35,7 +35,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Application'
+              $ref: '#/definitions/ApplicationReply'
         "500":
           description: A server error has occurred.
           schema:
@@ -57,7 +57,7 @@ paths:
         "200":
           description: The application is retrieved.
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/ApplicationReply'
         "404":
           description: The application is not found.
           schema:
@@ -89,7 +89,7 @@ paths:
         "200":
           description: The application is created.
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/ApplicationReply'
     delete:
       tags:
       - application
@@ -106,7 +106,7 @@ paths:
         "200":
           description: The application is deleted.
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/ApplicationReply'
   /application/{applicationName}/search/:
     post:
       tags:
@@ -222,6 +222,7 @@ paths:
           description: The entity is successfully deleted.
           schema:
             $ref: '#/definitions/Entity'
+      
   /pipeline:
     get:
       tags:
@@ -330,7 +331,7 @@ paths:
         "200":
           description: the pipeline is ok
           schema:
-            $ref: '#/definitions/Pipeline'
+            $ref: '#/definitions/PipelineTestResult'
     
   /operator:
     get:
@@ -390,7 +391,7 @@ paths:
           properties:
             url:
               type: string
-              example: http://ss
+              example: http://23.99.118.156/v1/operator
             override:
               type: boolean
               example: False
@@ -419,6 +420,8 @@ paths:
         "200":
           description: The operator details are retrieved.
           schema:
+           type: array
+           items:
             $ref: '#/definitions/Operator'
     delete:
       tags:
@@ -583,10 +586,26 @@ definitions:
     properties:
       fields:
         $ref: '#/definitions/Fields'
-      s3Buckets:
+      s3Bucket:
         type: string
         example: example1
         description: The bucket name in s3 storage. The uploaded image will be saved here.
+  ApplicationReply:
+    type: object
+    properties:
+      name: 
+        type: string
+        example: example_app
+        description: Name of application.
+      fields:
+        $ref: '#/definitions/Fields'
+      s3Bucket:
+        type: string
+        example: example1
+        description: The bucket name in s3 storage. The uploaded image will be saved here.
+      metadata:
+        type: object
+        $ref: '#/definitions/MetaData'
   Fields:
     type: object
     additionalProperties:
@@ -658,41 +677,32 @@ definitions:
         type: string
         example: image
         description: The type of data processed by this pipeline.
-      description:
+      output:
         type: string
-        example: This is a test pipeline.
-        description: A description of the pipeline.
+        example: image
+        description: The output type of this pipeline.
       processors:
-        type: array
-        items:
-          type: object
-          description: The processor name.
-          properties:
-            name:
-              type: string
-              example: face_detector
-              description: The processor name.
-            instance:
-              type: string
-              example: face_instance1
-              description: The processor instance name.
+        type: string
+        example: 
+          []
+        description: The processor information of this pipeline.
       encoder:
         type: object
         description: The processor name.
         properties:
-          name:
-            type: string
-            example: vgg16
-            description: The encoder name.
+          operator:
+            type: object
+            $ref: '#/definitions/Operator'
           instance:
-            type: string
-            example: vgg_instance1
-            description: The processor instance name.
-        
-      indexFileSize:
-        type: integer
-        example: 1024
-        description: Number of the documents automatically indexed.
+            type: object
+            $ref: '#/definitions/OperatorInstance'
+      description:
+        type: string
+        example: This is a test pipeline.
+        description: A description of the pipeline.
+      metadata:
+        type: object
+        $ref: '#/definitions/MetaData'
   Operator:
     type: object
     properties:
@@ -700,34 +710,33 @@ definitions:
         type: string
         example: operator-test
         description: The operator name.
-      backend:
+      addr:
         type: string
-        example: vgg16
-        description: The name of the container where the operator is provided.
+        example: psoperator/vgg16-encoder:latest
+        description: the addr of the operator image
+      author: 
+        type: string
+        example: phantoscope
+        description: the author of the operator
+      version:
+        type: string
+        example: 0.1.0
+        description: the version of the operator
       type:
         type: string
         example: encoder
         description: The type of the operator. Can be either "encoder" or "processor".
-      input:
+      description:
         type: string
-        example: image
-        description: The type of the input data.
-      outout:
+        example: vgg16 encoder
+        description: description of operators
+      runtime_client:
         type: string
-        example: vector
-        description: The type of the output data.
-      endpoint:
-        type: string
-        example: 192.168.100.1:35000
-        description: The endpoint of the container.
-      metric_type:
-        type: string
-        example: l2
-        description: The way to calculate vector distance. Only in "encoder"
-      dimension:
-        type: integer
-        example: 512
-        description: The dimension of the vector. Only in "encoder"
+        example: docker
+        description: The client type of runtime
+      metadata:
+        $ref: '#/definitions/MetaData'
+      
   OperatorPost:
     type: object
     properties:
@@ -753,25 +762,26 @@ definitions:
         description: Description of the operator.
       version:
         type: string
-        example: 0.1
+        example: 0.1.0
         description: The version of the operator.
   Entity:
     type: object
     properties:
-      id:
+      _id:
         type: string
         example: "13055410131"
         description: The unique identifier.
-      app_name:
+      _docs:
         type: string
-        example: test
-        description: The application name.
-      image_url:
-        type: string
-        example: http://test.com/dog.jpg
-        description: The image url in s3 storage.
-      fields:
-        $ref: '#/definitions/Fields'
+        example:
+          {
+            "vgg": {
+              "ids": [
+                  1594725498646129000
+              ],
+              "url": "http://192.168.1.192:9000/cx171122/multi_app4-a0ffd8e275d543fab381f14a33a8b4f5"
+            }
+          }
   Error:
     type: object
     properties:
@@ -784,27 +794,62 @@ definitions:
   OperatorInstance:
     type: object
     properties:
+      id: 
+        type: string
+        example: b01c221864
+        description: The operator instance id.
       name:
         type: string
         example: operator-test
         description: The operator name.
-      addr:
+      status: 
         type: string
-        example: psoperator/vgg16-encoder:latest
-        description: The address of the operator image which can pull.
-      author:
+        example: running
+        description: The operator instance status.
+      ports:
         type: string
-        example: phantoscope
-        description: The author of the operator.
-      type:
+        example: 
+          {
+            "80/tcp": [
+              {
+                  "HostIp": "0.0.0.0",
+                  "HostPort": "32846"
+              }
+            ]
+          }
+        description: Ports of the operator instance. 
+      ip:
         type: string
-        example: encoder
-        description: Type of the operator, processor and encoder is accepted.
-      description:
+        example: 192.168.128.6
+        description: IP of the operator instance.
+      endpoint:
         type: string
-        example: this is the vgg16 encoder operator.
-        description: Description of the operator.
-      version:
+        example: 192.168.128.6:80
+        description: The endpoint of the operator instance.     
+
+  MetaData:
+    type: object
+    properties:
+      id:  
         type: string
-        example: 0.1
-        description: The version of the operator.
+        example: operator-test
+        description: The resource id.
+      create_time: 
+         type: string
+         example: 2020-07-13 11:09:25.969068
+         description: Create time of this resource.
+      resource_type:
+         type: string
+         example: Operator
+         description: Type of resource.
+      state: 
+         type: string
+         example: created
+         description: State of the resource.
+  
+  PipelineTestResult:
+    type: object
+    properties:
+      result: 
+        type: string
+        example: [0.02045009285211563, 0.0, 0.021395420655608177, 0.0010909147094935179, ...]

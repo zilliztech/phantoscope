@@ -33,7 +33,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /mnt/om/mongo:/data/db
+      - /mnt/ps/mongo:/data/db
     networks:
       - phantoscope-network
   milvus:
@@ -42,7 +42,7 @@ services:
       - "19530:19530"
       - "19121:19121"
     volumes:
-      - /mnt/om/milvus/db:/var/lib/milvus/db
+      - /mnt/ps/milvus/db:/var/lib/milvus/db
     networks:
       - phantoscope-network
   minio:
@@ -50,7 +50,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - /mnt/om/minio/data:/data
+      - /mnt/ps/minio/data:/data
     command: ["server","/data"]
     networks:
       - phantoscope-network
