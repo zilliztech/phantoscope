@@ -3,12 +3,12 @@
 开始之前[安装](..\..\..\..\README_CN.md#安装)
 
 确认 Phantoscope 所有组件正常：
-```bash 
+```bash
 $ docker-compose ps
 ```
 
 *看到如下输出即表示 Phantoscope 正在运行:*
-```
+```bash
 Name                      Command               State                        Ports
 ----------------------------------------------------------------------------------------------------------------
 phantoscope_api_1      /usr/bin/gunicorn3 -w 4 -b ...   Up      0.0.0.0:5000->5000/tcp
@@ -53,7 +53,7 @@ $ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/pre
 
 ## 使用 curl 导入一张图片
 如果你想单独导入一张图片，可以使用如下命令
-``` bash
+```bash
 $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app/upload' \
 --header 'Content-Type: application/json' \
 --data "{
@@ -63,20 +63,19 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
         }
     }
 }"
-
 ```
 
 *预期得到如下响应：*
 ```json
 [
     {
-        "_id": 1591585583689787000,
-        "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example_app-19ef9e9ba7f745dd90b2d9373c1aed56",
-        "_fields": {
-            "example_field": {
-                "type": "object",
-                "pipeline": "example_pipeline"
+        "_id":"5f103b21f92bc0c90cc7f737",
+        "_docs":{
+            "example_field":{
+                "ids":[
+                    1594899233036739000
+                ],
+                "url":"http://192.168.1.192:9000/example-s3/example_app-33c5bf6ce2a0482593993140e83a6481"
             }
         }
     }
@@ -101,24 +100,24 @@ $ curl --location --request POST $LOCAL_ADDRESS':5000/v1/application/example_app
 ```json
 [
     {
-        "_id": "1591584893762549000",
-        "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example_app-b26e52aa65df4c23bbd848e98df1f0a3",
-        "_fields": {
-            "example_field": {
-                "type": "object",
-                "pipeline": "example_pipeline"
+        "_id":"5f103b21f92bc0c90cc7f737",
+        "_docs":{
+            "example_field":{
+                "ids":[
+                    1594899233036739000
+                ],
+                "url":"http://192.168.1.192:9000/example-s3/example_app-33c5bf6ce2a0482593993140e83a6481"
             }
         }
     },
     {
-        "_id": "1591584895837488000",
-        "_app_name": "example_app",
-        "_image_url": "http://host:9000/example/example_app-e53e7a233c814b7f825f7b58c2647501",
-        "_fields": {
-            "example_field": {
-                "type": "object",
-                "pipeline": "example_pipeline"
+        "_id":"5f103b9faf56a7d8833f5597",
+        "_docs":{
+            "example_field":{
+                "ids":[
+                    1594899359173444000
+                ],
+                "url":"http://192.168.1.192:9000/example-s3/example_app-b20d796e8cda4a539201557bd418a89f"
             }
         }
     }
