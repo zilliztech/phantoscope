@@ -1,27 +1,27 @@
 # 什么是 Operator
-Operator 是 Phantoscope 中工作单元的抽象描述，
-Operator 实例是 Phantoscope 中工作单元，可由 Phantoscope 根据 Operator 创建。
+Operator 是对 Phantoscope 中工作单元的抽象描述。
+Operator 的实例是 Phantoscope 中的工作单元，可由 Phantoscope 根据 Operator 创建。
 
-正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能.
+正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能。
 
-同样你也可以根据[文档](../../../../operators/HowToAddAnOperator.md)实现自己的 Operator 然后注册到 Phantoscope 中为你工作
+同样你也可以根据[文档](../../../../operators/HowToAddAnOperator.md)实现自己的 Operator，然后注册到 Phantoscope 中为你工作。
 
-Operator 根据工作不同分为两种: Processor 与 Encoder
+Operator 根据工作不同分为两种: Processor 与 Encoder。
 
 ## Processor
-Processor 是 Operator 当中最通用的一类，它们接收数据，并将处理完成数据交给下一个 Operator
+Processor 是 Operator 当中最通用的一类，它们接收数据，并将处理完成数据交给下一个 Operator。
 
-通常来说 Processor 处理的数据与发送的数据都是同一种类型的
+通常来说 Processor 处理的数据与发送的数据都是同一种类型的。
 
 例如:
 
-Processor 接收了一张图片然后将图片中的人脸数据提取出来，然后将人脸的数据发送出去
+Processor 接收了一张图片然后将图片中的人脸数据提取出来，然后将人脸的数据发送出去。
 
-Processor 只要进行接收、处理、发送
+Processor 只要进行接收、处理、发送。
 
-至于从哪里接收与发送到什么地方，Processor 都不需要关心
+至于从哪里接收与发送到什么地方，Processor 都不需要关心。
 
-目前 Phantoscope 内置的 Processor 有以下几种。
+目前 Phantoscope 内置的 Processor 有以下几种：
 
 - ###### MTCNN-face-detector
     - 镜像名： face-detector
@@ -39,7 +39,7 @@ Processor 只要进行接收、处理、发送
     - 返回： 检测出的一组物体图片
     - 样例 Pipeline：mask-rcnn-object-detetcor -> vgg/xception
 
-> 以 [Mask_RCNN](https://github.com/matterport/Mask_RCNN) 实现
+> 以 [Mask_RCNN](https://github.com/matterport/Mask_RCNN) 实现。
 
 - ###### SSD-object-detector
     - 镜像名： ssd-detector
@@ -48,7 +48,7 @@ Processor 只要进行接收、处理、发送
     - 返回： 检测出的一组物体图片
     - 样例 Pipeline：ssd-object-detector -> vgg/xception
 
-> 以 [Tensorflow SSD](https://github.com/scanner-research/scannertools/blob/master/scannertools/scannertools/object_detection.py) 模型实现
+> 以 [Tensorflow SSD](https://github.com/scanner-research/scannertools/blob/master/scannertools/scannertools/object_detection.py) 模型实现。
 
 - ###### YOLOv3-object-detector
     - 镜像名：yolov3-detector
@@ -57,23 +57,23 @@ Processor 只要进行接收、处理、发送
     - 返回： 检测出的一组物体图片
     - 样例 Pipeline：yolov3-object-detector -> vgg/xception
 
-> 以 [Paddlepaddle Yolov3](https://github.com/PaddlePaddle/PaddleDetection) 模型实现
+> 以 [Paddlepaddle Yolov3](https://github.com/PaddlePaddle/PaddleDetection) 模型实现。
 
 ## Encoder
-Encoder 可以看作特殊的 Processor, Encoder 与 Processor 的最大区别在于
+Encoder 可以看作特殊的 Processor, Encoder 与 Processor 的最大区别在于：
 
-Encoder 处理的数据与发送的数据类型并不一致
+Encoder 处理的数据与发送的数据类型并不一致；
 
-Encoder 会将非结构化的数据转变成向量或者是标签
+Encoder 会将非结构化的数据转变成向量或者是标签。
 
-所以 Encoder 是处理的最后一环
+所以 Encoder 是处理的最后一环。
 
-目前 Phantoscope 内置的 Encoder 有以下几种。
+目前 Phantoscope 内置的 Encoder 有以下几种：
 
 - ###### Vgg16
     - 镜像名： vgg16-encoder
     - 向量维度： 512
-    - 功能： 对输入的图片进行 embedding，得到表征图片的特征向量
+    - 功能： 对输入的图片进行 embedding，得到表征图片的特征向量。
 
 > 以 [Keras Vgg16](https://keras.io/zh/applications/) 实现。
 
@@ -126,8 +126,8 @@ CONTAINER ID        IMAGE                                       COMMAND         
 ```
 
 # Operator 的设计原则
-Operator 应该是无状态的 
+Operator 应该是无状态的。 
 
-Operator 设计上应该保持独立与可重入
+Operator 设计上应该保持独立与可重入。
 
-Operator 独立工作并不依赖于外接存储
+Operator 独立工作并不依赖于外接存储。
