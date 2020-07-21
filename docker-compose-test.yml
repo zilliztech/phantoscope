@@ -1,15 +1,19 @@
-version: '3'
+version: '3.5'
 services:
   milvus:
     image: milvusdb/milvus:0.10.0-cpu-d061620-5f3c00
     ports:
       - "19530:19530"
-      - "8080:8080"
+      - "19121:19121"
+    networks:
+      - phantoscope-network
   minio:
     image: minio/minio:latest
     ports:
       - "9000:9000"
     command: ["server","/data"]
+    networks:
+      - phantoscope-network
   mongo:
     image: mongo
     environment:
@@ -17,3 +21,9 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=passwd
     ports:
       - "27017:27017"
+    networks:
+      - phantoscope-network
+
+networks:
+  phantoscope-network:
+    name: phantoscope_default

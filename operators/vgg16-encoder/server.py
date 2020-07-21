@@ -59,6 +59,7 @@ class OperatorServicer(vggrpc.rpc_pb2_grpc.OperatorServicer):
                                             dimension=vgg.dimension,
                                             metricType=vgg.metric_type)
 
+
 def serve(port):
     options = [('grpc.max_send_message_length', 100 * 1024 * 1024),
                ('grpc.max_receive_message_length', 100 * 1024 * 1024)]

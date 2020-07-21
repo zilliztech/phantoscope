@@ -76,14 +76,9 @@ def operator_instance_list_api(name):
     return op.list_instances()
 
 
-@operator.route("/<name>/instances", methods=['POST'])
+@operator.route("/<name>/instances/<ins_name>", methods=['POST'])
 @json_response
-def create_operator_instance_api(name):
-    args = reqparse.RequestParser(). \
-        add_argument("instanceName", type=str, required=True). \
-        parse_args()
-    args = from_view_dict(args)
-    ins_name = args['instance_name']
+def create_operator_instance_api(name, ins_name):
     op = operator_detail(name)
     return op.new_instance(ins_name)
 

@@ -15,7 +15,7 @@ class TestOperatorApi:
     type = "encoder"
     description = "this is a test operator"
     version = "0.1"
-    instance_name = "ins-test"
+    instance_name = "ins-test1"
 
     def test_register_api(self, client):
         data = {
@@ -66,10 +66,7 @@ class TestOperatorApi:
         assert rv.status_code == 200
 
     def test_create_instance(self, client):
-        data = {
-            "instanceName": self.instance_name
-        }
-        rv = client.post(f'/v1/operator/{self.name}/instances', json=data)
+        rv = client.post(f'/v1/operator/{self.name}/instances/{self.instance_name}')
         assert rv.status_code == 200
 
     @sleep_time(5)

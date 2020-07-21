@@ -1,7 +1,7 @@
-version: '3'
+version: '3.5'
 services:
   api:
-    image: phantoscope/api-server:v0.1.0
+    image: phantoscope/api-server:0.2.0
     ports:
       - "5000:5000"
     environment:
@@ -13,10 +13,18 @@ services:
       - SEARCH_IMAGES_DATABASE_PASSWD=passwd
       - MILVUS_PORT=19530
       - MINIO_BUCKET_NUM=20
+      - MONGO_ADDR=mongo
+      - MONGO_PORT=27017
+      - MONGO_USERNAME=root
+      - MONGO_PASSWD=passwd
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - milvus
       - minio
       - mongo
+    networks:
+      - phantoscope-network
   mongo:
     image: mongo
     environment:
@@ -25,26 +33,28 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /mnt/om/mongo:/data/db
+      - /mnt/ps/mongo:/data/db
+    networks:
+      - phantoscope-network
   milvus:
     image: milvusdb/milvus:0.10.0-cpu-d061620-5f3c00
     ports:
       - "19530:19530"
-      - "8080:8080"
+      - "19121:19121"
     volumes:
-      - /mnt/om/milvus/db:/var/lib/milvus/db
+      - /mnt/ps/milvus/db:/var/lib/milvus/db
+    networks:
+      - phantoscope-network
   minio:
     image: minio/minio:latest
     ports:
       - "9000:9000"
     volumes:
-      - /mnt/om/minio/data:/data
+      - /mnt/ps/minio/data:/data
     command: ["server","/data"]
-  vgg:
-    image: psoperator/vgg16:latest
-    ports:
-      - "50001:50001"
-    environment:
-      - OP_ENDPOINT=${LOCAL_ADDRESS}:50001
-    depends_on:
-      - api
+    networks:
+      - phantoscope-network
+
+networks:
+  phantoscope-network:
+    name: phantoscope_default
