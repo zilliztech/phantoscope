@@ -210,6 +210,6 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object_ex
 
 3.使用 [Phantoscope Preview](https://github.com/zilliztech/phantoscope/blob/master/docs/site/zh-CN/tutorials/preview.md) 更直观地进行搜索。演示效果如下图所示：
 >  注意切换为 object_example 的 application。
-![result](/.github/example/object-example.gif)
+![result](https://live.staticflickr.com/65535/50140138427_45c3193fd8_o.gif)
 
-> 本文所使用 API 详见 [API 文档](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0)。
+> 本文所使用 API 详见 [API 文档](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.2.0)。

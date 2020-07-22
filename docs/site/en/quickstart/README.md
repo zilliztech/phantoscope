@@ -44,7 +44,7 @@ $ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/pre
 ```
 Open 127.0.0.1:8000 with browser
 
-![Phantoscope Preview Demonstration](../../../../.github/preview.gif)
+![Phantoscope Preview Demonstration](https://live.staticflickr.com/65535/50140138947_2801b030df_o.gif)
 
 
 ## Use curl to import an image
