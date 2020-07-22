@@ -1,6 +1,6 @@
 # 什么是 Operator
 Operator 是对 Phantoscope 中工作单元的抽象描述。
-Operator 的实例是 Phantoscope 中的工作单元，可由 Phantoscope 根据 Operator 创建。
+Operator 实例是 Phantoscope 中的工作单元，可由 Phantoscope 根据 Operator 创建。
 
 正是由于 Operator 的多样性，Phantoscope 才可以完成不同的功能。
 
