@@ -90,7 +90,7 @@ $ curl --location --request POST ${LOCAL_ADDRESS}':5000/v1/application/object_ex
 
 ```bash
 $ pip3 install requests tqdm
-$ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object-example -p object_pipeline
+$ python3 scripts/load_data.py -d /tmp/coco-animals/train -a object_example -p object_pipeline
 ```
 
 6. Conduct an object search. 
