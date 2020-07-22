@@ -12,7 +12,7 @@ $ docker run -d -e API_URL=$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:0.
 Open http://127.0.0.1:8000 with a Web browser to view the interface of Phantoscope Preview. 
 
 
-![](../../../../.github/preview.gif)
+![](https://live.staticflickr.com/65535/50140138947_2801b030df_o.gif)
 
 
 

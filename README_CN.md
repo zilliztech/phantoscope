@@ -117,7 +117,7 @@ phantoscope_mongo_1    docker-entrypoint.sh mongod      Up      0.0.0.0:27017->2
  
 ## API 参考
 
-点击 [这里](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0) 阅读详细 RESTful API 文档。
+点击 [这里](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.2.0) 阅读详细 RESTful API 文档。
 
 ## 贡献者指南
 

@@ -116,7 +116,7 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 <a href="#api"></a>
 ## API reference
 
-Click [here](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0) to read our latest RESTful API reference.
+Click [here](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.2.0) to read our latest RESTful API reference.
 
 <a href="#contributing"></a>
 ## Contributing
