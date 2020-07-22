@@ -4,7 +4,7 @@ Phantoscope Preview is a GUI interface designed for Phantoscope users to verify 
 ## Installation
 ```bash
 $ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-$ docker run -d -e API_URL=$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
+$ docker run -d -e API_URL=$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:0.2.0
 ```
 
 ## Search with Phantoscope Preview
