@@ -12,6 +12,7 @@
 import os
 import json
 import logging
+from functools import reduce
 import pymongo
 from bson.objectid import ObjectId
 from bson.json_util import dumps
@@ -147,13 +148,22 @@ class MongoIns:
 
     @staticmethod
     def search_by_vector_id(name, field_name, ids: list):
+        def find_index_as_key(item):
+            key = len(ids) + 1
+            for id in item[field_name]['ids']:
+                if id in ids:
+                    key = min(key, ids.index(id))
+            return key
+
         try:
             client = pymongo.MongoClient(MONGO_ADDR, MONGO_PORT,
                                          username=MONGO_USERNAME,
                                          password=MONGO_PASSWORD)
             db = client.phantoscope
             res = getattr(db, name).find({f"{field_name}.ids": {"$in": ids}})
-            return list(res)
+            res = list(res)
+            res.sort(key=find_index_as_key)
+            return res
         except Exception as e:
             raise e
 
