@@ -18,7 +18,7 @@
     | random-select          | Selects an entity from several entities detected from a single field and conducts topk search. | Randomly selects in order to increase search diversity.                   |
     | distance_first         | Conducts topk search on several entities detected from a single field and selects the nearest entities from the result sets as the final results. | Selects the nearest entities to guarantee that the results are the most similar ones to a certain part of the input image.  |
     
-    Take the detection of an object as an example. When the search data is a specific image, Phantoscope first uses the processor (specifically the detector processors, such as SSD) to extract a table, a chair, and a lamp from the image. Then the three images of the objects are encoded using the encoder to obtain three feature vectors. Each vector is used as input data, and the most similar topk entities are found in the Milvus base library. 
+    Take the detection of an object as an example. When the search data is a specific image, Phantoscope first uses the processor (specifically the detector processors, such as SSD) to extract a table, a chair, and a lamp from the image. Then the three images of the objects are encoded using the encoder to obtain three feature vectors. Each vector is used as input data, and the most similar `topk` entities are retrieved in Milvus. 
     
     If the `distance_first` inner field score mode is selected, then all search results are sorted by vector distance and the nearest one is the final result. The result obtained at this time must be the result set most similar to an object in the searched image.
     
