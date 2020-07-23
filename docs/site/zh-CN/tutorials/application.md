@@ -30,7 +30,7 @@
 不同的场景由于处理的流程(Pipeline)与数据各不相同，所以需要多个 Application。
 
 ## Application 支持多分支的 Pipeline 吗
-在当前版本，Application 支持一条或多条 Pipeline 的上传与搜索，关于多 Pipeline 的搜索方案可以参考 Score Function。
+在当前版本，Application 支持一条或多条 Pipeline 的上传与搜索，关于多 Pipeline 的搜索方案可以参考 [Score Function](./score_function.md)。
 
 接下来的版本中, Application 会支持一条 Pipeline 中 存在多个分支的情况。
 
