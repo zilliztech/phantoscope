@@ -56,7 +56,7 @@ Phantoscope is the right tool for you. Empowered by miscellaneous deep-learning 
 1. Download Phantoscope:
 
 ```bash
-$ git clone https://github.com/zilliztech/phantoscope.git -b 0.1.0 && cd phantoscope
+$ git clone https://github.com/zilliztech/phantoscope.git -b 0.2.0 && cd phantoscope
 ```
 
 2. Set up the environment:
@@ -80,11 +80,10 @@ $ docker-compose ps
 ```
 Name                   Command                          State   Ports
 ----------------------------------------------------------------------------------------------------------------
-phantoscope_api_1      /usr/bin/gunicorn3 -w 4 -b ...   Up      0.0.0.0:5000->5000/tcp
-phantoscope_milvus_1   /var/lib/milvus/docker-ent ...   Up      0.0.0.0:19530->19530/tcp, 0.0.0.0:8080->8080/tcp
-phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->9000/tcp
-phantoscope_mysql_1    docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
-phantoscope_vgg_1      python3 server.py                Up      0.0.0.0:50001->50001/tcp
+phantoscope_api_1      /usr/bin/gunicorn3 -w 4 -b ...   Up      0.0.0.0:5000->5000/tcp                            
+phantoscope_milvus_1   /var/lib/milvus/docker-ent ...   Up      0.0.0.0:19121->19121/tcp, 0.0.0.0:19530->19530/tcp
+phantoscope_minio_1    /usr/bin/docker-entrypoint ...   Up      0.0.0.0:9000->9000/tcp                            
+phantoscope_mongo_1    docker-entrypoint.sh mongod      Up      0.0.0.0:27017->27017/tcp
 ```
 
 <a href="#quickstart"></a>
@@ -117,7 +116,7 @@ Click [here](./docs/site/en/quickstart) to set up a basic Phantoscope applicatio
 <a href="#api"></a>
 ## API reference
 
-Click [here](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.1.0) to read our latest RESTful API reference.
+Click [here](https://app.swaggerhub.com/apis-docs/phantoscope/Phantoscope/0.2.0) to read our latest RESTful API reference.
 
 <a href="#contributing"></a>
 ## Contributing

@@ -40,11 +40,11 @@ $ python3 scripts/load_data.py -s $LOCAL_ADDRESS:5000 -a example_app -p example_
 
 ## Use Phantoscope Preview for an image search
 ```bash
-$ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:latest
+$ docker run -d -e API_URL=http://$LOCAL_ADDRESS:5000 -p 8000:80 phantoscope/preview:0.2.0
 ```
 Open 127.0.0.1:8000 with browser
 
-![Phantoscope Preview Demonstration](../../../../.github/preview.gif)
+![Phantoscope Preview Demonstration](https://live.staticflickr.com/65535/50140138947_2801b030df_o.gif)
 
 
 ## Use curl to import an image

@@ -7,7 +7,7 @@ name: CI
 on:
   pull_request:
     paths:
-    - 'operators/**'
+    - '/operators/**'
     branches:
       - master
     tags:
@@ -31,7 +31,7 @@ jobs:
     - name: find all rebuild operator
       id: rebuild_operator
       run: |
-        tmp=`cat ${HOME}/files.json | grep operators | sed 's/.*operators\/\([^\/]*\)\/.*/\1/g' | sed -e 's/example-custom-operator//g' | sed -e 's/rpc//g' | sed -e 's/^[ ]*//g' | sed -e 's/[ ]*$//g'`
+        tmp=`cat ${HOME}/files.json | grep operators | sed 's/operators\/\([^\/]*\)\/.*/\1/g' | sed -e 's/example-custom-operator//g' | sed -e 's/rpc//g' | sed -e 's/^[ ]*//g' | sed -e 's/[ ]*$//g'`
         echo $tmp
         echo '::set-output name=test::'${tmp}
     - name: build operator image

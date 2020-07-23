@@ -1,27 +1,29 @@
 # What is an operator?
 
-An operator is a basic unit within Phantoscope. 
+An operator is an abstract of a basic unit within Phantoscope. An example of an operator is that a unit within Phantoscope can be created according to the operator.
 
 The Phantoscope project can complete different tasks because of the diversity of the operators it has.
 
-You can follow our instructions to implement your own operator and add it to your Phantoscope project. 
+You can follow our [instructions](../../../../operators/HowToAddAnOperator.md) to implement your own operator and add it to your Phantoscope project. 
 
 Depending on its function, an operator can be classified into two types: processor and encoder. 
 
 ## Processor
 Processors take up a larger portion of the operators in an application. A processor only processes the data that it is fed. When it is done, the pipeline takes its output to the next operator down the line. 
 
-Generally speaking, the input to a processor has the same format as its output. For example, a processor takes in an image, extracts human face from it, and then send out the extracted information. 
+Generally speaking, the input to a processor has the same format as its output. For example, a processor takes in an image, extracts human face from it, and then sends out the extracted information. 
 
-Phantoscope has the following in-built processors: 
+A processor only receives, processes, and sends out data, no matter where it receives from or sends out to.
+
+Phantoscope has the following types of in-built processors: 
 
 #### MTCNN-face-detector
 
 - **Docker image:** face-detector
 - **Function:** Detects human faces from an image. 
-- **Input:** An image
+- **Input:** An image.
 - **Output:** A group of detected human face images. 
-- **Sample pipeline:** mtcnn_detect_face -> face_embedding
+- **Sample pipeline:** mtcnn-face-detector -> face-encoder
 
 > It is implemented using [Facenet](https://github.com/davidsandberg/facenet.git).
 
@@ -29,27 +31,27 @@ Phantoscope has the following in-built processors:
 
 - **Docker image:** mask-rcnn-detector
 - **Function:** Detects objects from an image. 
-- **Input:** An image
+- **Input:** An image.
 - **Output:** A group of detected object images. 
-- **Sample pipeline:** mask_rcnn -> vgg/xception
+- **Sample pipeline:** mask-rcnn-object-detetcor -> vgg/xception
 
 > It is implemented using [Mask_RCNN](https://github.com/matterport/Mask_RCNN).
 
 #### SSD-object-detector
 
-- **Docker image: ** ssd-detector
-- **Function: ** Detects objects from an image. 
-- **Input: ** An image
-- **Output: ** A group of detected object images. 
+- **Docker image:** ssd-detector
+- **Function:** Detects objects from an image. 
+- **Input:** An image.
+- **Output:** A group of detected object images. 
 - **Sample pipeline:** ssd-object-detector -> vgg/xception
 
-> It is implemented using [Tensorflow SSD](https://github.com/scanner-research/scannertools/blob/master/scannertools/scannertools/object_detection.py),
+> It is implemented using [Tensorflow SSD](https://github.com/scanner-research/scannertools/blob/master/scannertools/scannertools/object_detection.py).
 
 #### YOLOv3-object-detector
 
 - **Docker image:** yolov3-detector
 - **Function:** Detects objects from an image. 
-- **Input:** An image
+- **Input:** An image.
 - **Output:** A group of detected object images.
 - **Sample pipeline:** yolov3-object-detector -> vgg/xception
 
@@ -57,67 +59,80 @@ Phantoscope has the following in-built processors:
 
 ## Encoder
 
-An encoder is the last link in the pipeline. You can take an encoder as a special processor. The difference between an encoder and a processor includes: 
+You can take an encoder as a special processor. The difference between an encoder and a processor includes: 
 
-An encoder converts unstructured data to vectors or tags, so the input to an encoder is in a different format from its output.
+The input to an encoder is in a different format from its output.
 
-Phantoscope has the following in-built processors: 
+An encoder converts unstructured data to vectors or tags.
+
+So an encoder is the last link in processing data. 
+
+Phantoscope has the following types of in-built encoders: 
 
 #### Vgg16
 
 - **Docker image:** vgg16-encoder
-- **Vector dimension: ** 512
-- **Function: ** Does embedding to the input image and gets the feature vectors.
+- **Vector dimension:** 512
+- **Function:** Does embedding to the input image and gets the feature vectors.
 
 > It is implemented using [Keras Vgg16](https://keras.io/zh/applications/).
 
 #### Xception
 
-- **Docker image: ** xception-encoder
-- **Vector dimension: ** 2048
-- **Function: ** Does embedding to the input image and gets the feature vectors.
+- **Docker image:** xception-encoder
+- **Vector dimension:** 2048
+- **Function:** Does embedding to the input image and gets the feature vectors.
 
 > It is implemented using [Keras Xception](https://keras.io/zh/applications/).
 
 #### Face-encoder
 
-- **Docker image: ** face-encoder
-- **Vector dimension: ** 128
-- **Function: ** Does embedding to the output human face images and gets the feature vectors.
+- **Docker image:** face-encoder
+- **Vector dimension:** 128
+- **Function:** Does embedding to the output human face images and gets the feature vectors.
 
 > It is implemented using [Facenet](https://github.com/davidsandberg/facenet.git).
 
-## Run an Operator
-
-```bash
-$ export LOCAL_ADDRESS=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'| head -n 1)
-# Pull the docker image of the corresponding version. 
-$ docker pull psoperator/face-encoder:latest
-# Start up a container with the downloaded docker image and configure the container settings: 
-# 1. Set the container serviceendpoint to ${LOCAL_ADDRESS}:50004, and map the 50004 port to the local machine.
-# 2. Map the container's /app/tmp directory to the local machine to facilitate checking and debugging the cached images in the encoder. 
-$ docker run -p 50004:50004 -e OP_ENDPOINT=${LOCAL_ADDRESS}:50004 -v `pwd`/tmp:/app/tmp -d psoperator/face-encoder:latest
-```
 
 ## Register an operator to Phantoscope
 
+Phantoscope does not start up with an operator. For this version, you must manually register an operator to Phantoscope first using the following command.
 
-For this version, Phantoscope does not start up with an operator. To find and use an operator, you must manually register that operator to Phantoscope first. 
+`addr` is the address pulled by the operator, which can be understood as the docker image address in the following command.
 
-By default, Phantoscope starts a vgg16 operator when starting up and listening on the 50001 port. At this point, though vgg16 is started up, it is not registered to Phantoscope. 
-
-Call `/v1/operator/regist` to send the register request: 
-
-```json
-{
-    "endpoint": "LOCAL_HOST_IP:50001",
-	"name": "vgg16_example"
-}
+```bash
+$ curl --location --request POST '127.0.0.1:5000/v1/operator/register' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "face_detector",
+    "addr": "psoperator/face-detector:latest",
+    "author" :"phantoscope",
+    "type":"processor",
+    "description": "detect face in input images",
+    "version": "0.1.0"
+}'
 ```
 
-Register vgg16 to Phantoscope in the name of **vgg16_example**. 
+## Create an operator instance
 
-Phantoscope uses this endpoint to communicate with the operator, so you should set it to an intranet address starting off with 192 or 10, instead of setting it to 127.0.0.1. 
+After you successfully registered an operator, you also need to create an instance according to the operator as the actual unit that Phantoscope works on.
+
+For this version, you can create an operator instance using the following command.
+
+```bash
+$ curl --location --request POST '127.0.0.1:5000/v1/operator/face_detector/instances' \
+--header 'Content-Type: application/json' \
+--data '{
+    "instanceName": "face_detector1" 
+}'
+```
+
+The first creation pulls the Docker image from the remote, which takes relatively long. When the creation is successful, a container of the image appears on the local machine.
+
+```bash
+CONTAINER ID        IMAGE                                       COMMAND                  CREATED             STATUS              PORTS                                                NAMES
+67b697aad41b        psoperator/face-detector:latest             "python3 server.py"      26 seconds ago      Up 25 seconds       51001/tcp, 0.0.0.0:32768->80/tcp                     phantoscope_face_detector_face_detector1
+```
 
 
 # Design Principles of an Operator
