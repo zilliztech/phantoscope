@@ -7,4 +7,4 @@ You can create different fields within an application depending on your actual n
 
 Data of different applications is isolated from each other. 
 
-An application has at least one pipeline. A scoreling function is required if an application has multiple pipelines.
+An application has at least one pipeline. A [scoreling function](./score_function.md) is required if an application has multiple pipelines.
