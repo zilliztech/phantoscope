@@ -6,7 +6,7 @@ import rpc.rpc_pb2
 import rpc.rpc_pb2_grpc
 from face_detector import run, MTCNNDetectFace as Detector
 
-ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:50005")
+ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:80")
 
 
 class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):

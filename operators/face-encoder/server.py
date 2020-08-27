@@ -6,7 +6,7 @@ import rpc.rpc_pb2
 import rpc.rpc_pb2_grpc
 from face_embedding import run, EmbedFaces as Encoder
 
-ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:50004")
+ENDPOINT = os.getenv("OP_ENDPOINT", "127.0.0.1:80")
 
 
 class OperatorServicer(rpc.rpc_pb2_grpc.OperatorServicer):

@@ -80,9 +80,9 @@ def create_pipeline(name, processors=None, encoder=None, description=None):
             processor_res["operator"] = pr.to_dict()
             processor_res["instance"] = pr.inspect_instance(processor["instance"])
             pro.append(processor_res)
-        e = operator_detail(encoder["name"])
-        encoder_res["operator"] = e.to_dict()
-        encoder_res["instance"] = e.inspect_instance(encoder["instance"])
+        encoder_info = operator_detail(encoder["name"])
+        encoder_res["operator"] = encoder_info.to_dict()
+        encoder_res["instance"] = encoder_info.inspect_instance(encoder["instance"])
         pipe = Pipeline(name, description, pro, encoder_res)
         pipe.metadata = pipe._metadata()
         if pipeline_illegal(pipe):
@@ -90,7 +90,7 @@ def create_pipeline(name, processors=None, encoder=None, description=None):
         MongoIns.insert_documents(PIPELINE_COLLECTION_NAME, pipe.to_dict())
         return pipe
     except Exception as e:
-        logger.error(e)
+        logger.error(e, exc_info=True)
         raise e
 
 
@@ -162,8 +162,9 @@ def pipeline_illegal(pipe):
         for num, operator in enumerate(operators):
             # check operator and instance exist
             # use identity check container health
+            logging.info(f"now identity {operator['instance'].endpoint}")
             info = identity(operator['instance'].endpoint)
-            if num == len(operators)-1:
+            if num == len(operators) - 1:
                 if info.get("type") != OPERATOR_TYPE_ENCODER:
                     raise PipelineIllegalError("Pipeline illegal check error", "")
             else:
