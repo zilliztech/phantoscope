@@ -15,7 +15,6 @@ data1:
 	./prepare_model.sh
 	cd -
 
-
 cpu:
 	docker build  \
  	--build-arg base_tag=ubuntu:bionic-20200219 \
