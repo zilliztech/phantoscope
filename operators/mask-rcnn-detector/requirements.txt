@@ -1,5 +1,5 @@
 Keras==2.3.1
-tensorflow==1.15.2
+tensorflow==1.15.4
 grpcio==1.27.2
 pillow
 opencv-python==4.2.0.34
